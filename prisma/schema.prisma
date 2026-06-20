@@ -47,7 +47,11 @@ model Student {
 
   placementStatus String @default("UNPLACED")
 
+  companyId     String?
+
   user User @relation(fields: [userId], references: [id])
+
+  company Company? @relation(fields: [companyId], references: [id])
 
   @@map("students")
 }
@@ -65,6 +69,8 @@ model Company {
   approved      Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id])
+
+  students Student[]
 
   @@map("companies")
 }
