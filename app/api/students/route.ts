@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       student,
     });
   } catch (error) {
-    console.error(error);
+    console.error("CREATE STUDENT ERROR:", error);
 
     return NextResponse.json(
       {
