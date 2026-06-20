@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
   const [loginId, setLoginId] = useState("");
@@ -17,27 +18,49 @@ export default function LoginForm() {
     try {
       setIsLoading(true);
 
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          loginId,
-          password,
-        }),
+      const result = await signIn("credentials", {
+        loginId,
+        password,
+        redirect: false,
       });
 
-      const data = await response.json();
-
-      if (!data.success) {
-        alert(data.message || "Login failed");
+      if (result?.error) {
+        alert("Invalid Login ID or Password");
         return;
       }
 
-      alert("Login successful!");
+      const sessionResponse = await fetch(
+  "/api/auth/session"
+);
 
-      router.push("/dashboard");
+const session = await sessionResponse.json();
+
+switch (session.user?.role) {
+  case "ADMIN":
+    router.push("/admin");
+    break;
+
+  case "STUDENT":
+    router.push("/student");
+    break;
+
+  case "COMPANY":
+    router.push("/company");
+    break;
+
+  case "SUPERVISOR":
+    router.push("/supervisor");
+    break;
+
+  case "LIAISON":
+    router.push("/liaison");
+    break;
+
+  default:
+    router.push("/dashboard");
+}
+
+router.refresh();
     } catch {
       alert("Something went wrong.");
     } finally {
