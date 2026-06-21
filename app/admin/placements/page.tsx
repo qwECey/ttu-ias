@@ -1,20 +1,31 @@
 import { prisma } from "@/lib/prisma";
+import PlacementForm from "@/components/placement/PlacementForm";
 
 export default async function PlacementsPage() {
-  const students = await prisma.student.findMany({
-    include: {
-      user: true,
-    },
-    orderBy: {
-      fullName: "asc",
-    },
-  });
+  const students =
+    await prisma.student.findMany({
+      orderBy: {
+        fullName: "asc",
+      },
+    });
 
-  const companies = await prisma.company.findMany({
-    orderBy: {
-      companyName: "asc",
-    },
-  });
+  const companies =
+    await prisma.company.findMany({
+      orderBy: {
+        companyName: "asc",
+      },
+    });
+
+  const placements =
+    await prisma.placement.findMany({
+      include: {
+        student: true,
+        company: true,
+      },
+      orderBy: {
+        assignedAt: "desc",
+      },
+    });
 
   return (
     <main className="p-8">
@@ -23,94 +34,89 @@ export default async function PlacementsPage() {
       </h1>
 
       <p className="mt-2 text-gray-600">
-        Student placement system.
+        Assign students to companies and
+        track placements.
       </p>
 
       <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold">
-          Students
+          Assign Placement
         </h2>
 
-        {students.length === 0 ? (
-          <p>No students found.</p>
-        ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="py-3 text-left">
-                  Name
-                </th>
-                <th className="py-3 text-left">
-                  Student ID
-                </th>
-                <th className="py-3 text-left">
-                  Status
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {students.map((student) => (
-                <tr
-                  key={student.id}
-                  className="border-b"
-                >
-                  <td className="py-3">
-                    {student.fullName}
-                  </td>
-
-                  <td className="py-3">
-                    {student.studentId}
-                  </td>
-
-                  <td className="py-3">
-                    {student.placementStatus}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <PlacementForm
+          students={students}
+          companies={companies}
+        />
       </div>
 
       <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold">
-          Companies
+          Placement History
         </h2>
 
-        {companies.length === 0 ? (
-          <p>No companies found.</p>
+        {placements.length === 0 ? (
+          <p>No placements found.</p>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="py-3 text-left">
-                  Company
-                </th>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="px-4 py-3 text-left">
+                    Student
+                  </th>
 
-                <th className="py-3 text-left">
-                  Location
-                </th>
-              </tr>
-            </thead>
+                  <th className="px-4 py-3 text-left">
+                    Company
+                  </th>
 
-            <tbody>
-              {companies.map((company) => (
-                <tr
-                  key={company.id}
-                  className="border-b"
-                >
-                  <td className="py-3">
-                    {company.companyName}
-                  </td>
+                  <th className="px-4 py-3 text-left">
+                    Assigned Date
+                  </th>
 
-                  <td className="py-3">
-                    {company.location}
-                  </td>
+                  <th className="px-4 py-3 text-left">
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {placements.map(
+                  (placement) => (
+                    <tr
+                      key={placement.id}
+                      className="border-b"
+                    >
+                      <td className="px-4 py-3">
+                        {
+                          placement.student
+                            .fullName
+                        }
+                      </td>
+
+                      <td className="px-4 py-3">
+                        {
+                          placement.company
+                            .companyName
+                        }
+                      </td>
+
+                      <td className="px-4 py-3">
+                        {new Date(
+                          placement.assignedAt
+                        ).toLocaleDateString()}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                          PLACED
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </main>
