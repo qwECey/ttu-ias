@@ -28,6 +28,7 @@ model User {
 
   student   Student?
   company   Company?
+  //supervisor Supervisor?
 
   @@map("users")
 }
@@ -53,6 +54,10 @@ model Student {
 
   company Company? @relation(fields: [companyId], references: [id])
 
+  supervisorId String?
+
+  supervisor Supervisor? @relation(fields: [supervisorId], references: [id])
+
   placements Placement[]
 
   @@map("students")
@@ -77,6 +82,18 @@ model Company {
   placements Placement[]
 
   @@map("companies")
+}
+
+model Supervisor {
+  id        String @id @default(cuid())
+
+  fullName  String
+  email     String @unique
+  phone     String?
+
+  students Student[]
+
+  @@map("supervisors")
 }
 
 model Placement {
