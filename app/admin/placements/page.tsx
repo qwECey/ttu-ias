@@ -27,19 +27,88 @@ export default async function PlacementsPage() {
       },
     });
 
+  const totalPlacements =
+    await prisma.student.count({
+      where: {
+        placementStatus: "PLACED",
+      },
+    });
+
+  const totalStudents =
+    students.length;
+
+  const totalCompanies =
+    companies.length;
+
+  const placementRate =
+    totalStudents === 0
+      ? 0
+      : Math.round(
+          (totalPlacements /
+            totalStudents) *
+            100
+        );
+
   return (
     <main className="p-8">
-      <h1 className="text-3xl font-bold">
-        Placement Management
-      </h1>
+      {/* Hero */}
+      <div className="mb-8 rounded-3xl bg-linear-to-r from-green-600 to-green-800 p-8 text-white shadow-lg">
+        <h1 className="text-4xl font-bold">
+          Placement Management
+        </h1>
 
-      <p className="mt-2 text-gray-600">
-        Assign students to companies and
-        track placements.
-      </p>
+        <p className="mt-2 text-green-100">
+          Assign students and manage
+          attachment placements.
+        </p>
+      </div>
 
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold">
+      {/* Stats */}
+      <div className="mb-8 grid gap-6 md:grid-cols-4">
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-sm text-gray-500">
+            Total Placements
+          </p>
+
+          <h2 className="mt-2 text-4xl font-bold text-green-600">
+            {totalPlacements}
+          </h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-sm text-gray-500">
+            Students
+          </p>
+
+          <h2 className="mt-2 text-4xl font-bold text-blue-600">
+            {totalStudents}
+          </h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-sm text-gray-500">
+            Companies
+          </p>
+
+          <h2 className="mt-2 text-4xl font-bold text-yellow-600">
+            {totalCompanies}
+          </h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-sm text-gray-500">
+            Placement Rate
+          </p>
+
+          <h2 className="mt-2 text-4xl font-bold text-purple-600">
+            {placementRate}%
+          </h2>
+        </div>
+      </div>
+
+      {/* Assignment Form */}
+      <div className="rounded-3xl bg-white p-8 shadow-sm">
+        <h2 className="mb-6 text-2xl font-semibold">
           Assign Placement
         </h2>
 
@@ -49,31 +118,36 @@ export default async function PlacementsPage() {
         />
       </div>
 
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold">
+      {/* Placement History */}
+      <div className="mt-8 rounded-3xl bg-white p-8 shadow-sm">
+        <h2 className="mb-6 text-2xl font-semibold">
           Placement History
         </h2>
 
         {placements.length === 0 ? (
-          <p>No placements found.</p>
+          <div className="rounded-xl bg-gray-50 p-10 text-center">
+            <p className="text-gray-500">
+              No placements found.
+            </p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-3 text-left">
+                <tr className="border-b bg-gray-50">
+                  <th className="px-4 py-4 text-left">
                     Student
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-4 py-4 text-left">
                     Company
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-4 py-4 text-left">
                     Assigned Date
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-4 py-4 text-left">
                     Status
                   </th>
                 </tr>
@@ -84,29 +158,31 @@ export default async function PlacementsPage() {
                   (placement) => (
                     <tr
                       key={placement.id}
-                      className="border-b"
+                      className="border-b hover:bg-gray-50"
                     >
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4 font-medium">
                         {
                           placement.student
                             .fullName
                         }
                       </td>
 
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         {
                           placement.company
                             .companyName
                         }
                       </td>
 
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         {new Date(
                           placement.assignedAt
-                        ).toLocaleDateString()}
+                        ).toLocaleDateString(
+                          "en-GB"
+                        )}
                       </td>
 
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                           PLACED
                         </span>

@@ -52,6 +52,10 @@ switch (session.user?.role) {
     router.push("/supervisor");
     break;
 
+  case "INDUSTRY_SUPERVISOR":
+    router.push("/industry-supervisor/dashboard");
+    break;
+
   case "LIAISON":
     router.push("/liaison");
     break;

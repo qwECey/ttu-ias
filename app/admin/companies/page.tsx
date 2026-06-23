@@ -8,6 +8,8 @@ import { prisma } from "@/lib/prisma";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 
+import CompanyFilter from "./company-filter";
+
 export default async function CompaniesPage() {
   const session = await getServerSession(
     authOptions
@@ -17,7 +19,10 @@ export default async function CompaniesPage() {
     redirect("/login");
   }
 
-  if (session.user.role !== "ADMIN") {
+  if (
+    session.user.role !== "ADMIN" &&
+    session.user.role !== "LIAISON"
+  ) {
     redirect("/dashboard");
   }
 
@@ -39,14 +44,14 @@ export default async function CompaniesPage() {
 
         <main className="p-8">
           <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">
-                Company Management
-              </h1>
+            <div className="mb-8 rounded-3xl bg-linear-to-r from-yellow-500 to-yellow-600 p-8 text-white shadow-lg">
+                <h1 className="text-4xl font-bold">
+                  Company Management
+                </h1>
 
-              <p className="mt-1 text-gray-600">
-                Manage attachment companies
-              </p>
+                <p className="mt-2 text-yellow-100">
+                  Manage internship companies and partnerships.
+                </p>
             </div>
 
             <Link
@@ -86,72 +91,9 @@ export default async function CompaniesPage() {
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-4 text-left">
-                        Company
-                      </th>
-
-                      <th className="px-6 py-4 text-left">
-                        Location
-                      </th>
-
-                      <th className="px-6 py-4 text-left">
-                        Contact Person
-                      </th>
-
-                      <th className="px-6 py-4 text-left">
-                        Phone
-                      </th>
-
-                      <th className="px-6 py-4 text-left">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {companies.map(
-                      (company) => (
-                        <tr
-                          key={company.id}
-                          className="border-t hover:bg-gray-50"
-                        >
-                          <td className="px-6 py-4 font-medium">
-                            {company.companyName}
-                          </td>
-
-                          <td className="px-6 py-4">
-                            {company.location}
-                          </td>
-
-                          <td className="px-6 py-4">
-                            {company.contactPerson}
-                          </td>
-
-                          <td className="px-6 py-4">
-                            {company.contactPhone}
-                          </td>
-
-                          <td className="px-6 py-4">
-                            {company.approved ? (
-                              <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                                Approved
-                              </span>
-                            ) : (
-                              <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
-                                Pending
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <CompanyFilter
+                companies={companies}
+              />
             )}
           </div>
         </main>

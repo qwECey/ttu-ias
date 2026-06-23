@@ -18,6 +18,12 @@ export async function validateUser(
     return null;
   }
 
+  if (!user.isActive) {
+    throw new Error(
+      "Account has been deactivated"
+    );
+  }
+
   const validPassword = await bcrypt.compare(
     password,
     user.password

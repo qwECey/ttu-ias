@@ -33,6 +33,19 @@ export default async function AdminPage() {
   const placementCount =
     await prisma.placement.count();
 
+  const supervisorCount =
+  await prisma.supervisor.count();
+
+  const industrySupervisorCount =
+  await prisma.industrySupervisor.count();
+
+  const pendingRequests =
+    await prisma.placementRequest.count({
+      where: {
+        status: "PENDING",
+      },
+    });
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <AdminSidebar />
@@ -45,39 +58,130 @@ export default async function AdminPage() {
         />
 
         <main className="p-8">
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              title="Students"
-              value={studentCount.toString()}
-            />
+            <div className="mb-8 rounded-3xl bg-linear-to-r from-blue-600 to-blue-800 p-8 text-white shadow-lg">
+              <h1 className="text-4xl font-bold">
+                TTU Industrial Attachment System
+              </h1>
 
-            <StatCard
-              title="Companies"
-              value={companyCount.toString()}
-            />
+              <p className="mt-3 max-w-2xl text-blue-100">
+                Manage students, companies,
+                supervisors, placements and
+                attachment reports from one
+                central dashboard.
+              </p>
 
-            <StatCard
-              title="Supervisors"
-              value="0"
-            />
+              <div className="mt-6">
+                <a
+                  href="/admin/placement-requests"
+                  className="inline-flex rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50"
+                >
+                  Review Placement Requests
+                </a>
+              </div>
+            </div>
 
-            <StatCard
-              title="Placements"
-              value={placementCount.toString()}
-            />
-          </div>
+            <div className="mb-8 grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+              <StatCard
+                title="Students"
+                value={studentCount}
+              />
 
-          <div className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
-            <h2 className="text-xl font-bold">
-              Welcome to TTU IAS
-            </h2>
+              <StatCard
+                title="Companies"
+                value={companyCount}
+              />
 
-            <p className="mt-3 text-gray-600">
-              System overview and
-              administrative controls.
-            </p>
-          </div>
-        </main>
+              <StatCard
+                title="Placements"
+                value={placementCount}
+              />
+
+              <StatCard
+                title="Academic Supervisors"
+                value={supervisorCount}
+              />
+
+              <StatCard
+                title="Industry Supervisors"
+                value={industrySupervisorCount}
+              />
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              <div className="rounded-3xl bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-semibold">
+                  Pending Requests
+                </h2>
+
+                <p className="mt-4 text-5xl font-bold text-yellow-600">
+                  {pendingRequests}
+                </p>
+
+                <p className="mt-2 text-gray-500">
+                  Placement requests awaiting
+                  review.
+                </p>
+              </div>
+
+              <div className="rounded-3xl bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-semibold">
+                  Quick Actions
+                </h2>
+
+                <div className="mt-4 flex flex-col gap-3">
+                  <a
+                    href="/admin/students"
+                    className="rounded-xl border p-3 hover:bg-gray-50"
+                  >
+                    Manage Students
+                  </a>
+
+                  <a
+                    href="/admin/companies"
+                    className="rounded-xl border p-3 hover:bg-gray-50"
+                  >
+                    Manage Companies
+                  </a>
+
+                  <a
+                    href="/admin/placements"
+                    className="rounded-xl border p-3 hover:bg-gray-50"
+                  >
+                    Manage Placements
+                  </a>
+                </div>
+              </div>
+
+              <div className="rounded-3xl bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-semibold">
+                  System Status
+                </h2>
+
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span>Students</span>
+                    <span className="font-semibold">
+                      {studentCount}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span>Companies</span>
+                    <span className="font-semibold">
+                      {companyCount}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span>Placements</span>
+                    <span className="font-semibold">
+                      {placementCount}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
       </div>
     </div>
   );

@@ -75,59 +75,79 @@ export default function PlacementForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4"
+      className="mx-auto max-w-3xl space-y-6"
     >
-      <select
-        value={studentId}
-        onChange={(e) =>
-          setStudentId(
-            e.target.value
-          )
-        }
-        className="w-full rounded-lg border p-3"
-      >
-        <option value="">
-          Select Student
-        </option>
+      <div>
+        <label
+          htmlFor="student-select"
+          className="mb-2 block font-medium"
+        >
+          Student
+        </label>
 
-        {students.map((student) => (
-          <option
-            key={student.id}
-            value={student.id}
-          >
-            {student.fullName}
+        <select
+          id="student-select"
+          value={studentId}
+          onChange={(e) =>
+            setStudentId(
+              e.target.value
+            )
+          }
+          className="w-full rounded-xl border border-gray-300 p-4"
+        >
+          <option value="">
+            Select Student
           </option>
-        ))}
-      </select>
 
-      <select
-        value={companyId}
-        onChange={(e) =>
-          setCompanyId(
-            e.target.value
-          )
-        }
-        className="w-full rounded-lg border p-3"
-      >
-        <option value="">
-          Select Company
-        </option>
+          {students.map((student) => (
+            <option
+              key={student.id}
+              value={student.id}
+            >
+              {student.fullName}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {companies.map((company) => (
-          <option
-            key={company.id}
-            value={company.id}
-          >
-            {company.companyName}
+      <div>
+        <label
+          htmlFor="company-select"
+          className="mb-2 block font-medium"
+        >
+          Company
+        </label>
+
+        <select
+          id="company-select"
+          value={companyId}
+          onChange={(e) =>
+            setCompanyId(
+              e.target.value
+            )
+          }
+          className="w-full rounded-xl border border-gray-300 p-4"
+        >
+          <option value="">
+            Select Company
           </option>
-        ))}
-      </select>
+
+          {companies.map((company) => (
+            <option
+              key={company.id}
+              value={company.id}
+            >
+              {company.companyName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <button
         type="submit"
-        className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-white"
+        className="w-full rounded-xl bg-green-600 px-6 py-4 font-semibold text-white hover:bg-green-700"
       >
-        Assign Student
+        Assign Placement
       </button>
     </form>
   );

@@ -8,12 +8,12 @@ export default function StatCard({
   value,
 }: StatCardProps) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <p className="text-sm text-gray-500">
+    <div className="rounded-3xl bg-white p-6 shadow-sm transition hover:shadow-md">
+      <p className="text-sm font-medium text-gray-500">
         {title}
       </p>
 
-      <h3 className="mt-2 text-3xl font-bold">
+      <h3 className="mt-3 text-4xl font-bold text-slate-800">
         {value}
       </h3>
     </div>

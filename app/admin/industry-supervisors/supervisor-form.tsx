@@ -48,67 +48,71 @@ export default function IndustrySupervisorForm({
       await res.json();
 
     if (data.success) {
-        alert(
-            `Login ID: ${data.credentials.loginId}\nPassword: ${data.credentials.password}`
-        );
+      alert(
+        `Login ID: ${data.credentials.loginId}\nPassword: ${data.credentials.password}`
+      );
 
-        location.reload();
+      location.reload();
     }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl bg-white p-6 shadow-sm"
+      className="grid gap-4 md:grid-cols-2"
     >
-      <div className="grid gap-4">
-        <input
-          title="Full Name"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(e) =>
-            setFullName(
-              e.target.value
-            )
-          }
-          className="rounded border p-2"
-          required
-        />
+      <input
+        placeholder="Full Name"
+        value={fullName}
+        onChange={(e) =>
+          setFullName(
+            e.target.value
+          )
+        }
+        className="rounded-xl border p-3"
+        required
+      />
 
-        <input
-          title="Email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(
-              e.target.value
-            )
-          }
-          className="rounded border p-2"
-          required
-        />
+      <input
+        placeholder="Email Address"
+        value={email}
+        onChange={(e) =>
+          setEmail(
+            e.target.value
+          )
+        }
+        className="rounded-xl border p-3"
+        required
+      />
 
-        <input
-          title="Phone"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) =>
-            setPhone(
-              e.target.value
-            )
-          }
-          className="rounded border p-2"
-        />
+      <input
+        placeholder="Phone Number"
+        value={phone}
+        onChange={(e) =>
+          setPhone(
+            e.target.value
+          )
+        }
+        className="rounded-xl border p-3"
+      />
+
+      <div>
+        <label
+          htmlFor="companyId"
+          className="mb-2 block text-sm font-medium text-gray-700"
+        >
+          Company
+        </label>
 
         <select
-          title="Company"
+          id="companyId"
           value={companyId}
           onChange={(e) =>
             setCompanyId(
               e.target.value
             )
           }
-          className="rounded border p-2"
+          className="w-full rounded-xl border p-3"
           required
         >
           <option value="">
@@ -121,21 +125,19 @@ export default function IndustrySupervisorForm({
                 key={company.id}
                 value={company.id}
               >
-                {
-                  company.companyName
-                }
+                {company.companyName}
               </option>
             )
           )}
         </select>
-
-        <button
-          type="submit"
-          className="rounded bg-black px-4 py-2 text-white"
-        >
-          Add Industry Supervisor
-        </button>
       </div>
+
+      <button
+        type="submit"
+        className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 md:col-span-2"
+      >
+        Create Industry Supervisor
+      </button>
     </form>
   );
 }

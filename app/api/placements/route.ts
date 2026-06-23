@@ -6,6 +6,26 @@ export async function POST(req: NextRequest) {
   try {
     const { studentId, companyId } =
       await req.json();
+
+    const existingPlacement =
+      await prisma.placement.findFirst({
+        where: {
+          studentId,
+        },
+      });
+
+    if (existingPlacement) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Student already has a placement",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
     
       const placement =
       await prisma.placement.create({

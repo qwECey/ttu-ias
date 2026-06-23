@@ -2,135 +2,104 @@ import { prisma } from "@/lib/prisma";
 import ReportForm from "./report-form";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
+import ReportFilter from "./report-filter";
 
 export default async function ReportsPage() {
   const session =
-  await getServerSession(authOptions);
+    await getServerSession(authOptions);
 
-if (!session?.user?.id) {
-  return <div>Unauthorized</div>;
-}
+  if (!session?.user?.id) {
+    return <div>Unauthorized</div>;
+  }
 
-const student =
-  await prisma.student.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-  });
+  const student =
+    await prisma.student.findUnique({
+      where: {
+        userId: session.user.id,
+      },
+    });
 
-if (!student) {
-  return <div>Student not found</div>;
-}
+  if (!student) {
+    return <div>Student not found</div>;
+  }
+
   const reports =
-  await prisma.report.findMany({
-    where: {
-      studentId: student.id,
-    },
-    orderBy: {
-      submittedAt: "desc",
-    },
-  });
+    await prisma.report.findMany({
+      where: {
+        studentId: student.id,
+      },
+
+      orderBy: {
+        submittedAt: "desc",
+      },
+    });
 
   return (
-    <main className="p-8">
-      <h1 className="mb-2 text-3xl font-bold">
-        Submit Attachment Report
-      </h1>
+    <main className="min-h-screen bg-gray-100 p-6">
+      <div className="mx-auto max-w-7xl">
 
-      <p className="mb-8 text-gray-600">
-        Submit weekly summaries,
-        monthly summaries, and final
-        attachment reports.
-      </p>
+        {/* Hero */}
+        <div className="mb-8 rounded-3xl bg-linear-to-r from-blue-600 to-blue-800 p-8 text-white shadow-lg">
 
-      <ReportForm />
+          <h1 className="text-4xl font-bold">
+            Attachment Reports
+          </h1>
 
-      <div className="mt-10">
-        <h2 className="mb-4 text-2xl font-semibold">
-          Submitted Reports
-        </h2>
+          <p className="mt-3 text-blue-100">
+            Submit weekly, monthly and final
+            attachment reports and track
+            supervisor feedback.
+          </p>
 
-        <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="px-4 py-3 text-left">
-                  Title
-                </th>
-
-                <th className="px-4 py-3 text-left">
-                  Type
-                </th>
-
-                <th className="px-4 py-3 text-left">
-                  Period
-                </th>
-
-                <th className="px-4 py-3 text-left">
-                  Status
-                </th>
-
-                <th className="px-4 py-3 text-left">
-                  Submitted
-                </th>
-
-                <th className="px-4 py-3 text-left">
-                Remarks
-              </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {reports.map(
-                (report) => (
-                  <tr
-                    key={report.id}
-                    className="border-b"
-                  >
-                    <td className="px-4 py-3">
-                      {report.title}
-                    </td>
-
-                    <td className="px-4 py-3">
-                      {
-                        report.reportType
-                      }
-                    </td>
-
-                    <td className="px-4 py-3">
-                      {report.periodNumber ??
-                        "-"}
-                    </td>
-
-                    <td className="px-4 py-3">
-                      <span
-                        className={
-                          report.status === "APPROVED"
-                            ? "rounded bg-green-100 px-2 py-1 text-green-700"
-                            : report.status === "REJECTED"
-                            ? "rounded bg-red-100 px-2 py-1 text-red-700"
-                            : "rounded bg-yellow-100 px-2 py-1 text-yellow-700"
-                        }
-                      >
-                        {report.status}
-                      </span>
-                    </td>
-
-                    <td className="px-4 py-3">
-                      {new Date(
-                        report.submittedAt
-                      ).toLocaleDateString()}
-                    </td>
-
-                    <td className="px-4 py-3">
-                      {report.supervisorRemarks ?? "-"}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
         </div>
+
+        {/* Report Form */}
+        <div className="rounded-3xl bg-white p-8 shadow-md">
+
+            <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+              Submit New Report
+            </h2>
+
+            <div className="mx-auto max-w-3xl">
+              <ReportForm />
+            </div>
+
+        </div>
+
+        {/* Submitted Reports */}
+        <div className="mt-8 rounded-3xl bg-white p-8 shadow-md">
+
+          <h2 className="mb-6 text-2xl font-bold text-gray-800">
+            Submitted Reports
+          </h2>
+
+          {reports.length === 0 ? (
+            <div className="rounded-2xl border border-dashed p-10 text-center">
+
+              <h3 className="text-lg font-semibold text-gray-700">
+                No Reports Submitted
+              </h3>
+
+              <p className="mt-2 text-gray-500">
+                Your submitted reports will
+                appear here.
+              </p>
+
+            </div>
+          ) : (
+            <ReportFilter
+              reports={reports.map(
+                (report) => ({
+                  ...report,
+                  submittedAt:
+                    report.submittedAt.toISOString(),
+                })
+              )}
+            />
+          )}
+
+        </div>
+
       </div>
     </main>
   );

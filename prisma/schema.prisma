@@ -29,40 +29,42 @@ enum ReportStatus {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  loginId   String   @unique
-  email     String?  @unique
-  password  String
-  role      UserRole
-  isActive  Boolean  @default(true)
+  id       String   @id @default(cuid())
+  loginId  String   @unique
+  email    String?  @unique
+  password String
+  role     UserRole
+  isActive Boolean  @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  student   Student?
-  company   Company?
-  //supervisor Supervisor?
+  student Student?
+  company Company?
+
+  supervisor Supervisor?
+
   industrySupervisor IndustrySupervisor?
 
   @@map("users")
 }
 
 model Student {
-  id            String @id @default(cuid())
-  userId        String @unique
+  id     String @id @default(cuid())
+  userId String @unique
 
-  studentId     String @unique
-  fullName      String
-  email         String? @unique
-  phone         String?
+  studentId String  @unique
+  fullName  String
+  email     String? @unique
+  phone     String?
 
-  department    String
-  programme     String
-  level         Int
+  department String
+  programme  String
+  level      Int
 
   placementStatus String @default("UNPLACED")
 
-  companyId     String?
+  companyId String?
 
   user User @relation(fields: [userId], references: [id])
 
@@ -72,7 +74,7 @@ model Student {
 
   supervisor Supervisor? @relation(fields: [supervisorId], references: [id])
 
-  industrySupervisorId String? 
+  industrySupervisorId String?
 
   industrySupervisor IndustrySupervisor? @relation(fields: [industrySupervisorId], references: [id])
 
@@ -80,20 +82,24 @@ model Student {
 
   reports Report[]
 
+  placementRequests PlacementRequest[]
+
   @@map("students")
 }
 
 model Company {
-  id            String @id @default(cuid())
-  userId        String @unique
+  id     String @id @default(cuid())
+  userId String @unique
 
-  companyName   String
-  location      String
+  companyName String
+  location    String
 
   contactPerson String
   contactPhone  String
+  contactEmail String?
 
-  approved      Boolean @default(false)
+  approved Boolean @default(false)
+
 
   user User @relation(fields: [userId], references: [id])
 
@@ -129,11 +135,14 @@ model IndustrySupervisor {
 }
 
 model Supervisor {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  fullName  String
-  email     String @unique
-  phone     String?
+  fullName String
+  email    String  @unique
+  phone    String?
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
 
   students Student[]
 
@@ -141,16 +150,17 @@ model Supervisor {
 }
 
 model Placement {
-  id         String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  studentId  String
-  companyId  String
+  studentId String
+  companyId String
 
   assignedAt DateTime @default(now())
 
   student Student @relation(fields: [studentId], references: [id])
 
   company Company @relation(fields: [companyId], references: [id])
+  
 
   @@map("placements")
 }
@@ -181,4 +191,25 @@ model Report {
   student Student @relation(fields: [studentId], references: [id])
 
   @@map("reports")
+}
+
+model PlacementRequest {
+  id String @id @default(cuid())
+
+  studentId String
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  companyName String
+  location    String
+
+  contactPerson String
+  contactPhone  String
+  contactEmail  String?
+
+  status String @default("PENDING")
+
+  createdAt DateTime @default(now())
+
+  @@map("placement_requests")
 }
