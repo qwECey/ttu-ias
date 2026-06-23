@@ -11,23 +11,36 @@ export async function PATCH(
     const { id } = await params;
 
     const request =
-      await prisma.placementRequest.findUnique({
-        where: {
-          id,
-        },
-      });
+  await prisma.placementRequest.findUnique({
+    where: {
+      id,
+    },
+  });
 
-    if (!request) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Request not found",
-        },
-        {
-          status: 404,
-        }
-      );
+if (!request) {
+  return NextResponse.json(
+    {
+      success: false,
+      message: "Request not found",
+    },
+    {
+      status: 404,
     }
+  );
+}
+
+if (request.status === "APPROVED") {
+  return NextResponse.json(
+    {
+      success: false,
+      message:
+        "Request already approved",
+    },
+    {
+      status: 400,
+    }
+  );
+}
 
     const companyCount =
       await prisma.company.count();
