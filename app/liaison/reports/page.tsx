@@ -22,20 +22,23 @@ export default async function LiaisonReportsPage() {
         </h1>
 
         <ReportFilter
-            reports={reports.map(
-                (report) => ({
-                id: report.id,
-                title: report.title,
-                reportType:
-                    report.reportType,
-                status: report.status,
-                submittedAt:
-                    report.submittedAt.toISOString(),
-                studentName:
-                    report.student.fullName,
-                })
-            )}
-            />
+          reports={reports.map(
+            (report) => ({
+              id: report.id,
+              title: report.title,
+              reportType:
+                report.reportType,
+              academicStatus:
+                report.academicStatus,
+              industryStatus:
+                report.industryStatus,
+              submittedAt:
+                report.submittedAt.toISOString(),
+              studentName:
+                report.student.fullName,
+            })
+          )}
+        />
 
       </div>
     </main>

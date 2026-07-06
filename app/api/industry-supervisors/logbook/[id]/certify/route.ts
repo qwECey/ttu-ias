@@ -1,0 +1,51 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import { prisma } from "@/lib/prisma";
+
+export async function PATCH(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  try {
+
+    const { id } =
+      await params;
+
+    const {
+      remarks,
+    } = await req.json();
+
+    await prisma.logbookWeek.update({
+      where: {
+        id,
+      },
+      data: {
+        certified: true,
+        supervisorRemarks: remarks,
+        certifiedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+      },
+      {
+        status: 500,
+      }
+    );
+
+  }
+}

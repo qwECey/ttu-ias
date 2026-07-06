@@ -34,6 +34,16 @@ export default async function ReportsPage() {
       },
     });
 
+  console.log(
+    reports.map((r) => ({
+      title: r.title,
+      industryStatus: r.industryStatus,
+      academicStatus: r.academicStatus,
+      industryRemarks: r.industryRemarks,
+      academicRemarks: r.academicRemarks,
+    }))
+  );
+
   return (
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-7xl">

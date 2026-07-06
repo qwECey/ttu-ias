@@ -61,6 +61,8 @@ export const authOptions: AuthOptions = {
     session.user.loginId = token.loginId;
     session.user.role = token.role;
 
+    console.log("SESSION ROLE:", token.role);
+
     return session;
   },
 },

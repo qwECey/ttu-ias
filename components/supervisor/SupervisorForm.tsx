@@ -41,7 +41,10 @@ export default function SupervisorForm() {
 
     if (data.success) {
       alert(
-        "Supervisor created successfully"
+        `Supervisor created successfully!
+
+      Login ID: ${data.credentials.loginId}
+      Password: ${data.credentials.password}`
       );
 
       router.push(

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function LiaisonPage() {
   const totalStudents =
@@ -24,24 +25,57 @@ export default async function LiaisonPage() {
   const totalIndustrySupervisors =
     await prisma.industrySupervisor.count();
 
+  const pendingPlacementRequests =
+    await prisma.placementRequest.count({
+      where: {
+        status: "PENDING",
+      },
+    });
+
   const pendingReports =
     await prisma.report.count({
       where: {
-        status: "PENDING",
+        NOT: {
+          OR: [
+            {
+              academicStatus: "REJECTED",
+            },
+            {
+              industryStatus: "REJECTED",
+            },
+          ],
+        },
+
+        OR: [
+          {
+            academicStatus: "PENDING",
+          },
+          {
+            industryStatus: "PENDING",
+          },
+        ],
       },
     });
 
   const approvedReports =
     await prisma.report.count({
       where: {
-        status: "APPROVED",
+        academicStatus: "APPROVED",
+        industryStatus: "APPROVED",
       },
     });
 
   const rejectedReports =
     await prisma.report.count({
       where: {
-        status: "REJECTED",
+        OR: [
+          {
+            academicStatus: "REJECTED",
+          },
+          {
+            industryStatus: "REJECTED",
+          },
+        ]
       },
     });
 
@@ -99,19 +133,38 @@ export default async function LiaisonPage() {
       },
     });
 
+    function getOverallStatus(report: {
+      academicStatus: string;
+      industryStatus: string;
+    }) {
+      if (
+        report.academicStatus === "REJECTED" ||
+        report.industryStatus === "REJECTED"
+      ) {
+        return "REJECTED";
+      }
+
+      if (
+        report.academicStatus === "APPROVED" &&
+        report.industryStatus === "APPROVED"
+      ) {
+        return "APPROVED";
+      }
+
+      return "PENDING";
+    }
+
     const recentPlacements =
       await prisma.placement.findMany({
         take: 10,
-
         orderBy: {
           assignedAt: "desc",
         },
-
         include: {
           student: true,
           company: true,
         },
-    });
+      });
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
@@ -149,6 +202,11 @@ export default async function LiaisonPage() {
           />
 
           <DashboardCard
+            title="Placement Requests"
+            value={pendingPlacementRequests}
+          />
+
+          <DashboardCard
             title="Pending Reports"
             value={pendingReports}
           />
@@ -173,7 +231,7 @@ export default async function LiaisonPage() {
           <div className="grid gap-6 md:grid-cols-4">
 
             <a
-              href="/admin/students"
+              href="/liaison/students"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
               <h3 className="text-lg font-semibold">
@@ -186,7 +244,7 @@ export default async function LiaisonPage() {
             </a>
 
             <a
-              href="/admin/companies"
+              href="/liaison/companies"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
               <h3 className="text-lg font-semibold">
@@ -198,8 +256,21 @@ export default async function LiaisonPage() {
               </p>
             </a>
 
+            <Link
+              href="/liaison/placement-requests"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Placement Requests
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                Review student placement requests
+              </p>
+            </Link>
+
             <a
-              href="/admin/industry-supervisors"
+              href="/liaison/industry-supervisors"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
               <h3 className="text-lg font-semibold">
@@ -212,7 +283,7 @@ export default async function LiaisonPage() {
             </a>
 
             <a
-              href="/admin/industry-supervisors/assign"
+              href="/liaison/assignments"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
               <h3 className="text-lg font-semibold">
@@ -276,8 +347,20 @@ export default async function LiaisonPage() {
                         </td>
 
                         <td className="px-6 py-4">
-                          {report.status}
-                        </td>
+                            {getOverallStatus(report) === "APPROVED" ? (
+                              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                                APPROVED
+                              </span>
+                            ) : getOverallStatus(report) === "REJECTED" ? (
+                              <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                                REJECTED
+                              </span>
+                            ) : (
+                              <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                                PENDING
+                              </span>
+                            )}
+                          </td>
 
                         <td className="px-6 py-4">
                           {new Date(

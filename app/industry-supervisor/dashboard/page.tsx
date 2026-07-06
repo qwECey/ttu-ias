@@ -48,7 +48,7 @@ export default async function IndustrySupervisorDashboard() {
         student.reports
           .filter(
             (report) =>
-              report.status ===
+              report.industryStatus ===
               "PENDING"
           )
           .map((report) => ({
@@ -105,7 +105,7 @@ export default async function IndustrySupervisorDashboard() {
                 (s) => s.reports
               ).filter(
                 (r) =>
-                  r.status !==
+                  r.industryStatus !==
                   "PENDING"
               ).length
             }

@@ -28,6 +28,12 @@ enum ReportStatus {
   REJECTED
 }
 
+enum PlacementRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id       String   @id @default(cuid())
   loginId  String   @unique
@@ -82,7 +88,11 @@ model Student {
 
   reports Report[]
 
+  logbookWeeks LogbookWeek[]
+
   placementRequests PlacementRequest[]
+
+  internships Internship[]
 
   @@map("students")
 }
@@ -96,10 +106,9 @@ model Company {
 
   contactPerson String
   contactPhone  String
-  contactEmail String?
+  contactEmail  String?
 
   approved Boolean @default(false)
-
 
   user User @relation(fields: [userId], references: [id])
 
@@ -107,7 +116,11 @@ model Company {
 
   placements Placement[]
 
+  internships Internship[]
+
   industrySupervisors IndustrySupervisor[]
+
+  placementRequests PlacementRequest[]
 
   @@map("companies")
 }
@@ -131,6 +144,8 @@ model IndustrySupervisor {
 
   students Student[]
 
+  internships Internship[]
+
   @@map("industry_supervisors")
 }
 
@@ -146,6 +161,8 @@ model Supervisor {
 
   students Student[]
 
+  internships Internship[]
+
   @@map("supervisors")
 }
 
@@ -160,7 +177,6 @@ model Placement {
   student Student @relation(fields: [studentId], references: [id])
 
   company Company @relation(fields: [companyId], references: [id])
-  
 
   @@map("placements")
 }
@@ -180,11 +196,17 @@ model Report {
 
   fileUrl String?
 
-  status ReportStatus @default(PENDING)
+  industryStatus ReportStatus @default(PENDING)
 
-  supervisorRemarks String?
+  academicStatus ReportStatus @default(PENDING)
 
-  approvedAt DateTime?
+  industryRemarks String?
+
+  academicRemarks String?
+
+  industryReviewedAt DateTime?
+
+  academicReviewedAt DateTime?
 
   submittedAt DateTime @default(now())
 
@@ -197,19 +219,116 @@ model PlacementRequest {
   id String @id @default(cuid())
 
   studentId String
+  student   Student @relation(fields: [studentId], references: [id])
 
-  student Student @relation(fields: [studentId], references: [id])
+  internshipId String?
+  internship   Internship? @relation(fields: [internshipId], references: [id])
 
-  companyName String
-  location    String
+  // NEW
+  companyId String?
 
+  company Company? @relation(fields: [companyId], references: [id])
+
+  companyName   String
+  location      String
   contactPerson String
   contactPhone  String
   contactEmail  String?
 
-  status String @default("PENDING")
+  status PlacementRequestStatus @default(PENDING)
+
+  liaisonRemarks String?
 
   createdAt DateTime @default(now())
 
   @@map("placement_requests")
+}
+
+model LogbookWeek {
+  id String @id @default(cuid())
+
+  // Old relationship (keep temporarily)
+  studentId String
+
+  // New relationship
+  internshipId String?
+
+  weekNumber Int
+
+  department String?
+
+  monday    String? @db.Text
+  tuesday   String? @db.Text
+  wednesday String? @db.Text
+  thursday  String? @db.Text
+  friday    String? @db.Text
+  saturday  String? @db.Text
+  sunday    String? @db.Text
+
+  studentRemarks String? @db.Text
+
+  submitted Boolean @default(false)
+
+  certified Boolean @default(false)
+
+  supervisorRemarks String? @db.Text
+
+  certifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  internship Internship? @relation(fields: [internshipId], references: [id])
+
+  @@unique([studentId, weekNumber])
+  @@map("logbook_weeks")
+}
+
+model Internship {
+  id String @id @default(cuid())
+
+  studentId String
+
+  companyId String?
+
+  supervisorId String?
+
+  industrySupervisorId String?
+
+  academicYear String
+
+  level Int
+
+  semester Int
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  durationWeeks Int
+
+  placementStatus String @default("UNPLACED")
+
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  company Company? @relation(fields: [companyId], references: [id])
+
+  supervisor Supervisor? @relation(fields: [supervisorId], references: [id])
+
+  industrySupervisor IndustrySupervisor? @relation(fields: [industrySupervisorId], references: [id])
+
+  placementRequest PlacementRequest[]
+
+  logbookWeeks LogbookWeek[]
+
+  @@map("internships")
 }

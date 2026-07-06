@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth-options";
 
+import { getOrCreateActiveInternship } from "@/lib/internship";
+
 export async function POST(
   req: NextRequest
 ) {
@@ -42,6 +44,35 @@ export async function POST(
       );
     }
 
+    const internship =
+      await getOrCreateActiveInternship(
+        student.id,
+        {
+          level: student.level,
+        }
+      );
+
+      const existingRequest =
+        await prisma.placementRequest.findFirst({
+          where: {
+            internshipId: internship.id,
+            status: "PENDING",
+          },
+        });
+
+      if (existingRequest) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "You already have a pending placement request.",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+
     const {
       existingCompanyId,
       companyName,
@@ -51,16 +82,81 @@ export async function POST(
       contactEmail,
     } = await req.json();
 
+    const usingExisting =
+      Boolean(existingCompanyId);
+
+    const usingNew =
+      Boolean(
+        companyName?.trim()
+      );
+
+    if (
+      usingExisting &&
+      usingNew
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Choose an existing company OR register a new one.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (
+      !usingExisting &&
+      !usingNew
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Please select a company or register a new one.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     // Existing company selected
-    if (existingCompanyId) {
+    if (usingExisting) {
+      const company =
+        await prisma.company.findUnique({
+          where: {
+            id: existingCompanyId,
+          },
+        });
+
+      if (!company) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Selected company does not exist.",
+          },
+          {
+            status: 404,
+          }
+        );
+      }
+
       await prisma.placementRequest.create({
         data: {
           studentId: student.id,
-          companyName: "EXISTING COMPANY",
-          location: "",
-          contactPerson: "",
-          contactPhone: "",
-          contactEmail: "",
+          internshipId: internship.id,
+
+          companyId: company.id,
+
+          companyName: company.companyName,
+          location: company.location,
+          contactPerson: company.contactPerson,
+          contactPhone: company.contactPhone,
+          contactEmail: company.contactEmail,
+
           status: "PENDING",
         },
       });
@@ -74,11 +170,14 @@ export async function POST(
     await prisma.placementRequest.create({
       data: {
         studentId: student.id,
+        internshipId: internship.id,
+
         companyName,
         location,
         contactPerson,
         contactPhone,
         contactEmail,
+        
         status: "PENDING",
       },
     });

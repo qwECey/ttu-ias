@@ -5,16 +5,24 @@ import { prisma } from "@/lib/prisma";
 import StudentFilter from "./student-filter";
 
 export default async function StudentsPage() {
-  const students =
-    await prisma.student.findMany({
-      include: {
-        company: true,
-        supervisor: true,
-      },
-      orderBy: {
-        fullName: "asc",
-      },
-    });
+    const students =
+      await prisma.student.findMany({
+        include: {
+          internships: {
+            where: {
+              status: "ACTIVE",
+            },
+            include: {
+              company: true,
+              supervisor: true,
+            },
+          },
+        },
+
+        orderBy: {
+          fullName: "asc",
+        },
+      });
 
   return (
     <main className="p-8">
@@ -38,30 +46,41 @@ export default async function StudentsPage() {
       </div>
 
       <StudentFilter
-          students={students.map(
-            (student) => ({
+          students={students.map((student) => {
+            const internship =
+              student.internships[0];
+
+            return {
               id: student.id,
+
               studentId:
                 student.studentId,
+
               fullName:
                 student.fullName,
+
               department:
                 student.department,
+
               programme:
                 student.programme,
-              level: student.level,
+
+              level:
+                student.level,
+
               placementStatus:
-                student.placementStatus,
+                internship?.placementStatus ??
+                "UNPLACED",
+
               companyName:
-                student.company
-                  ?.companyName ??
+                internship?.company?.companyName ??
                 "Not Assigned",
+
               supervisorName:
-                student.supervisor
-                  ?.fullName ??
+                internship?.supervisor?.fullName ??
                 "Not Assigned",
-            })
-          )}
+            };
+          })}
         />
     </main>
   );

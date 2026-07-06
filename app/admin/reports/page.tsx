@@ -19,22 +19,22 @@ export default async function AdminReportsPage() {
   const pendingReports =
     reports.filter(
       (report) =>
-        report.status ===
-        "PENDING"
+        report.academicStatus === "PENDING" ||
+        report.industryStatus === "PENDING"
     ).length;
 
   const approvedReports =
     reports.filter(
       (report) =>
-        report.status ===
-        "APPROVED"
+        report.academicStatus === "APPROVED" &&
+        report.industryStatus === "APPROVED"
     ).length;
 
   const rejectedReports =
     reports.filter(
       (report) =>
-        report.status ===
-        "REJECTED"
+        report.academicStatus === "REJECTED" ||
+        report.industryStatus === "REJECTED"
     ).length;
 
   return (

@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
       location,
       contactPerson,
       contactPhone,
+      contactEmail,
     } = await req.json();
 
     const companyCount =
@@ -38,6 +39,8 @@ export async function POST(req: NextRequest) {
           location,
           contactPerson,
           contactPhone,
+          contactEmail,
+          approved: true,
         },
       });
 

@@ -7,9 +7,14 @@ type Report = {
   title: string;
   reportType: string;
   periodNumber: number | null;
-  status: string;
+
+  industryStatus: string;
+  academicStatus: string;
+
+  industryRemarks: string | null;
+  academicRemarks: string | null;
+
   submittedAt: string;
-  supervisorRemarks: string | null;
 };
 
 export default function ReportFilter({
@@ -17,11 +22,34 @@ export default function ReportFilter({
 }: {
   reports: Report[];
 }) {
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
   const [status, setStatus] =
     useState("ALL");
+
+  function getOverallStatus(
+    report: Report
+  ) {
+    if (
+      report.industryStatus ===
+        "REJECTED" ||
+      report.academicStatus ===
+        "REJECTED"
+    ) {
+      return "REJECTED";
+    }
+
+    if (
+      report.industryStatus ===
+        "APPROVED" &&
+      report.academicStatus ===
+        "APPROVED"
+    ) {
+      return "APPROVED";
+    }
+
+    return "PENDING";
+  }
 
   const filtered =
     reports.filter((report) => {
@@ -32,10 +60,13 @@ export default function ReportFilter({
             search.toLowerCase()
           );
 
+      const overallStatus =
+        getOverallStatus(report);
+
       const matchesStatus =
         status === "ALL"
           ? true
-          : report.status ===
+          : overallStatus ===
             status;
 
       return (
@@ -74,7 +105,6 @@ export default function ReportFilter({
   return (
     <>
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
-
         <div className="flex-1">
           <label
             htmlFor="report-search"
@@ -132,7 +162,6 @@ export default function ReportFilter({
             </option>
           </select>
         </div>
-
       </div>
 
       {filtered.length === 0 ? (
@@ -148,7 +177,6 @@ export default function ReportFilter({
         </div>
       ) : (
         <div className="space-y-4">
-
           {filtered.map(
             (report) => (
               <div
@@ -156,9 +184,7 @@ export default function ReportFilter({
                 className="rounded-3xl bg-white p-6 shadow-md transition hover:shadow-lg"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
                   <div>
-
                     <h3 className="text-xl font-bold text-gray-800">
                       {report.title}
                     </h3>
@@ -166,19 +192,18 @@ export default function ReportFilter({
                     <p className="mt-2 text-sm text-gray-500">
                       {report.reportType}
                     </p>
-
                   </div>
 
                   <div>
                     {getStatusBadge(
-                      report.status
+                      getOverallStatus(
+                        report
+                      )
                     )}
                   </div>
-
                 </div>
 
-                <div className="mt-5 grid gap-3 text-sm text-gray-700 md:grid-cols-3">
-
+                <div className="mt-5 grid gap-3 text-sm text-gray-700 md:grid-cols-2">
                   <p>
                     <strong>
                       Period:
@@ -193,22 +218,26 @@ export default function ReportFilter({
                     </strong>{" "}
                     {new Date(
                       report.submittedAt
-                    ).toLocaleDateString()}
+                    ).toLocaleDateString("en-GB")}
                   </p>
 
                   <p>
                     <strong>
-                      Remarks:
+                      Industry Remarks:
                     </strong>{" "}
-                    {report.supervisorRemarks ??
-                      "No remarks"}
+                    {report.industryRemarks?.trim() || "No remarks"}
                   </p>
 
+                  <p>
+                    <strong>
+                      Academic Remarks:
+                    </strong>{" "}
+                    {report.academicRemarks?.trim() || "No remarks"}
+                  </p>
                 </div>
               </div>
             )
           )}
-
         </div>
       )}
     </>

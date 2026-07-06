@@ -42,8 +42,23 @@ export default async function ReviewReportPage({
           </p>
 
           <p>
-            <strong>Status:</strong>{" "}
-            {report.status}
+            <strong>Industry Status:</strong>{" "}
+            {report.industryStatus}
+          </p>
+
+          <p>
+            <strong>Academic Status:</strong>{" "}
+            {report.academicStatus}
+          </p>
+
+          <p>
+            <strong>Industry Remarks:</strong>{" "}
+            {report.industryRemarks || "No remarks"}
+          </p>
+
+          <p>
+            <strong>Academic Remarks:</strong>{" "}
+            {report.academicRemarks || "No remarks"}
           </p>
 
           <p>
@@ -64,9 +79,23 @@ export default async function ReviewReportPage({
           </p>
         </div>
 
-        <ReviewActions
+        {report.industryStatus === "PENDING" ? (
+          <ReviewActions
             reportId={report.id}
-        />
+            initialRemarks={report.industryRemarks ?? ""}
+          />
+        ) : (
+          <div className="rounded-xl border border-green-200 bg-green-50 p-6">
+            <h2 className="text-lg font-semibold text-green-700">
+              Review Completed
+            </h2>
+
+            <p className="mt-2 text-gray-700">
+              This report has already been{" "}
+              <strong>{report.industryStatus}</strong>.
+            </p>
+          </div>
+        )}
       </div>
     </main>
   );

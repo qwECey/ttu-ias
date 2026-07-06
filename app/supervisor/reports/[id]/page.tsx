@@ -1,104 +1,166 @@
-import { notFound } from "next/navigation";
-
 import { prisma } from "@/lib/prisma";
-
+import { notFound } from "next/navigation";
 import RemarksForm from "./remarks-form";
 
-export default async function ReportPage({
+export default async function ReportDetailsPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 }) {
   const { id } = await params;
 
-  const report =
-    await prisma.report.findUnique({
-      where: {
-        id,
+  const report = await prisma.report.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      student: {
+        include: {
+          company: true,
+        },
       },
-
-      include: {
-        student: true,
-      },
-    });
+    },
+  });
 
   if (!report) {
     notFound();
   }
 
+  // keep the rest of your code exactly the same...
+
   return (
     <main className="min-h-screen bg-gray-100 p-6">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl space-y-6">
 
-        <div className="rounded-2xl bg-white p-8 shadow-sm">
+        <div className="rounded-3xl bg-white p-8 shadow">
 
-          <h1 className="mb-6 text-3xl font-bold">
+          <h1 className="text-3xl font-bold">
             {report.title}
           </h1>
 
-          <div className="mb-6 space-y-2">
+          <p className="mt-2 text-gray-500">
+            {report.reportType}
+          </p>
+
+        </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow">
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Student Information
+          </h2>
+
+          <div className="space-y-2">
 
             <p>
-              <strong>Student:</strong>{" "}
+              <strong>Name:</strong>{" "}
               {report.student.fullName}
             </p>
 
             <p>
-              <strong>Type:</strong>{" "}
-              {report.reportType}
+              <strong>Student ID:</strong>{" "}
+              {report.student.studentId}
             </p>
 
             <p>
-              <strong>Status:</strong>{" "}
-              {report.status}
+              <strong>Programme:</strong>{" "}
+              {report.student.programme}
+            </p>
+
+            <p>
+              <strong>Company:</strong>{" "}
+              {report.student.company?.companyName ?? "Not Assigned"}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow">
+
+          <h2 className="mb-6 text-xl font-semibold">
+            Report Details
+          </h2>
+
+          <div className="space-y-3">
+
+            <p>
+              <strong>Industry Status:</strong>{" "}
+              {report.industryStatus}
+            </p>
+
+            <p>
+              <strong>Academic Status:</strong>{" "}
+              {report.academicStatus}
+            </p>
+
+            <p>
+              <strong>Industry Remarks:</strong>{" "}
+              {report.industryRemarks || "No remarks"}
+            </p>
+
+            <p>
+              <strong>Academic Remarks:</strong>{" "}
+              {report.academicRemarks || "No remarks"}
             </p>
 
             <p>
               <strong>Submitted:</strong>{" "}
               {new Date(
                 report.submittedAt
-              ).toLocaleString()}
+              ).toLocaleDateString("en-GB")}
             </p>
 
-            {report.periodNumber && (
-              <p>
-                <strong>Period:</strong>{" "}
-                {report.periodNumber}
-              </p>
-            )}
-
           </div>
-
-          <div className="rounded-xl border bg-gray-50 p-6">
-            <h2 className="mb-4 text-xl font-semibold">
-              Report Content
-            </h2>
-
-            <div className="whitespace-pre-wrap">
-              {report.content}
-            </div>
-          </div>
-
-          {report.fileUrl && (
-            <div className="mt-6">
-              <a
-                href={report.fileUrl}
-                target="_blank"
-                className="rounded bg-blue-600 px-4 py-2 text-white"
-              >
-                View Attachment
-              </a>
-            </div>
-          )}
-
-          <RemarksForm
-            reportId={report.id}
-            initialRemarks={
-                report.supervisorRemarks ?? ""
-            }
-            />
 
         </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow">
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Report Content
+          </h2>
+
+          <div className="whitespace-pre-wrap rounded-xl border p-6">
+            {report.content}
+          </div>
+
+        </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow">
+
+          {report.academicStatus === "PENDING" ? (
+
+            <RemarksForm
+              reportId={report.id}
+              initialRemarks={
+                report.academicRemarks ?? ""
+              }
+            />
+
+          ) : (
+
+            <div className="rounded-xl border border-green-200 bg-green-50 p-6">
+
+              <h2 className="text-lg font-semibold text-green-700">
+                Review Completed
+              </h2>
+
+              <p className="mt-2 text-gray-700">
+                This report has already been{" "}
+                <strong>
+                  {report.academicStatus}
+                </strong>.
+              </p>
+
+            </div>
+
+          )}
+
+        </div>
+
       </div>
     </main>
   );

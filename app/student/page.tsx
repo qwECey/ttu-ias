@@ -2,6 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import Image from "next/image";
+import { getOrCreateActiveInternship } from "@/lib/internship";
+// import { Link } from "lucide-react";
+import Link from "next/link";
 
 export default async function StudentPage() {
   const session =
@@ -23,7 +26,6 @@ export default async function StudentPage() {
         userId: session.user.id,
       },
       include: {
-        company: true,
         supervisor: true,
         industrySupervisor: true,
       },
@@ -39,10 +41,69 @@ export default async function StudentPage() {
     );
   }
 
-  // const statusColor =
-  //   student.placementStatus === "PLACED"
-  //     ? "bg-green-100 text-green-700"
-  //     : "bg-yellow-100 text-yellow-700";
+  const internship =
+    await getOrCreateActiveInternship(
+      student.id,
+      {
+        level: student.level,
+      }
+    );
+
+  const currentInternship =
+    await prisma.internship.findUnique({
+      where: {
+        id: internship.id,
+      },
+      include: {
+        company: true,
+      },
+    });
+
+  if (!currentInternship) {
+    return (
+      <main className="p-8">
+        <div className="rounded-3xl bg-white p-6 shadow-md">
+          Internship not found.
+        </div>
+      </main>
+    );
+  }
+
+  const placementRequest =
+    await prisma.placementRequest.findFirst({
+      where: {
+        studentId: student.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+  const reports =
+    await prisma.report.findMany({
+      where: {
+        studentId: student.id,
+      },
+    });
+  
+  const totalReports = reports.length;
+
+  const approvedReports = reports.filter(
+    (r) =>
+      r.industryStatus === "APPROVED" &&
+      r.academicStatus === "APPROVED"
+  ).length;
+
+  const rejectedReports = reports.filter(
+    (r) =>
+      r.industryStatus === "REJECTED" ||
+      r.academicStatus === "REJECTED"
+  ).length;
+
+  const pendingReports =
+    reports.length -
+    approvedReports -
+    rejectedReports; 
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
@@ -58,6 +119,7 @@ export default async function StudentPage() {
                   src="/images/ttu_campus.jpg"
                   alt="TTU Campus"
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                   priority
                 />
@@ -87,11 +149,19 @@ export default async function StudentPage() {
                     </span>
 
                     <span className="ml-2">
-                      {student.placementStatus}
+                      {currentInternship.placementStatus}
                     </span>
                   </div>
 
-                  {student.placementStatus !== "PLACED" && (
+                  {currentInternship.placementStatus === "PLACED" ? null : placementRequest?.status === "PENDING" ? (
+                    <div className="rounded-xl bg-yellow-100 px-5 py-3 font-semibold text-yellow-700">
+                      Placement Request Pending
+                    </div>
+                  ) : placementRequest?.status === "APPROVED" ? (
+                    <div className="rounded-xl bg-green-100 px-5 py-3 font-semibold text-green-700">
+                      Placement Approved
+                    </div>
+                  ) : (
                     <a
                       href="/student/placement-request"
                       className="rounded-xl bg-yellow-500 px-5 py-3 font-semibold text-white shadow hover:bg-yellow-600"
@@ -121,6 +191,332 @@ export default async function StudentPage() {
                 Manage your placement, reports and supervisors.
               </p>
           </div>
+
+        {/* Placement Request Status */}
+        {placementRequest && (
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+
+            <h2 className="mb-4 text-xl font-semibold">
+              Placement Request Status
+            </h2>
+
+            <p>
+              <strong>Status:</strong>{" "}
+              {placementRequest.status}
+            </p>
+
+            {placementRequest.status === "REJECTED" && (
+              <div className="mt-3 rounded-xl bg-red-50 p-4 text-red-700">
+                <strong>Remarks:</strong>{" "}
+                {placementRequest.liaisonRemarks ||
+                  "No remarks provided"}
+              </div>
+            )}
+
+            {placementRequest.status === "APPROVED" && (
+              <div className="mt-3 rounded-xl bg-green-50 p-4 text-green-700">
+                Your placement has been approved.
+              </div>
+            )}
+
+            {placementRequest.status === "PENDING" && (
+              <div className="mt-3 rounded-xl bg-yellow-50 p-4 text-yellow-700">
+                Your request is under review.
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* Internship Journey */}
+
+        <div className="rounded-3xl bg-white p-6 shadow-md">
+
+          <h2 className="mb-6 text-xl font-semibold">
+            Your Internship Journey
+          </h2>
+
+          <div className="space-y-5">
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+                <h3 className="font-semibold">
+                  1. Student Registration
+                </h3>
+
+                <p className="text-sm text-gray-500">
+                  Your internship account has been created.
+                </p>
+              </div>
+
+              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                ✓ Completed
+              </span>
+
+            </div>
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  2. Placement Request
+                </h3>
+
+                <p className="text-sm text-gray-500">
+
+                  {placementRequest
+                    ? "Placement request submitted."
+                    : "Choose a company to begin your attachment."}
+
+                </p>
+
+              </div>
+
+              {placementRequest ? (
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                  ✓ Completed
+                </span>
+
+              ) : (
+
+                <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                  Pending
+                </span>
+
+              )}
+
+            </div>
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  3. Placement Approval
+                </h3>
+
+                <p className="text-sm text-gray-500">
+
+                  {currentInternship.placementStatus === "PLACED"
+                    ? "Your placement has been approved."
+                    : "Awaiting approval from the Liaison Office."}
+
+                </p>
+
+              </div>
+
+              {currentInternship.placementStatus === "PLACED" ? (
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                  ✓ Approved
+                </span>
+
+              ) : (
+
+                <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                  Waiting
+                </span>
+
+              )}
+
+            </div>
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  4. Academic Supervisor
+                </h3>
+
+                <p className="text-sm text-gray-500">
+
+                  {student.supervisor
+                    ? student.supervisor.fullName
+                    : "Supervisor not yet assigned."}
+
+                </p>
+
+              </div>
+
+              {student.supervisor ? (
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                  ✓ Assigned
+                </span>
+
+              ) : (
+
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+                  Waiting
+                </span>
+
+              )}
+
+            </div>
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  5. Industry Supervisor
+                </h3>
+
+                <p className="text-sm text-gray-500">
+
+                  {student.industrySupervisor
+                    ? student.industrySupervisor.fullName
+                    : "Waiting for company assignment."}
+
+                </p>
+
+              </div>
+
+              {student.industrySupervisor ? (
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                  ✓ Assigned
+                </span>
+
+              ) : (
+
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+                  Waiting
+                </span>
+
+              )}
+
+            </div>
+
+            <div className="flex items-center justify-between border-b pb-3">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  6. Report Submission
+                </h3>
+
+                <p className="text-sm text-gray-500">
+
+                  {totalReports > 0
+                    ? `${totalReports} report(s) submitted`
+                    : "No reports submitted yet."}
+
+                </p>
+
+              </div>
+
+              {totalReports > 0 ? (
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                  In Progress
+                </span>
+
+              ) : (
+
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+                  Waiting
+                </span>
+
+              )}
+
+            </div>
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <h3 className="font-semibold">
+                  7. Final Assessment
+                </h3>
+
+                <p className="text-sm text-gray-500">
+                  Assessment will be available after your internship is completed.
+                </p>
+
+              </div>
+
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+                Locked
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Digital Logbook */}
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+
+            <h2 className="mb-4 text-xl font-semibold">
+              Digital Logbook
+            </h2>
+
+            <p className="mb-4 text-gray-600">
+              Record your weekly internship
+              activities and track supervisor
+              certification.
+            </p>
+
+            <Link
+              href="/student/logbook"
+              className="inline-block rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+            >
+              Open Logbook
+            </Link>
+
+          </div>
+
+        {/* Report Statistics */}
+        <div className="grid gap-6 md:grid-cols-4">
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">
+              Total Reports
+            </p>
+
+            <h3 className="mt-2 text-3xl font-bold text-blue-600">
+              {totalReports}
+            </h3>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">
+              Approved
+            </p>
+
+            <h3 className="mt-2 text-3xl font-bold text-green-600">
+              {approvedReports}
+            </h3>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">
+              Pending
+            </p>
+
+            <h3 className="mt-2 text-3xl font-bold text-yellow-600">
+              {pendingReports}
+            </h3>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">
+              Rejected
+            </p>
+
+            <h3 className="mt-2 text-3xl font-bold text-red-600">
+              {rejectedReports}
+            </h3>
+          </div>
+
+        </div>
 
         {/* Info Grid */}
         <div className="grid gap-6 md:grid-cols-3">
@@ -155,39 +551,65 @@ export default async function StudentPage() {
           </div>
 
           {/* Company Info */}
-          <div className="space-y-3">
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <h2 className="mb-4 text-xl font-semibold">
+              Company Information
+            </h2>
 
-              <p>
-                <strong>Company:</strong>{" "}
-                {student.company?.companyName ??
-                  "Not Assigned"}
-              </p>
+            {currentInternship.company ? (
 
-              <p>
-                <strong>Location:</strong>{" "}
-                {student.company?.location ??
-                  "N/A"}
-              </p>
+              <div className="space-y-3">
 
-              <p>
-                <strong>Contact Person:</strong>{" "}
-                {student.company?.contactPerson ??
-                  "N/A"}
-              </p>
+                <p>
+                  <strong>Company:</strong>{" "}
+                  {currentInternship.company.companyName}
+                </p>
 
-              <p>
-                <strong>Phone:</strong>{" "}
-                {student.company?.contactPhone ??
-                  "N/A"}
-              </p>
+                <p>
+                  <strong>Location:</strong>{" "}
+                  {currentInternship.company.location}
+                </p>
 
-              <p>
-                <strong>Email:</strong>{" "}
-                {student.company?.contactEmail ??
-                  "N/A"}
-              </p>
+                <p>
+                  <strong>Contact Person:</strong>{" "}
+                  {currentInternship.company.contactPerson}
+                </p>
 
-            </div>
+                <p>
+                  <strong>Phone:</strong>{" "}
+                  {currentInternship.company.contactPhone}
+                </p>
+
+                <p>
+                  <strong>Email:</strong>{" "}
+                  {currentInternship.company.contactEmail ?? "N/A"}
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="space-y-4">
+
+                <p className="text-gray-600">
+                  You haven`t been assigned to a company yet.
+                </p>
+
+                <p className="text-sm text-gray-500">
+                  Browse approved companies or submit your own company for verification to begin your internship placement.
+                </p>
+
+                <a
+                  href="/student/placement-request"
+                  className="inline-block rounded-lg bg-yellow-500 px-5 py-2 font-semibold text-white hover:bg-yellow-600"
+                >
+                  Browse Companies
+                </a>
+
+              </div>
+
+            )}
+          </div>
 
           {/* Reports */}
           <div className="rounded-3xl bg-white p-6 shadow-md">
@@ -236,7 +658,7 @@ export default async function StudentPage() {
             </div>
           ) : (
             <p className="text-gray-500">
-              No supervisor assigned.
+              An Academic Supervisor will be assigned after your placement has been approved.
             </p>
           )}
         </div>
@@ -267,7 +689,7 @@ export default async function StudentPage() {
             </div>
           ) : (
             <p className="text-gray-500">
-              No industry supervisor assigned.
+              Your company will assign an Industry Supervisor after your placement has been confirmed.
             </p>
           )}
         </div>

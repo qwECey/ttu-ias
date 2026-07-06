@@ -5,80 +5,142 @@ import { UserRole } from "@/lib/generated/prisma/enums";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  {
+    params,
+  }: {
+    params: Promise<{ id: string }>;
+  }
 ) {
   try {
     const { id } = await params;
 
     const request =
-  await prisma.placementRequest.findUnique({
-    where: {
-      id,
-    },
-  });
-
-if (!request) {
-  return NextResponse.json(
-    {
-      success: false,
-      message: "Request not found",
-    },
-    {
-      status: 404,
-    }
-  );
-}
-
-if (request.status === "APPROVED") {
-  return NextResponse.json(
-    {
-      success: false,
-      message:
-        "Request already approved",
-    },
-    {
-      status: 400,
-    }
-  );
-}
-
-    const companyCount =
-      await prisma.company.count();
-
-    const loginId =
-      `COM${String(companyCount + 1).padStart(3, "0")}`;
-
-    const password = "password123";
-
-    const hashedPassword =
-      await bcrypt.hash(password, 10);
-
-    const user =
-      await prisma.user.create({
-        data: {
-          loginId,
-          email: request.contactEmail,
-          password: hashedPassword,
-          role: UserRole.COMPANY,
+      await prisma.placementRequest.findUnique({
+        where: {
+          id,
         },
       });
 
-    const company =
-      await prisma.company.create({
-        data: {
-          userId: user.id,
-          companyName: request.companyName,
-          location: request.location,
-          contactPerson: request.contactPerson,
-          contactPhone: request.contactPhone,
-          contactEmail: request.contactEmail,
-          approved: true,
+    if (!request) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Request not found",
         },
-      });
+        {
+          status: 404,
+        }
+      );
+    }
 
-    await prisma.student.update({
+    const internship =
+      request.internshipId
+        ? await prisma.internship.findUnique({
+            where: {
+              id: request.internshipId,
+            },
+          })
+        : null;
+
+    if (!internship) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Internship not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    if (request.status === "APPROVED") {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Request already approved",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    let company;
+
+      if (request.companyId) {
+        // Student selected an existing company
+        company = await prisma.company.findUnique({
+          where: {
+            id: request.companyId,
+          },
+        });
+
+        if (!company) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: "Selected company not found.",
+            },
+            {
+              status: 404,
+            }
+          );
+        }
+      } else {
+        // Student registered a new company
+
+        if (!request.contactEmail) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: "Placement request has no contact email.",
+            },
+            {
+              status: 400,
+            }
+          );
+        }
+
+        const companyCount =
+          await prisma.company.count();
+
+        const loginId =
+          `COMP${String(companyCount + 1).padStart(3, "0")}`;
+
+        const password = "password123";
+
+        const hashedPassword =
+          await bcrypt.hash(password, 10);
+
+        const user =
+          await prisma.user.create({
+            data: {
+              loginId,
+              email: request.contactEmail,
+              password: hashedPassword,
+              role: UserRole.COMPANY,
+            },
+          });
+
+        company =
+          await prisma.company.create({
+            data: {
+              userId: user.id,
+              companyName: request.companyName,
+              location: request.location,
+              contactPerson: request.contactPerson,
+              contactPhone: request.contactPhone,
+              contactEmail: request.contactEmail,
+              approved: true,
+            },
+          });
+      }
+
+    await prisma.internship.update({
       where: {
-        id: request.studentId,
+        id: internship.id,
       },
       data: {
         companyId: company.id,
@@ -104,10 +166,6 @@ if (request.status === "APPROVED") {
 
     return NextResponse.json({
       success: true,
-      credentials: {
-        loginId,
-        password,
-      },
     });
   } catch (error) {
     console.error(error);

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 
 export default async function SupervisorPage() {
   const session =
@@ -26,18 +27,27 @@ export default async function SupervisorPage() {
       },
 
       include: {
-        students: {
-          include: {
-            reports: {
-              orderBy: {
-                submittedAt:
-                  "desc",
+  internships: {
+    where: {
+      status: "ACTIVE",
+    },
+
+        include: {
+          student: {
+            include: {
+              reports: {
+                orderBy: {
+                  submittedAt: "desc",
+                },
               },
             },
           },
+
+          company: true,
         },
       },
-    });
+    },
+   });
 
   if (!supervisor) {
     return (
@@ -49,45 +59,76 @@ export default async function SupervisorPage() {
   }
 
   const totalStudents =
-    supervisor.students.length;
+    supervisor.internships.length;
 
   const totalReports =
-    supervisor.students.reduce(
-      (total, student) =>
+    supervisor.internships.reduce(
+      (total, internship) =>
         total +
-        student.reports
-          .length,
+        internship.student.reports.length,
       0
     );
 
   const pendingReports =
-    supervisor.students.flatMap(
-      (student) =>
-        student.reports
-    ).filter(
-      (report) =>
-        report.status ===
-        "PENDING"
-    ).length;
+    supervisor.internships
+      .flatMap(
+        (internship) =>
+          internship.student.reports
+      )
+      .filter(
+        (report) =>
+          report.academicStatus ===
+          "PENDING"
+      ).length;
 
   const approvedReports =
-    supervisor.students.flatMap(
-      (student) =>
-        student.reports
-    ).filter(
-      (report) =>
-        report.status ===
-        "APPROVED"
-    ).length;
+    supervisor.internships
+      .flatMap(
+        (internship) =>
+          internship.student.reports
+      )
+      .filter(
+        (report) =>
+          report.academicStatus ===
+          "APPROVED"
+      ).length;
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-7xl">
 
-        <h1 className="mb-8 text-3xl font-bold">
-          Welcome,{" "}
-          {supervisor.fullName}
-        </h1>
+        <div className="relative mb-8 overflow-hidden rounded-3xl shadow-lg">
+
+          <div className="absolute inset-0">
+            <Image
+              src="/images/ttu_campus.jpg"
+              alt="TTU Campus"
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          <div className="absolute inset-0 bg-black/60" />
+
+          <div className="relative z-10 p-10 text-white">
+
+            <h1 className="text-4xl font-bold">
+              Welcome Back,
+            </h1>
+
+            <h2 className="mt-2 text-3xl font-semibold">
+              {supervisor.fullName}
+            </h2>
+
+            <p className="mt-3 text-lg text-gray-200">
+              Academic Supervisor Dashboard
+            </p>
+
+          </div>
+
+        </div>
 
         <div className="grid gap-6 md:grid-cols-4">
 
@@ -123,6 +164,68 @@ export default async function SupervisorPage() {
 
         <div className="mt-10">
           <h2 className="mb-4 text-2xl font-semibold">
+            Quick Actions
+          </h2>
+
+          <div className="grid gap-6 md:grid-cols-3">
+
+            <Link
+              href="/supervisor/reports"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Review Reports
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                Approve or reject reports.
+              </p>
+            </Link>
+
+            <Link
+              href="/supervisor/students"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                My Students
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                View assigned students.
+              </p>
+            </Link>
+
+            <Link
+              href="/supervisor/profile"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Profile
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                Update your information.
+              </p>
+            </Link>
+
+            <Link
+              href="/supervisor/logbook"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Review Logbooks
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                View and monitor students` weekly logbooks.
+              </p>
+            </Link>
+
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="mb-4 text-2xl font-semibold">
             Supervised Students
           </h2>
 
@@ -149,34 +252,34 @@ export default async function SupervisorPage() {
               </thead>
 
               <tbody>
-                {supervisor.students.map(
-                  (student) => (
+                {supervisor.internships.map(
+                  (internship) => (
                     <tr
                       key={
-                        student.id
+                        internship.id
                       }
                       className="border-t"
                     >
                       <td className="px-6 py-4">
                         {
-                          student.studentId
+                          internship.student.studentId
                         }
                       </td>
 
                       <td className="px-6 py-4">
                         {
-                          student.fullName
+                          internship.student.fullName
                         }
                       </td>
 
                       <td className="px-6 py-4">
                         {
-                          student.programme
+                          internship.student.programme
                         }
                       </td>
 
                       <td className="px-6 py-4">
-                        {student.companyId ??
+                        {internship.company?.companyName ??
                           "Not Assigned"}
                       </td>
                     </tr>
@@ -192,54 +295,66 @@ export default async function SupervisorPage() {
             Recent Reports
           </h2>
 
-          <div className="space-y-4">
-            {supervisor.students.flatMap(
-              (student) =>
-                student.reports.map(
-                  (report) => (
-                    <div
-                      key={
-                        report.id
-                      }
-                      className="rounded-xl bg-white p-4 shadow-sm"
+          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left">Student</th>
+                  <th className="px-6 py-4 text-left">Title</th>
+                  <th className="px-6 py-4 text-left">Type</th>
+                  <th className="px-6 py-4 text-left">Status</th>
+                  <th className="px-6 py-4 text-left">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {supervisor.internships.flatMap((internship) =>
+                  internship.student.reports.map((report) => (
+                    <tr
+                      key={report.id}
+                      className="border-t"
                     >
-                      <p>
-                        <strong>
-                          Student:
-                        </strong>{" "}
-                        {
-                          student.fullName
-                        }
-                      </p>
+                      <td className="px-6 py-4">
+                        {internship.student.fullName}
+                      </td>
 
-                      <p>
-                        <strong>
-                          Title:
-                        </strong>{" "}
-                        {
-                          report.title
-                        }
-                      </p>
+                      <td className="px-6 py-4">
+                        {report.title}
+                      </td>
 
-                      <p>
-                        <strong>
-                          Status:
-                        </strong>{" "}
-                        {
-                          report.status
-                        }
-                      </p>
+                      <td className="px-6 py-4">
+                        {report.reportType}
+                      </td>
 
-                      <Link
-                        href={`/supervisor/reports/${report.id}`}
-                        className="mt-3 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                      >
-                        View Report
-                      </Link>
-                    </div>
-                  )
-                )
-            )}
+                      <td className="px-6 py-4">
+                        {report.academicStatus === "APPROVED" ? (
+                          <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                            APPROVED
+                          </span>
+                        ) : report.academicStatus === "REJECTED" ? (
+                          <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
+                            REJECTED
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
+                            PENDING
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <Link
+                          href={`/supervisor/reports/${report.id}`}
+                          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                        >
+                          Review
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 

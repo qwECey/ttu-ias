@@ -12,9 +12,9 @@ export async function POST(
     const formData =
       await req.formData();
 
-    const studentId =
+    const internshipId =
       formData.get(
-        "studentId"
+        "internshipId"
       ) as string;
 
     const supervisorId =
@@ -22,9 +22,9 @@ export async function POST(
         "supervisorId"
       ) as string;
 
-    await prisma.student.update({
+    await prisma.internship.update({
       where: {
-        id: studentId,
+        id: internshipId,
       },
       data: {
         supervisorId,

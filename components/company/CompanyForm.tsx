@@ -18,6 +18,9 @@ export default function CompanyForm() {
   const [contactPhone, setContactPhone] =
     useState("");
 
+  const [contactEmail, setContactEmail] =
+  useState("");
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -37,6 +40,7 @@ export default function CompanyForm() {
             location,
             contactPerson,
             contactPhone,
+            contactEmail,
           }),
         }
       );
@@ -63,6 +67,7 @@ Password: ${data.loginId}`
       setLocation("");
       setContactPerson("");
       setContactPhone("");
+      setContactEmail("");
 
       router.push("/admin/companies");
       router.refresh();
@@ -121,6 +126,19 @@ Password: ${data.loginId}`
         value={contactPhone}
         onChange={(e) =>
           setContactPhone(
+            e.target.value
+          )
+        }
+        className="w-full rounded-lg border p-3"
+        required
+      />
+
+      <input
+        type="email"
+        placeholder="Contact Email"
+        value={contactEmail}
+        onChange={(e) =>
+          setContactEmail(
             e.target.value
           )
         }

@@ -15,7 +15,7 @@ export default function IndustrySupervisorLayout({
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-white p-2">
               <Image
-                src="/images/ttu-logo.png"
+                src="/images/ttu_logo.png"
                 alt="TTU Logo"
                 width={40}
                 height={40}
@@ -56,12 +56,31 @@ export default function IndustrySupervisorLayout({
 
             <li>
               <Link
+                href="/industry-supervisor/logbook"
+                className="block rounded-lg px-4 py-3 hover:bg-slate-800"
+              >
+                Weekly Logbooks
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 href="/industry-supervisor/reports"
                 className="block rounded-lg px-4 py-3 hover:bg-slate-800"
               >
                 Reports
               </Link>
             </li>
+
+            <li>
+              <Link
+                href="/industry-supervisor/profile"
+                className="block rounded-lg px-4 py-3 hover:bg-slate-800"
+              >
+                Profile
+              </Link>
+            </li>
+
           </ul>
         </nav>
       </aside>

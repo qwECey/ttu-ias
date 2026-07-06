@@ -24,7 +24,11 @@ export default function AdminSidebar() {
       href: "/admin/supervisors",
     },
     {
-      name: "Industry Supervisor Assign",
+      name: "Assign Supervisor",
+      href: "/admin/supervisors/assign",
+    },
+    {
+      name: "Assign Industry Supervisor",
       href: "/admin/industry-supervisors/assign",
     },
     {
@@ -46,7 +50,7 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-slate-900 text-white">
+    <aside className="flex min-h-screen w-64 flex-col bg-slate-900 text-white">
       <div className="border-b border-slate-700 p-6">
         <h2 className="text-xl font-bold">
           TTU IAS

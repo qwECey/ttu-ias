@@ -1,10 +1,22 @@
 import { prisma } from "@/lib/prisma";
 
 export default async function AssignPage() {
-  const students =
-    await prisma.student.findMany({
+  const internships =
+    await prisma.internship.findMany({
+      where: {
+        status: "ACTIVE",
+        placementStatus: "PLACED",
+      },
+
+      include: {
+        student: true,
+        company: true,
+      },
+
       orderBy: {
-        fullName: "asc",
+        student: {
+          fullName: "asc",
+        },
       },
     });
 
@@ -29,24 +41,26 @@ export default async function AssignPage() {
         >
           <div>
            <label
-                htmlFor="studentId"
+                htmlFor="internshipId"
                 className="mb-2 block"
                 >
-                Student
+                Student Placement
                 </label>
 
                 <select
-                id="studentId"
-                name="studentId"
+                  id="internshipId"
+                  name="internshipId"
                 className="w-full rounded-lg border p-3"
             >
-              {students.map(
-                (student) => (
+              {internships.map(
+                (internship) => (
                   <option
-                    key={student.id}
-                    value={student.id}
+                    key={internship.id}
+                    value={internship.id}
                   >
-                    {student.fullName}
+                    {internship.student.fullName}
+                    {" — "}
+                    {internship.company?.companyName}
                   </option>
                 )
               )}

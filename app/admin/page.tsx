@@ -8,6 +8,8 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import StatCard from "@/components/admin/StatCard";
 
+import Link from "next/link";
+
 export default async function AdminPage() {
   const session =
     await getServerSession(
@@ -71,12 +73,12 @@ export default async function AdminPage() {
               </p>
 
               <div className="mt-6">
-                <a
+                <Link
                   href="/admin/placement-requests"
                   className="inline-flex rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50"
                 >
                   Review Placement Requests
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -129,26 +131,34 @@ export default async function AdminPage() {
                 </h2>
 
                 <div className="mt-4 flex flex-col gap-3">
-                  <a
+                  <Link
                     href="/admin/students"
                     className="rounded-xl border p-3 hover:bg-gray-50"
                   >
                     Manage Students
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href="/admin/companies"
                     className="rounded-xl border p-3 hover:bg-gray-50"
                   >
                     Manage Companies
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href="/admin/placements"
                     className="rounded-xl border p-3 hover:bg-gray-50"
                   >
                     Manage Placements
-                  </a>
+                  </Link>
+
+                  <Link
+                    href="/admin/supervisors/assign"
+                    className="rounded-xl border p-3 hover:bg-gray-50"
+                  >
+                    Assign Academic Supervisors
+                  </Link>
+
                 </div>
               </div>
 

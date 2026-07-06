@@ -6,14 +6,36 @@ type Report = {
   id: string;
   title: string;
   reportType: string;
-  status: string;
   submittedAt: string;
-  supervisorRemarks: string | null;
+
+  industryStatus: string;
+  academicStatus: string;
+
+  industryRemarks: string | null;
+  academicRemarks: string | null;
 
   student: {
     fullName: string;
   };
 };
+
+function getOverallStatus(report: Report) {
+  if (
+    report.academicStatus === "REJECTED" ||
+    report.industryStatus === "REJECTED"
+  ) {
+    return "REJECTED";
+  }
+
+  if (
+    report.academicStatus === "APPROVED" &&
+    report.industryStatus === "APPROVED"
+  ) {
+    return "APPROVED";
+  }
+
+  return "PENDING";
+}
 
 export default function ReportFilter({
   reports,
@@ -43,7 +65,7 @@ export default function ReportFilter({
       const matchesStatus =
         status === "ALL"
           ? true
-          : report.status ===
+          : getOverallStatus(report) ===
             status;
 
       return (
@@ -109,6 +131,7 @@ export default function ReportFilter({
             Rejected
           </option>
         </select>
+
       </div>
 
       <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
@@ -166,19 +189,21 @@ export default function ReportFilter({
                   </td>
 
                   <td className="px-4 py-3">
-                      {report.status === "APPROVED" ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                          APPROVED
-                        </span>
-                      ) : report.status === "REJECTED" ? (
-                        <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
-                          REJECTED
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
-                          PENDING
-                        </span>
-                      )}
+                    {getOverallStatus(report) ===
+                    "APPROVED" ? (
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                        APPROVED
+                      </span>
+                    ) : getOverallStatus(report) ===
+                      "REJECTED" ? (
+                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                        REJECTED
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                        PENDING
+                      </span>
+                    )}
                   </td>
 
                   <td className="px-4 py-3">
@@ -190,7 +215,8 @@ export default function ReportFilter({
                   </td>
 
                   <td className="px-4 py-3">
-                    {report.supervisorRemarks ??
+                    {report.academicRemarks ??
+                      report.industryRemarks ??
                       "-"}
                   </td>
                 </tr>

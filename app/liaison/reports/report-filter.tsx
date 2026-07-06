@@ -6,10 +6,29 @@ type Report = {
   id: string;
   title: string;
   reportType: string;
-  status: string;
+  academicStatus: string;
+  industryStatus: string;
   submittedAt: string;
   studentName: string;
 };
+
+function getOverallStatus(report: Report) {
+  if (
+    report.academicStatus === "REJECTED" ||
+    report.industryStatus === "REJECTED"
+  ) {
+    return "REJECTED";
+  }
+
+  if (
+    report.academicStatus === "APPROVED" &&
+    report.industryStatus === "APPROVED"
+  ) {
+    return "APPROVED";
+  }
+
+  return "PENDING";
+}
 
 export default function ReportFilter({
   reports,
@@ -39,7 +58,7 @@ export default function ReportFilter({
       const matchesStatus =
         status === "ALL"
           ? true
-          : report.status ===
+          : getOverallStatus(report) ===
             status;
 
       return (
@@ -73,23 +92,22 @@ export default function ReportFilter({
         />
 
         <label
-            htmlFor="liaison-status-filter"
-            className="sr-only"
-            >
-            Filter reports by status
-            </label>
-
-            <select
-            id="liaison-status-filter"
-            value={status}
-            onChange={(e) =>
-                setStatus(
-                e.target.value
-                )
-            }
-            className="rounded border px-4 py-2"
+          htmlFor="liaison-status-filter"
+          className="sr-only"
         >
-            
+          Filter reports by status
+        </label>
+
+        <select
+          id="liaison-status-filter"
+          value={status}
+          onChange={(e) =>
+            setStatus(
+              e.target.value
+            )
+          }
+          className="rounded border px-4 py-2"
+        >
           <option value="ALL">
             All
           </option>
@@ -160,13 +178,17 @@ export default function ReportFilter({
                   </td>
 
                   <td className="px-6 py-4">
-                    {report.status}
+                    {getOverallStatus(
+                      report
+                    )}
                   </td>
 
                   <td className="px-6 py-4">
                     {new Date(
                       report.submittedAt
-                    ).toLocaleDateString()}
+                    ).toLocaleDateString(
+                      "en-GB"
+                    )}
                   </td>
                 </tr>
               )
