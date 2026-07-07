@@ -56,6 +56,8 @@ export default async function StudentPage() {
       },
       include: {
         company: true,
+        supervisor: true,
+        industrySupervisor: true,
       },
     });
 
@@ -334,15 +336,15 @@ export default async function StudentPage() {
 
                 <p className="text-sm text-gray-500">
 
-                  {student.supervisor
-                    ? student.supervisor.fullName
+                  {currentInternship.supervisor
+                    ? currentInternship.supervisor.fullName
                     : "Supervisor not yet assigned."}
 
                 </p>
 
               </div>
 
-              {student.supervisor ? (
+              {currentInternship.supervisor ? (
 
                 <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                   ✓ Assigned
@@ -368,15 +370,15 @@ export default async function StudentPage() {
 
                 <p className="text-sm text-gray-500">
 
-                  {student.industrySupervisor
-                    ? student.industrySupervisor.fullName
+                  {currentInternship.industrySupervisor
+                    ? currentInternship.industrySupervisor.fullName
                     : "Waiting for company assignment."}
 
                 </p>
 
               </div>
 
-              {student.industrySupervisor ? (
+              {currentInternship.industrySupervisor ? (
 
                 <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                   ✓ Assigned
@@ -638,21 +640,21 @@ export default async function StudentPage() {
             Academic Supervisor
           </h2>
 
-          {student.supervisor ? (
+          {currentInternship.supervisor ? (
             <div className="space-y-3">
               <p>
                 <strong>Name:</strong>{" "}
-                {student.supervisor.fullName}
+                {currentInternship.supervisor.fullName}
               </p>
 
               <p>
                 <strong>Email:</strong>{" "}
-                {student.supervisor.email}
+                {currentInternship.supervisor.email}
               </p>
 
               <p>
                 <strong>Phone:</strong>{" "}
-                {student.supervisor.phone ??
+                {currentInternship.supervisor.phone ??
                   "N/A"}
               </p>
             </div>
@@ -669,21 +671,21 @@ export default async function StudentPage() {
             Industry Supervisor
           </h2>
 
-          {student.industrySupervisor ? (
+          {currentInternship.industrySupervisor ? (
             <div className="space-y-3">
               <p>
                 <strong>Name:</strong>{" "}
-                {student.industrySupervisor.fullName}
+                {currentInternship.industrySupervisor.fullName}
               </p>
 
               <p>
                 <strong>Email:</strong>{" "}
-                {student.industrySupervisor.email}
+                {currentInternship.industrySupervisor.email}
               </p>
 
               <p>
                 <strong>Phone:</strong>{" "}
-                {student.industrySupervisor.phone ??
+                {currentInternship.industrySupervisor.phone ??
                   "N/A"}
               </p>
             </div>

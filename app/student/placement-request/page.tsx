@@ -24,7 +24,7 @@ if (!student) {
   return <div>Student not found.</div>;
 }
 
-const internship =
+// const internship =
   await getOrCreateActiveInternship(
     student.id,
     {

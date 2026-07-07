@@ -6,15 +6,17 @@ export default async function LiaisonPage() {
     await prisma.student.count();
 
   const placedStudents =
-    await prisma.student.count({
+    await prisma.internship.count({
       where: {
+        status: "ACTIVE",
         placementStatus: "PLACED",
       },
     });
 
   const unplacedStudents =
-    await prisma.student.count({
+    await prisma.internship.count({
       where: {
+        status: "ACTIVE",
         placementStatus: "UNPLACED",
       },
     });
@@ -230,7 +232,7 @@ export default async function LiaisonPage() {
 
           <div className="grid gap-6 md:grid-cols-4">
 
-            <a
+            <Link
               href="/liaison/students"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
@@ -241,9 +243,9 @@ export default async function LiaisonPage() {
               <p className="mt-2 text-gray-600">
                 Manage students
               </p>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/liaison/companies"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
@@ -254,7 +256,7 @@ export default async function LiaisonPage() {
               <p className="mt-2 text-gray-600">
                 View companies
               </p>
-            </a>
+            </Link>
 
             <Link
               href="/liaison/placement-requests"
@@ -269,7 +271,7 @@ export default async function LiaisonPage() {
               </p>
             </Link>
 
-            <a
+            <Link
               href="/liaison/industry-supervisors"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
@@ -280,9 +282,9 @@ export default async function LiaisonPage() {
               <p className="mt-2 text-gray-600">
                 Manage supervisors
               </p>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/liaison/assignments"
               className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
             >
@@ -293,7 +295,7 @@ export default async function LiaisonPage() {
               <p className="mt-2 text-gray-600">
                 Assign supervisors
               </p>
-            </a>
+            </Link>
 
           </div>
           <div className="mt-10">

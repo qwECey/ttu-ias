@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 
+import Link from "next/link";
+
 export default async function CompanyDashboard() {
   const session =
     await getServerSession(authOptions);
@@ -135,7 +137,7 @@ export default async function CompanyDashboard() {
             />
 
             <ActionCard
-              href="/company/students"
+              href="/company/assignments"
               title="Students"
               description="View assigned students"
             />
@@ -146,11 +148,11 @@ export default async function CompanyDashboard() {
               description="Manage supervisors"
             />
 
-            <ActionCard
+            {/* <ActionCard
               href="/company/reports"
               title="Reports"
               description="Review student reports"
-            />
+            /> */}
 
           </div>
 
@@ -216,11 +218,10 @@ function ActionCard({
   description: string;
 }) {
   return (
-    <a
+    <Link
       href={href}
       className="rounded-3xl bg-white p-6 shadow transition hover:shadow-lg"
     >
-
       <h3 className="text-lg font-bold">
         {title}
       </h3>
@@ -228,7 +229,6 @@ function ActionCard({
       <p className="mt-2 text-gray-500">
         {description}
       </p>
-
-    </a>
+    </Link>
   );
 }

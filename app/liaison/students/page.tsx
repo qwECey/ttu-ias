@@ -2,16 +2,26 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 export default async function LiaisonStudentsPage() {
-  const students = await prisma.student.findMany({
-    include: {
-      company: true,
-      supervisor: true,
-      industrySupervisor: true,
-    },
-    orderBy: {
-      fullName: "asc",
-    },
-  });
+  const students =
+    await prisma.student.findMany({
+      include: {
+        internships: {
+          where: {
+            status: "ACTIVE",
+          },
+
+          include: {
+            company: true,
+            supervisor: true,
+            industrySupervisor: true,
+          },
+        },
+      },
+
+      orderBy: {
+        fullName: "asc",
+      },
+    });
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
@@ -78,7 +88,12 @@ export default async function LiaisonStudentsPage() {
 
             <tbody>
 
-              {students.map((student) => (
+              {students.map((student) => {
+
+                const internship =
+                  student.internships[0];
+
+                return (
 
                 <tr
                   key={student.id}
@@ -98,20 +113,20 @@ export default async function LiaisonStudentsPage() {
                   </td>
 
                   <td className="px-6 py-4">
-                    {student.company?.companyName ?? "Not Assigned"}
+                    {internship?.company?.companyName ?? "Not Assigned"}
                   </td>
 
                   <td className="px-6 py-4">
-                    {student.supervisor?.fullName ?? "Not Assigned"}
+                    {internship?.supervisor?.fullName ?? "Not Assigned"}
                   </td>
 
                   <td className="px-6 py-4">
-                    {student.industrySupervisor?.fullName ?? "Not Assigned"}
+                    {internship?.industrySupervisor?.fullName ?? "Not Assigned"}
                   </td>
 
                   <td className="px-6 py-4">
 
-                    {student.placementStatus === "PLACED" ? (
+                    {internship?.placementStatus === "PLACED" ? (
 
                       <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                         PLACED
@@ -129,7 +144,8 @@ export default async function LiaisonStudentsPage() {
 
                 </tr>
 
-              ))}
+              );
+            })}
 
             </tbody>
 

@@ -4,7 +4,16 @@ import Link from "next/link";
 export default async function LiaisonCompaniesPage() {
   const companies = await prisma.company.findMany({
     include: {
-      students: true,
+      internships: {
+        where: {
+          status: "ACTIVE",
+        },
+
+        include: {
+          student: true,
+        },
+      },
+
       industrySupervisors: true,
     },
     orderBy: {
@@ -99,7 +108,7 @@ export default async function LiaisonCompaniesPage() {
                   </td>
 
                   <td className="px-6 py-4">
-                    {company.students.length}
+                    {company.internships.length}
                   </td>
 
                   <td className="px-6 py-4">
