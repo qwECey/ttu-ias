@@ -382,8 +382,33 @@ model AssessmentSection {
 
   assessmentTemplate AssessmentTemplate @relation(fields: [assessmentTemplateId], references: [id], onDelete: Cascade)
 
-  // criteria AssessmentCriterion[]
+  criteria AssessmentCriterion[]
 
   @@unique([assessmentTemplateId, sortOrder])
   @@map("assessment_sections")
+}
+
+model AssessmentCriterion {
+  id String @id @default(cuid())
+
+  assessmentSectionId String
+
+  name String
+
+  description String?
+
+  maximumScore Decimal @db.Decimal(5, 2)
+
+  sortOrder Int
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  assessmentSection AssessmentSection @relation(fields: [assessmentSectionId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentSectionId, sortOrder])
+  @@map("assessment_criteria")
 }
