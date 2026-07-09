@@ -34,6 +34,14 @@ enum PlacementRequestStatus {
   REJECTED
 }
 
+enum AssessmentStatus {
+  DRAFT
+  IN_PROGRESS
+  SUBMITTED
+  VERIFIED
+  LOCKED
+}
+
 model User {
   id       String   @id @default(cuid())
   loginId  String   @unique
@@ -331,4 +339,26 @@ model Internship {
   logbookWeeks LogbookWeek[]
 
   @@map("internships")
+}
+
+model AssessmentTemplate {
+  id String @id @default(cuid())
+
+  name String
+
+  version Int @default(1)
+
+  description String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  // sections AssessmentSection[]
+
+  @@unique([name, version])
+  @@index([isActive])
+  @@map("assessment_templates")
 }
