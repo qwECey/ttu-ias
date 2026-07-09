@@ -338,6 +338,8 @@ model Internship {
 
   logbookWeeks LogbookWeek[]
 
+  assessments InternshipAssessment[]
+
   @@map("internships")
 }
 
@@ -357,6 +359,8 @@ model AssessmentTemplate {
   updatedAt DateTime @updatedAt
 
   sections AssessmentSection[]
+
+  assessments InternshipAssessment[]
 
   @@unique([name, version])
   @@index([isActive])
@@ -411,4 +415,33 @@ model AssessmentCriterion {
 
   @@unique([assessmentSectionId, sortOrder])
   @@map("assessment_criteria")
+}
+
+model InternshipAssessment {
+  id String @id @default(cuid())
+
+  internshipId String
+
+  assessmentTemplateId String
+
+  status AssessmentStatus @default(DRAFT)
+
+  evaluatorRemarks String? @db.Text
+
+  evaluatedAt DateTime?
+
+  submittedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  internship Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+
+  assessmentTemplate AssessmentTemplate @relation(fields: [assessmentTemplateId], references: [id])
+
+  //scores AssessmentScore[]
+
+  @@unique([internshipId, assessmentTemplateId])
+  @@map("internship_assessments")
 }
