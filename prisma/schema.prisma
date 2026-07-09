@@ -356,9 +356,34 @@ model AssessmentTemplate {
 
   updatedAt DateTime @updatedAt
 
-  // sections AssessmentSection[]
+  sections AssessmentSection[]
 
   @@unique([name, version])
   @@index([isActive])
   @@map("assessment_templates")
+}
+
+model AssessmentSection {
+  id String @id @default(cuid())
+
+  assessmentTemplateId String
+
+  name String
+
+  description String?
+
+  sortOrder Int
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  assessmentTemplate AssessmentTemplate @relation(fields: [assessmentTemplateId], references: [id], onDelete: Cascade)
+
+  // criteria AssessmentCriterion[]
+
+  @@unique([assessmentTemplateId, sortOrder])
+  @@map("assessment_sections")
 }
