@@ -137,12 +137,23 @@ export default async function IndustryStudentsPage() {
 
                   <td className="px-6 py-4">
 
-                    <Link
-                      href={`/industry-supervisor/reports?studentId=${internship.student.id}`}
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    >
-                      View Reports
-                    </Link>
+                    <div className="flex gap-3">
+
+                      <Link
+                        href={`/industry-supervisor/reports?studentId=${internship.student.id}`}
+                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                      >
+                        Reports
+                      </Link>
+
+                      <Link
+                        href={`/industry-supervisor/assessments/${internship.student.id}`}
+                        className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                      >
+                        Assess
+                      </Link>
+
+                    </div>
 
                   </td>
 

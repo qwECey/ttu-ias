@@ -401,7 +401,7 @@ model AssessmentCriterion {
 
   description String?
 
-  maximumScore Decimal @db.Decimal(5, 2)
+  maximumScore Decimal @default(0) @db.Decimal(5,2)
 
   sortOrder Int
 
@@ -413,6 +413,9 @@ model AssessmentCriterion {
 
   assessmentSection AssessmentSection @relation(fields: [assessmentSectionId], references: [id], onDelete: Cascade)
 
+  scores AssessmentScore[]
+
+  @@index([assessmentSectionId])
   @@unique([assessmentSectionId, sortOrder])
   @@map("assessment_criteria")
 }
@@ -424,13 +427,15 @@ model InternshipAssessment {
 
   assessmentTemplateId String
 
-  status AssessmentStatus @default(DRAFT)
+  // evaluatorUserId String?
 
-  evaluatorRemarks String? @db.Text
+  completed Boolean @default(false)
 
-  evaluatedAt DateTime?
+  generalRemarks String? @db.Text
 
-  submittedAt DateTime?
+  startedAt DateTime?
+
+  completedAt DateTime?
 
   createdAt DateTime @default(now())
 
@@ -440,8 +445,33 @@ model InternshipAssessment {
 
   assessmentTemplate AssessmentTemplate @relation(fields: [assessmentTemplateId], references: [id])
 
-  //scores AssessmentScore[]
+  // evaluator User? @relation(fields: [evaluatorUserId], references: [id])
 
+  scores AssessmentScore[]
+
+  @@index([internshipId])
   @@unique([internshipId, assessmentTemplateId])
   @@map("internship_assessments")
+}
+
+model AssessmentScore {
+  id String @id @default(cuid())
+
+  internshipAssessmentId String
+
+  assessmentCriterionId String
+
+  score Decimal @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  internshipAssessment InternshipAssessment @relation(fields: [internshipAssessmentId], references: [id], onDelete: Cascade)
+
+  assessmentCriterion AssessmentCriterion @relation(fields: [assessmentCriterionId], references: [id])
+
+  @@index([internshipAssessmentId])
+  @@unique([internshipAssessmentId, assessmentCriterionId])
+  @@map("assessment_scores")
 }
