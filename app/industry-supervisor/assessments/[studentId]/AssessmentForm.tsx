@@ -6,6 +6,7 @@ type Criterion = {
   id: string;
   name: string;
   maximumScore: number;
+  score: string | number | null;
 };
 
 type Section = {
@@ -90,7 +91,11 @@ export default function AssessmentForm({
                     id={`score-${criterion.id}`}
                     aria-label={`Score for ${criterion.name}`}
                     title={`Score for ${criterion.name}`}
-                    defaultValue=""
+                    defaultValue={
+                      criterion.score !== null
+                        ? Number(criterion.score)
+                        : ""
+                    }
                     className="rounded-lg border px-3 py-2"
                     onChange={(e) =>
                       saveScore(

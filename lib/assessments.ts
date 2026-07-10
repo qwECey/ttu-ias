@@ -82,3 +82,21 @@ export async function saveAssessmentScore(
     },
   });
 }
+
+export async function getAssessmentScores(
+  internshipId: string,
+  assessmentTemplateId: string
+) {
+  return prisma.internshipAssessment.findUnique({
+    where: {
+      internshipId_assessmentTemplateId: {
+        internshipId,
+        assessmentTemplateId,
+      },
+    },
+
+    include: {
+      scores: true,
+    },
+  });
+}                                                                                                                                                             

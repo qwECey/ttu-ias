@@ -3,7 +3,10 @@ import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
-import { getAssessmentTemplate } from "@/lib/assessments";
+import {
+  getAssessmentTemplate,
+  getAssessmentScores,
+} from "@/lib/assessments";
 
 import AssessmentForm from "./AssessmentForm";
 
@@ -60,16 +63,38 @@ export default async function IndustryAssessmentPage({
       "Industry Supervisor Assessment"
     );
 
-    const serializedTemplate = {
-      ...template!,
-      sections: template!.sections.map((section) => ({
-        ...section,
-        criteria: section.criteria.map((criterion) => ({
-          ...criterion,
-          maximumScore: Number(criterion.maximumScore),
-        })),
+  const assessment =
+  await getAssessmentScores(
+    internship.id,
+    template!.id
+  );
+
+  const serializedTemplate = {
+    ...template!,
+    sections: template!.sections.map((section) => ({
+      ...section,
+      criteria: section.criteria.map((criterion) => ({
+        ...criterion,
+        maximumScore: Number(
+          criterion.maximumScore
+        ),
+        score:
+          assessment?.scores.find(
+            (s) =>
+              s.assessmentCriterionId ===
+              criterion.id
+          )?.score !== undefined
+            ? Number(
+                assessment.scores.find(
+                  (s) =>
+                    s.assessmentCriterionId ===
+                    criterion.id
+                )!.score
+              )
+            : null,
       })),
-    };
+    })),
+  };
 
   if (!template) {
     return (
