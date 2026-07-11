@@ -4,6 +4,8 @@ import {
   getAssessmentTemplate,
   getOrCreateInternshipAssessment,
   saveAssessmentScore,
+  submitAssessment,
+  updateAssessmentRemarks,
 } from "@/lib/assessments";
 
 export async function POST(request: NextRequest) {
@@ -12,10 +14,14 @@ export async function POST(request: NextRequest) {
       internshipId,
       assessmentCriterionId,
       score,
+      generalRemarks,
+      submit,
     }: {
       internshipId: string;
-      assessmentCriterionId: string;
-      score: number;
+      assessmentCriterionId?: string;
+      score?: number;
+      generalRemarks?: string;
+      submit?: boolean;
     } = await request.json();
 
     const template = await getAssessmentTemplate(
@@ -40,11 +46,27 @@ export async function POST(request: NextRequest) {
         template.id
       );
 
-    await saveAssessmentScore(
-      assessment.id,
-      assessmentCriterionId,
-      score
-    );
+    if (
+      assessmentCriterionId &&
+      score !== undefined
+    ) {
+      await saveAssessmentScore(
+        assessment.id,
+        assessmentCriterionId,
+        score
+      );
+    }
+
+    if (generalRemarks !== undefined) {
+      await updateAssessmentRemarks(
+        assessment.id,
+        generalRemarks
+      );
+    }
+
+    if (submit) {
+      await submitAssessment(assessment.id);
+    }
 
     return NextResponse.json({
       success: true,

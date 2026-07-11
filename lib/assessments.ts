@@ -99,4 +99,34 @@ export async function getAssessmentScores(
       scores: true,
     },
   });
-}                                                                                                                                                             
+}
+
+export async function updateAssessmentRemarks(
+  internshipAssessmentId: string,
+  generalRemarks: string
+) {
+  return prisma.internshipAssessment.update({
+    where: {
+      id: internshipAssessmentId,
+    },
+
+    data: {
+      generalRemarks,
+    },
+  });
+}
+
+export async function submitAssessment(
+  internshipAssessmentId: string
+) {
+  return prisma.internshipAssessment.update({
+    where: {
+      id: internshipAssessmentId,
+    },
+
+    data: {
+      completed: true,
+      completedAt: new Date(),
+    },
+  });
+}

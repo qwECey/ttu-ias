@@ -58,6 +58,50 @@ export default function AssessmentForm({
     }
   }
 
+  async function saveRemarks(
+    generalRemarks: string
+  ) {
+    try {
+      await fetch(
+        "/api/industry-supervisors/assessments/save-score",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            internshipId,
+            generalRemarks,
+          }),
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function submitAssessment() {
+    try {
+      await fetch(
+        "/api/industry-supervisors/assessments/save-score",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            internshipId,
+            submit: true,
+          }),
+        }
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       {template.sections.map((section) => (
@@ -131,6 +175,33 @@ export default function AssessmentForm({
           </div>
         </section>
       ))}
+      <div className="mb-8 rounded-3xl bg-white p-8 shadow">
+        <label
+          htmlFor="generalRemarks"
+          className="mb-3 block text-lg font-semibold"
+        >
+          General Remarks
+        </label>
+
+        <textarea
+          id="generalRemarks"
+          rows={6}
+          className="w-full rounded-xl border p-4"
+          placeholder="Enter your overall remarks..."
+          onBlur={(e) =>
+            saveRemarks(e.target.value)
+          }
+        />
+      </div>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={submitAssessment}
+          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+        >
+          Submit Assessment
+        </button>
+      </div>
     </>
   );
 }
