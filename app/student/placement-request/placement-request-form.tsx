@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 type Company = {
   id: string;
   companyName: string;
@@ -15,6 +16,11 @@ export default function PlacementRequestForm({
 }: {
   companies: Company[];
 }) {
+  const router = useRouter();
+
+  const [submitting, setSubmitting] =
+    useState(false);
+
   const [existingCompanyId, setExistingCompanyId] =
     useState("");
 
@@ -37,8 +43,10 @@ export default function PlacementRequestForm({
     useState("");
 
   async function handleSubmit() {
-    const response =
-      await fetch(
+    setSubmitting(true);
+
+    try {
+      const response = await fetch(
         "/api/placement-requests",
         {
           method: "POST",
@@ -57,16 +65,28 @@ export default function PlacementRequestForm({
         }
       );
 
-    const data =
-      await response.json();
+      const data =
+        await response.json();
 
-    if (data.success) {
-      alert(
-        "Placement request submitted."
+      if (data.success) {
+        toast.success(
+          "Placement request submitted successfully."
+        );
+
+        router.push("/student");
+        router.refresh();
+      } else {
+        toast.error(
+          data.message ??
+            "Failed to submit placement request."
+        );
+      }
+    } catch {
+      toast.error(
+        "Unable to connect to the server. Please try again."
       );
-
-      window.location.href =
-        "/student";
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -240,23 +260,29 @@ export default function PlacementRequestForm({
 
       <button
         disabled={
-          !showCompanyForm &&
-          !existingCompanyId
+          submitting ||
+          (
+            !showCompanyForm &&
+            !existingCompanyId
+          )
         }
 
         onClick={handleSubmit}
         className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {showCompanyForm
-          ? "Submit for Verification"
-          : existingCompanyId
-            ? `Apply to ${
-                companies.find(
-                  (company) =>
-                    company.id === existingCompanyId
-                )?.companyName
-              }`
-            : "Select a Company"}
+        {submitting
+          ? "Submitting..."
+          : showCompanyForm
+            ? "Submit for Verification"
+            : existingCompanyId
+              ? `Apply to ${
+                  companies.find(
+                    (company) =>
+                      company.id ===
+                      existingCompanyId
+                  )?.companyName
+                }`
+              : "Select a Company"}
       </button>
 
     </div>

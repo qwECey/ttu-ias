@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CompanyForm() {
   const router = useRouter();
@@ -21,12 +22,17 @@ export default function CompanyForm() {
   const [contactEmail, setContactEmail] =
   useState("");
 
+  const [loading, setLoading] =
+  useState(false);
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const response = await fetch(
         "/api/companies",
         {
@@ -49,18 +55,20 @@ export default function CompanyForm() {
         await response.json();
 
       if (!response.ok) {
-        alert(
+        toast.error(
           data.message ??
-            "Failed to create company"
+            "Failed to create company."
         );
         return;
       }
 
+      // Keep this alert for now because
+      // it contains the login credentials.
       alert(
-        `Company created successfully!
+  `Company created successfully!
 
-Login ID: ${data.loginId}
-Password: ${data.loginId}`
+  Login ID: ${data.loginId}
+  Password: ${data.loginId}`
       );
 
       setCompanyName("");
@@ -71,8 +79,13 @@ Password: ${data.loginId}`
 
       router.push("/admin/companies");
       router.refresh();
+
     } catch {
-      alert("Something went wrong.");
+      toast.error(
+        "Unable to connect to the server."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,9 +161,12 @@ Password: ${data.loginId}`
 
       <button
         type="submit"
-        className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-white transition hover:bg-yellow-600"
+        disabled={loading}
+        className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-white transition hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Create Company
+        {loading
+          ? "Creating Company..."
+          : "Create Company"}
       </button>
     </form>
   );

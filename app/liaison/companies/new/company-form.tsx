@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -28,15 +29,14 @@ export default function CompanyForm() {
     try {
       setLoading(true);
 
-      const response =
-        await fetch("/api/companies", {
+      const response = await fetch(
+        "/api/companies",
+        {
           method: "POST",
-
           headers: {
             "Content-Type":
               "application/json",
           },
-
           body: JSON.stringify({
             companyName,
             location,
@@ -44,25 +44,22 @@ export default function CompanyForm() {
             contactPhone,
             contactEmail,
           }),
-        });
+        }
+      );
 
       const data =
         await response.json();
 
       if (!response.ok) {
-        alert(
+        toast.error(
           data.message ??
             "Failed to register company."
         );
         return;
       }
 
-      alert(
-        `Company created successfully.
-
-Login ID: ${data.loginId}
-
-Temporary Password: ${data.loginId}`
+      toast.success(
+        "Company registered successfully."
       );
 
       router.push(
@@ -71,6 +68,10 @@ Temporary Password: ${data.loginId}`
 
       router.refresh();
 
+    } catch {
+      toast.error(
+        "Unable to connect to the server."
+      );
     } finally {
       setLoading(false);
     }

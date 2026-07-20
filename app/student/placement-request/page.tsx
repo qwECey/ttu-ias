@@ -5,14 +5,24 @@ import { getOrCreateActiveInternship } from "@/lib/internship";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 
+import StatusCard from "@/components/ui/StatusCard";
+import PageHeader from "@/components/ui/PageHeader";
+
 export default async function PlacementRequestPage() {
   const session =
   await getServerSession(authOptions);
 
 if (!session?.user?.id) {
-  return <div>Unauthorized</div>;
+  return (
+    <main className="p-8">
+      <StatusCard
+        variant="error"
+        title="Unauthorized"
+        message="Please sign in to continue."
+      />
+    </main>
+  );
 }
-
 const student =
   await prisma.student.findUnique({
     where: {
@@ -21,10 +31,18 @@ const student =
   });
 
 if (!student) {
-  return <div>Student not found.</div>;
+  return (
+    <main className="p-8">
+      <StatusCard
+        variant="warning"
+        title="Student Not Found"
+        message="We couldn't find your student record. Please contact the Liaison Office."
+      />
+    </main>
+  );
 }
 
-// const internship =
+const internship =
   await getOrCreateActiveInternship(
     student.id,
     {
@@ -32,10 +50,33 @@ if (!student) {
     }
   );
 
-// console.log(
-//   "Active Internship:",
-//   internship.id
-// );
+  if (
+  internship.placementStatus ===
+  "PLACED"
+) {
+  return (
+    <main className="p-8">
+
+      <div className="rounded-3xl bg-green-50 p-8 shadow">
+
+        <h1 className="text-2xl font-bold text-green-700">
+          Placement Approved
+        </h1>
+
+        <p className="mt-4 text-gray-700">
+          Your placement has already been
+          approved.
+
+          You cannot submit another
+          placement request for this
+          internship.
+        </p>
+
+      </div>
+
+    </main>
+  );
+}
 
 const existingRequest =
   await prisma.placementRequest.findFirst({
@@ -75,15 +116,18 @@ if (existingRequest) {
 
   return (
     <main className="p-8">
-      <h1 className="mb-6 text-3xl font-bold">
-        Placement Request
-      </h1>
+
+      <PageHeader
+        title="Placement Request"
+        description="Choose an approved company or submit your own company for verification."
+      />
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">
         <PlacementRequestForm
           companies={companies}
         />
       </div>
+
     </main>
   );
 }

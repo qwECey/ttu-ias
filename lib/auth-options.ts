@@ -40,6 +40,8 @@ export const authOptions: AuthOptions = {
           loginId: user.loginId,
           email: user.email,
           role: user.role,
+          mustChangePassword:
+            user.mustChangePassword,
         };
       },
     }),
@@ -51,17 +53,18 @@ export const authOptions: AuthOptions = {
       token.id = user.id;
       token.loginId = user.loginId;
       token.role = user.role;
+      token.mustChangePassword =
+        user.mustChangePassword;
     }
-
     return token;
   },
 
   async session({ session, token }) {
     session.user.id = token.id;
-    session.user.loginId = token.loginId;
-    session.user.role = token.role;
-
-    console.log("SESSION ROLE:", token.role);
+      session.user.loginId = token.loginId;
+      session.user.role = token.role;
+      session.user.mustChangePassword =
+        token.mustChangePassword;
 
     return session;
   },

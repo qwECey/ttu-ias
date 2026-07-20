@@ -21,7 +21,7 @@ export async function POST(
       `IND${String(count + 1).padStart(3, "0")}`;
 
     const password =
-      "password123";
+      loginId; // Default password is the same as loginId
 
     const hashedPassword =
       await bcrypt.hash(password, 10);
@@ -56,6 +56,7 @@ export async function POST(
           email,
           password: hashedPassword,
           role: UserRole.INDUSTRY_SUPERVISOR,
+          mustChangePassword: true,
         },
       });
 

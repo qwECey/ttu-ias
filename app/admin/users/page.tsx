@@ -4,6 +4,14 @@ import UserFilter from "./user-filter";
 export default async function UsersPage() {
   const users =
     await prisma.user.findMany({
+      select: {
+        id: true,
+        loginId: true,
+        email: true,
+        role: true,
+        isActive: true,
+        mustChangePassword: true,
+      },
       orderBy: {
         createdAt: "desc",
       },

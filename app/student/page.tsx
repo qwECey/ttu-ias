@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import Image from "next/image";
 import { getOrCreateActiveInternship } from "@/lib/internship";
-// import { Link } from "lucide-react";
 import Link from "next/link";
+import InternshipJourney from "@/components/student/InternshipJourney";
 
 export default async function StudentPage() {
   const session =
@@ -58,6 +58,8 @@ export default async function StudentPage() {
         company: true,
         supervisor: true,
         industrySupervisor: true,
+
+        assessments: true,
       },
     });
 
@@ -69,6 +71,36 @@ export default async function StudentPage() {
         </div>
       </main>
     );
+  }
+  let assessmentStatus:
+    | "LOCKED"
+    | "PENDING"
+    | "IN_PROGRESS"
+    | "COMPLETED" = "LOCKED";
+
+  const completedAssessments =
+    currentInternship.assessments.filter(
+      (assessment) => assessment.completed
+    ).length;
+
+  if (
+    currentInternship.assessments.length > 0
+  ) {
+    if (
+      completedAssessments ===
+      currentInternship.assessments.length
+    ) {
+      assessmentStatus =
+        "COMPLETED";
+    } else if (
+      completedAssessments > 0
+    ) {
+      assessmentStatus =
+        "IN_PROGRESS";
+    } else {
+      assessmentStatus =
+        "PENDING";
+    }
   }
 
   const placementRequest =
@@ -232,225 +264,25 @@ export default async function StudentPage() {
 
         {/* Internship Journey */}
 
-        <div className="rounded-3xl bg-white p-6 shadow-md">
-
-          <h2 className="mb-6 text-xl font-semibold">
-            Your Internship Journey
-          </h2>
-
-          <div className="space-y-5">
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-                <h3 className="font-semibold">
-                  1. Student Registration
-                </h3>
-
-                <p className="text-sm text-gray-500">
-                  Your internship account has been created.
-                </p>
-              </div>
-
-              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                ✓ Completed
-              </span>
-
-            </div>
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  2. Placement Request
-                </h3>
-
-                <p className="text-sm text-gray-500">
-
-                  {placementRequest
-                    ? "Placement request submitted."
-                    : "Choose a company to begin your attachment."}
-
-                </p>
-
-              </div>
-
-              {placementRequest ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                  ✓ Completed
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
-                  Pending
-                </span>
-
-              )}
-
-            </div>
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  3. Placement Approval
-                </h3>
-
-                <p className="text-sm text-gray-500">
-
-                  {currentInternship.placementStatus === "PLACED"
-                    ? "Your placement has been approved."
-                    : "Awaiting approval from the Liaison Office."}
-
-                </p>
-
-              </div>
-
-              {currentInternship.placementStatus === "PLACED" ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                  ✓ Approved
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
-                  Waiting
-                </span>
-
-              )}
-
-            </div>
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  4. Academic Supervisor
-                </h3>
-
-                <p className="text-sm text-gray-500">
-
-                  {currentInternship.supervisor
-                    ? currentInternship.supervisor.fullName
-                    : "Supervisor not yet assigned."}
-
-                </p>
-
-              </div>
-
-              {currentInternship.supervisor ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                  ✓ Assigned
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-                  Waiting
-                </span>
-
-              )}
-
-            </div>
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  5. Industry Supervisor
-                </h3>
-
-                <p className="text-sm text-gray-500">
-
-                  {currentInternship.industrySupervisor
-                    ? currentInternship.industrySupervisor.fullName
-                    : "Waiting for company assignment."}
-
-                </p>
-
-              </div>
-
-              {currentInternship.industrySupervisor ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                  ✓ Assigned
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-                  Waiting
-                </span>
-
-              )}
-
-            </div>
-
-            <div className="flex items-center justify-between border-b pb-3">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  6. Report Submission
-                </h3>
-
-                <p className="text-sm text-gray-500">
-
-                  {totalReports > 0
-                    ? `${totalReports} report(s) submitted`
-                    : "No reports submitted yet."}
-
-                </p>
-
-              </div>
-
-              {totalReports > 0 ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                  In Progress
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-                  Waiting
-                </span>
-
-              )}
-
-            </div>
-
-            <div className="flex items-center justify-between">
-
-              <div>
-
-                <h3 className="font-semibold">
-                  7. Final Assessment
-                </h3>
-
-                <p className="text-sm text-gray-500">
-                  Assessment will be available after your internship is completed.
-                </p>
-
-              </div>
-
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-                Locked
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
+          <InternshipJourney
+            placementRequestExists={!!placementRequest}
+            placementApproved={
+              currentInternship.placementStatus ===
+              "PLACED"
+            }
+            academicSupervisor={
+              currentInternship.supervisor?.fullName ??
+              null
+            }
+            industrySupervisor={
+              currentInternship.industrySupervisor
+                ?.fullName ?? null
+            }
+            totalReports={totalReports}
+            assessmentStatus={
+              assessmentStatus
+            }
+          />
 
         {/* Digital Logbook */}
 

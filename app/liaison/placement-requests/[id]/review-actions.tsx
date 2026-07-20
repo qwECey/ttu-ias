@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -39,9 +40,11 @@ export default function ReviewActions({
         await response.json();
 
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
+
+      toast.success("Placement request approved.");
 
       setRemarks("");
 
@@ -74,10 +77,11 @@ export default function ReviewActions({
         await response.json();
 
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
-      }
+    }
 
+      toast.success("Placement request rejected.");
       setRemarks("");
 
       router.refresh();
@@ -107,7 +111,9 @@ export default function ReviewActions({
           disabled={loading}
           className="rounded-lg bg-green-600 px-5 py-2 text-white"
         >
-          Approve
+          {loading
+            ? "Approving..."
+            : "Approve"}
         </button>
 
         <button
@@ -116,7 +122,9 @@ export default function ReviewActions({
           disabled={loading}
           className="rounded-lg bg-red-600 px-5 py-2 text-white"
         >
-          Reject
+          {loading
+            ? "Rejecting..."
+            : "Reject"}
         </button>
 
       </div>

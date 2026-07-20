@@ -8,6 +8,8 @@ type Report = {
   reportType: string;
   periodNumber: number | null;
 
+  fileUrl: string | null;
+
   industryStatus: string;
   academicStatus: string;
 
@@ -22,7 +24,8 @@ export default function ReportFilter({
 }: {
   reports: Report[];
 }) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] =
+    useState("");
 
   const [status, setStatus] =
     useState("ALL");
@@ -51,30 +54,6 @@ export default function ReportFilter({
     return "PENDING";
   }
 
-  const filtered =
-    reports.filter((report) => {
-      const matchesSearch =
-        report.title
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
-
-      const overallStatus =
-        getOverallStatus(report);
-
-      const matchesStatus =
-        status === "ALL"
-          ? true
-          : overallStatus ===
-            status;
-
-      return (
-        matchesSearch &&
-        matchesStatus
-      );
-    });
-
   function getStatusBadge(
     status: string
   ) {
@@ -102,144 +81,240 @@ export default function ReportFilter({
     }
   }
 
+  const filtered =
+    reports.filter((report) => {
+      const matchesSearch =
+        report.title
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
+
+      const matchesStatus =
+        status === "ALL"
+          ? true
+          : getOverallStatus(
+              report
+            ) === status;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+    });
+
   return (
     <>
+
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
-        <div className="flex-1">
-          <label
-            htmlFor="report-search"
-            className="sr-only"
-          >
-            Search reports
-          </label>
 
-          <input
-            id="report-search"
-            type="text"
-            placeholder="Search reports..."
-            value={search}
-            onChange={(e) =>
-              setSearch(
-                e.target.value
-              )
-            }
-            className="w-full rounded-xl border bg-white px-4 py-3 shadow-sm"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Search reports..."
+          value={search}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
+          className="flex-1 rounded-xl border bg-white px-4 py-3 shadow-sm"
+        />
 
-        <div>
-          <label
-            htmlFor="status-filter"
-            className="sr-only"
-          >
-            Filter reports by status
-          </label>
+        <select
+          value={status}
+          onChange={(e) =>
+            setStatus(
+              e.target.value
+            )
+          }
+          className="rounded-xl border bg-white px-4 py-3 shadow-sm"
+        >
+          <option value="ALL">
+            All Statuses
+          </option>
 
-          <select
-            id="status-filter"
-            value={status}
-            onChange={(e) =>
-              setStatus(
-                e.target.value
-              )
-            }
-            className="rounded-xl border bg-white px-4 py-3 shadow-sm"
-          >
-            <option value="ALL">
-              All Statuses
-            </option>
+          <option value="PENDING">
+            Pending
+          </option>
 
-            <option value="PENDING">
-              Pending
-            </option>
+          <option value="APPROVED">
+            Approved
+          </option>
 
-            <option value="APPROVED">
-              Approved
-            </option>
+          <option value="REJECTED">
+            Rejected
+          </option>
 
-            <option value="REJECTED">
-              Rejected
-            </option>
-          </select>
-        </div>
+        </select>
+
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl bg-white p-10 text-center shadow-md">
-          <h3 className="text-lg font-semibold text-gray-700">
+
+        <div className="rounded-3xl bg-white p-10 text-center shadow">
+
+          <h3 className="text-xl font-semibold">
             No Reports Found
           </h3>
 
           <p className="mt-2 text-gray-500">
-            Try changing your search
-            criteria.
+            Try changing your search.
           </p>
+
         </div>
+
       ) : (
-        <div className="space-y-4">
+
+        <div className="space-y-6">
+
           {filtered.map(
             (report) => (
+
               <div
                 key={report.id}
-                className="rounded-3xl bg-white p-6 shadow-md transition hover:shadow-lg"
+                className="rounded-3xl bg-white p-6 shadow transition hover:shadow-lg"
               >
+
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800">
+
+                    <h3 className="text-2xl font-bold text-slate-900">
                       {report.title}
                     </h3>
 
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-slate-500">
                       {report.reportType}
                     </p>
+
+                  </div>
+
+                  {getStatusBadge(
+                    getOverallStatus(
+                      report
+                    )
+                  )}
+
+                </div>
+
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
+
+                  <div>
+
+                    <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                      Submitted
+                    </p>
+
+                    <p className="mt-1 text-slate-700">
+                      {new Date(
+                        report.submittedAt
+                      ).toLocaleDateString(
+                        "en-GB"
+                      )}
+                    </p>
+
                   </div>
 
                   <div>
-                    {getStatusBadge(
-                      getOverallStatus(
-                        report
-                      )
-                    )}
+
+                    <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                      Period
+                    </p>
+
+                    <p className="mt-1 text-slate-700">
+                      {report.periodNumber ??
+                        "-"}
+                    </p>
+
                   </div>
+
+                  <div>
+
+                    <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                      Industry Review
+                    </p>
+
+                    <div className="mt-2">
+                      {getStatusBadge(
+                        report.industryStatus
+                      )}
+                    </div>
+
+                  </div>
+
+                  <div>
+
+                    <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                      Academic Review
+                    </p>
+
+                    <div className="mt-2">
+                      {getStatusBadge(
+                        report.academicStatus
+                      )}
+                    </div>
+
+                  </div>
+
                 </div>
 
-                <div className="mt-5 grid gap-3 text-sm text-gray-700 md:grid-cols-2">
-                  <p>
-                    <strong>
-                      Period:
-                    </strong>{" "}
-                    {report.periodNumber ??
-                      "-"}
-                  </p>
+                {report.reportType ===
+                  "FINAL" &&
+                  report.fileUrl && (
 
-                  <p>
-                    <strong>
-                      Submitted:
-                    </strong>{" "}
-                    {new Date(
-                      report.submittedAt
-                    ).toLocaleDateString("en-GB")}
-                  </p>
+                  <div className="mt-6 rounded-2xl bg-blue-50 p-4">
 
-                  <p>
-                    <strong>
-                      Industry Remarks:
-                    </strong>{" "}
-                    {report.industryRemarks?.trim() || "No remarks"}
-                  </p>
+                    <p className="text-sm font-semibold text-blue-700">
+                      Final Report Uploaded
+                    </p>
 
-                  <p>
-                    <strong>
-                      Academic Remarks:
-                    </strong>{" "}
-                    {report.academicRemarks?.trim() || "No remarks"}
-                  </p>
+                    <p className="mt-2 break-all text-blue-600">
+                      {report.fileUrl.split("/").pop()}
+                    </p>
+
+                  </div>
+
+                )}
+
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+
+                    <h4 className="font-semibold text-slate-700">
+                      Industry Remarks
+                    </h4>
+
+                    <p className="mt-2 text-slate-600">
+                      {report.industryRemarks?.trim() ||
+                        "No remarks yet."}
+                    </p>
+
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+
+                    <h4 className="font-semibold text-slate-700">
+                      Academic Remarks
+                    </h4>
+
+                    <p className="mt-2 text-slate-600">
+                      {report.academicRemarks?.trim() ||
+                        "No remarks yet."}
+                    </p>
+
+                  </div>
+
                 </div>
+
               </div>
+
             )
           )}
+
         </div>
+
       )}
+
     </>
   );
 }

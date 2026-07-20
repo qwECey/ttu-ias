@@ -78,6 +78,7 @@ export async function POST(
           email,
           password: hashedPassword,
           role: UserRole.SUPERVISOR,
+          mustChangePassword: true,
         },
       });
 

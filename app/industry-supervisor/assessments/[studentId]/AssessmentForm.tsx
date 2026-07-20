@@ -20,14 +20,28 @@ type Template = {
   sections: Section[];
 };
 
+type Summary = {
+  name: string;
+  earned: number;
+  maximum: number;
+};
+
 type Props = {
   internshipId: string;
   template: Template;
+  completed: boolean;
+  summary: Summary[];
+  totalEarned: number;
+  totalMaximum: number;
 };
 
 export default function AssessmentForm({
   internshipId,
   template,
+  completed,
+  summary,
+  totalEarned,
+  totalMaximum,
 }: Props) {
 
   async function saveScore(
@@ -140,6 +154,7 @@ export default function AssessmentForm({
                         ? Number(criterion.score)
                         : ""
                     }
+                    disabled={completed}
                     className="rounded-lg border px-3 py-2"
                     onChange={(e) =>
                       saveScore(
@@ -191,16 +206,50 @@ export default function AssessmentForm({
           onBlur={(e) =>
             saveRemarks(e.target.value)
           }
+          disabled={completed}
         />
       </div>
       <div className="flex justify-end">
         <button
           type="button"
+          disabled={completed}
           onClick={submitAssessment}
-          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white disabled:bg-gray-400"
         >
-          Submit Assessment
+          {completed
+            ? "Assessment Submitted"
+            : "Submit Assessment"}
         </button>
+      </div>
+      <div className="mt-8 rounded-3xl bg-white p-8 shadow">
+        <h2 className="mb-6 text-2xl font-bold">
+          Assessment Summary
+        </h2>
+
+        <div className="space-y-3">
+          {summary.map((section) => (
+            <div
+              key={section.name}
+              className="flex justify-between"
+            >
+              <span>{section.name}</span>
+
+              <span className="font-semibold">
+                {section.earned} / {section.maximum}
+              </span>
+            </div>
+          ))}
+
+          <hr />
+
+          <div className="flex justify-between text-xl font-bold">
+            <span>Total</span>
+
+            <span>
+              {totalEarned} / {totalMaximum}
+            </span>
+          </div>
+        </div>
       </div>
     </>
   );

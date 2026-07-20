@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,46 +16,65 @@ export default function SupervisorForm() {
   const [phone, setPhone] =
     useState("");
 
+  const [loading, setLoading] =
+    useState(false);
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
 
-    const response = await fetch(
-      "/api/supervisors",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          fullName,
-          email,
-          phone,
-        }),
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/supervisors",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            fullName,
+            email,
+            phone,
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!data.success) {
+        toast.error(
+          data.message ??
+          "Failed to create supervisor."
+        );
+        return;
       }
-    );
 
-    const data =
-      await response.json();
-
-    if (data.success) {
+      // Keep this alert because it
+      // contains login credentials.
       alert(
-        `Supervisor created successfully!
+  `Supervisor created successfully!
 
-      Login ID: ${data.credentials.loginId}
-      Password: ${data.credentials.password}`
+  Login ID: ${data.credentials.loginId}
+  Password: ${data.credentials.password}`
       );
 
       router.push(
         "/admin/supervisors"
       );
-    } else {
-      alert(
-        data.message ||
-          "Failed to create supervisor"
+
+      router.refresh();
+
+    } catch {
+      toast.error(
+        "Unable to connect to the server."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,9 +147,12 @@ export default function SupervisorForm() {
 
       <button
         type="submit"
-        className="rounded-lg bg-blue-600 px-5 py-3 text-white"
+        disabled={loading}
+        className="rounded-lg bg-blue-600 px-5 py-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Create Supervisor
+        {loading
+          ? "Creating Supervisor..."
+          : "Create Supervisor"}
       </button>
     </form>
   );

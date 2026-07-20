@@ -1,7 +1,31 @@
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
 export default withAuth(
-  function middleware() {},
+  function middleware(req) {
+    const token = req.nextauth.token;
+    const pathname = req.nextUrl.pathname;
+
+    if (
+      token?.mustChangePassword &&
+      pathname !== "/change-password"
+    ) {
+      return NextResponse.redirect(
+        new URL("/change-password", req.url)
+      );
+    }
+
+    if (
+      !token?.mustChangePassword &&
+      pathname === "/change-password"
+    ) {
+      return NextResponse.redirect(
+        new URL("/", req.url)
+      );
+    }
+
+    return NextResponse.next();
+  },
   {
     callbacks: {
       authorized: ({ token, req }) => {
@@ -15,12 +39,24 @@ export default withAuth(
           return token.role === "STUDENT";
         }
 
-        if (pathname.startsWith("/industry-supervisor")) {
-          return token.role === "INDUSTRY_SUPERVISOR";
+        if (
+          pathname.startsWith(
+            "/industry-supervisor"
+          )
+        ) {
+          return (
+            token.role ===
+            "INDUSTRY_SUPERVISOR"
+          );
         }
 
-        // 👇 ADD THIS BLOCK HERE
-        if (pathname.startsWith("/supervisor")) {
+        if (pathname.startsWith("/company")) {
+          return token.role === "COMPANY";
+        }
+
+        if (
+          pathname.startsWith("/supervisor")
+        ) {
           return token.role === "SUPERVISOR";
         }
 
@@ -37,16 +73,18 @@ export default withAuth(
 
         return true;
       },
-      },
     },
+  }
 );
 
 export const config = {
-    matcher: [
+  matcher: [
     "/student/:path*",
+    "/company/:path*",
     "/supervisor/:path*",
     "/industry-supervisor/:path*",
     "/liaison/:path*",
     "/admin/:path*",
+    "/change-password",
   ],
 };

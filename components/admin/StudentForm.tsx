@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function StudentForm() {
   const [studentId, setStudentId] = useState("");
@@ -42,11 +43,13 @@ export default function StudentForm() {
     const data = await response.json();
 
     if (!data.success) {
-      alert(data.message);
+      toast.error(data.message);
       return;
     }
 
-    alert("Student created successfully!");
+    toast.success(
+      "Student created successfully."
+    );
 
     setStudentId("");
     setFullName("");
@@ -56,7 +59,9 @@ export default function StudentForm() {
     setProgramme("");
     setLevel("");
   } catch {
-    alert("Something went wrong.");
+    toast.error(
+      "Unable to connect to the server."
+    );
   } finally {
     setIsLoading(false);
   }

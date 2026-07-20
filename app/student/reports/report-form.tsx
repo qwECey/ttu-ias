@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ReportForm() {
   const [title, setTitle] =
@@ -17,86 +18,168 @@ export default function ReportForm() {
   const [content, setContent] =
     useState("");
 
+  const [file, setFile] =
+    useState<File | null>(null);
+
+  const [submitting, setSubmitting] =
+    useState(false);
+
   async function handleSubmit(
     e: React.FormEvent
   ) {
     e.preventDefault();
 
-    const res = await fetch(
-      "/api/reports",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          reportType,
-          periodNumber:
-            periodNumber
-              ? Number(
-                  periodNumber
-                )
-              : null,
-          content,
-        }),
+    setSubmitting(true);
+
+    try {
+      let fileUrl: string | null =
+        null;
+
+      if (
+        reportType === "FINAL"
+      ) {
+        if (!file) {
+          alert(
+            "Please choose a PDF file."
+          );
+          setSubmitting(false);
+          return;
+        }
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "file",
+          file
+        );
+
+        const uploadResponse =
+          await fetch(
+            "/api/reports/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+        const uploadData =
+          await uploadResponse.json();
+
+        if (
+          !uploadData.success
+        ) {
+          alert(
+            uploadData.message
+          );
+          setSubmitting(false);
+          return;
+        }
+
+        fileUrl =
+          uploadData.fileUrl;
       }
-    );
 
-    const data =
-      await res.json();
+      const response =
+        await fetch(
+          "/api/reports",
+          {
+            method: "POST",
 
-    if (data.success) {
-      alert(
-        "Report submitted"
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              title,
+              reportType,
+
+              periodNumber:
+                reportType ===
+                "FINAL"
+                  ? null
+                  : Number(
+                      periodNumber
+                    ),
+
+              content,
+
+              fileUrl,
+            }),
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!data.success) {
+        toast.error(
+          data.message ??
+            "Failed to submit report."
+        );
+
+        setSubmitting(false);
+
+        return;
+      }
+
+      toast.success(
+        "Report submitted successfully."
       );
 
       setTitle("");
       setContent("");
       setPeriodNumber("");
-    } else {
-      alert("Failed");
+      setReportType(
+        "WEEKLY"
+      );
+      setFile(null);
+
+      window.location.reload();
+    } finally {
+      setSubmitting(false);
     }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl space-y-4 rounded-2xl bg-white p-6 shadow-sm"
+      className="space-y-6"
     >
       <div>
-        <label>
+
+        <label className="mb-2 block font-medium">
           Report Title
         </label>
 
         <input
-          title="Report Title"
           value={title}
           onChange={(e) =>
             setTitle(
               e.target.value
             )
           }
-          className="w-full rounded border p-2"
+          className="w-full rounded-lg border p-3"
           required
         />
+
       </div>
 
       <div>
-        <label>
+
+        <label className="mb-2 block font-medium">
           Report Type
         </label>
 
         <select
-          title="Report Type"
           value={reportType}
           onChange={(e) =>
             setReportType(
               e.target.value
             )
           }
-          className="w-full rounded border p-2"
+          className="w-full rounded-lg border p-3"
         >
           <option value="WEEKLY">
             Weekly
@@ -109,52 +192,109 @@ export default function ReportForm() {
           <option value="FINAL">
             Final
           </option>
+
         </select>
+
       </div>
 
-      <div>
-        <label>
-          Period Number
-        </label>
+      {reportType !==
+        "FINAL" && (
 
-        <input
-          title="Period Number"
-          type="number"
-          value={periodNumber}
-          onChange={(e) =>
-            setPeriodNumber(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-2"
-        />
-      </div>
+        <div>
+
+          <label className="mb-2 block font-medium">
+            Period Number
+          </label>
+
+          <input
+            type="number"
+            min={1}
+            value={
+              periodNumber
+            }
+            onChange={(e) =>
+              setPeriodNumber(
+                e.target.value
+              )
+            }
+            className="w-full rounded-lg border p-3"
+            required
+          />
+
+        </div>
+
+      )}
 
       <div>
-        <label>
-          Report Content
+
+        <label className="mb-2 block font-medium">
+          {reportType ===
+          "FINAL"
+            ? "Report Summary"
+            : "Report Content"}
         </label>
 
         <textarea
-          title="Report Content"
+          rows={10}
           value={content}
           onChange={(e) =>
             setContent(
               e.target.value
             )
           }
-          rows={10}
-          className="w-full rounded border p-2"
+          className="w-full rounded-lg border p-3"
           required
         />
+
       </div>
+
+      {reportType ===
+        "FINAL" && (
+
+        <div>
+
+          <label className="mb-2 block font-medium">
+            Final Report (PDF)
+          </label>
+
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) =>
+              setFile(
+                e.target
+                  .files?.[0] ??
+                  null
+              )
+            }
+            className="w-full rounded-lg border p-3"
+            required
+          />
+
+          {file && (
+            <p className="mt-2 text-sm text-green-600">
+              Selected:
+              {" "}
+              {file.name}
+            </p>
+          )}
+
+        </div>
+
+      )}
 
       <button
         type="submit"
-        className="rounded bg-black px-4 py-2 text-white"
+        disabled={
+          submitting
+        }
+        className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Submit Report
+        {submitting
+          ? "Submitting..."
+          : "Submit Report"}
       </button>
+
     </form>
   );
 }

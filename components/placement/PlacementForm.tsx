@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Student = {
   id: string;
@@ -27,49 +28,63 @@ export default function PlacementForm({
   const [companyId, setCompanyId] =
     useState("");
 
+  const [loading, setLoading] =
+  useState(false);
+
   const handleSubmit = async (
     e: React.FormEvent
   ) => {
     e.preventDefault();
 
     if (!studentId || !companyId) {
-      alert(
+      toast.error(
         "Select both a student and a company."
       );
       return;
     }
 
-    const response = await fetch(
-      "/api/placements",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          studentId,
-          companyId,
-        }),
-      }
-    );
+    try {
+      setLoading(true);
 
-    const data =
-      await response.json();
-
-    if (!response.ok) {
-      alert(
-        data.message ??
-          "Failed to assign placement."
+      const response = await fetch(
+        "/api/placements",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            studentId,
+            companyId,
+          }),
+        }
       );
-      return;
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        toast.error(
+          data.message ??
+            "Failed to assign placement."
+        );
+        return;
+      }
+
+      toast.success(
+        "Placement assigned successfully."
+      );
+
+      window.location.reload();
+
+    } catch {
+      toast.error(
+        "Unable to connect to the server."
+      );
+    } finally {
+      setLoading(false);
     }
-
-    alert(
-      "Student assigned successfully!"
-    );
-
-    window.location.reload();
   };
 
   return (
@@ -145,9 +160,12 @@ export default function PlacementForm({
 
       <button
         type="submit"
-        className="w-full rounded-xl bg-green-600 px-6 py-4 font-semibold text-white hover:bg-green-700"
+        disabled={loading}
+        className="w-full rounded-xl bg-green-600 px-6 py-4 font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Assign Placement
+        {loading
+          ? "Assigning Placement..."
+          : "Assign Placement"}
       </button>
     </form>
   );

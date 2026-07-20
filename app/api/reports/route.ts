@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       reportType,
       periodNumber,
       content,
+      fileUrl,
     } = await req.json();
 
     const student =
@@ -54,7 +55,23 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           message:
-            "Period number is required",
+            "Period number is required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (
+      reportType === "FINAL" &&
+      !fileUrl
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Please upload your final report PDF.",
         },
         {
           status: 400,
@@ -76,7 +93,7 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           message:
-            "Report already submitted for this period",
+            "Report already submitted for this period.",
         },
         {
           status: 400,
@@ -92,6 +109,7 @@ export async function POST(req: NextRequest) {
           reportType,
           periodNumber,
           content,
+          fileUrl,
         },
       });
 
@@ -108,7 +126,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Server error",
+        message: "Server error.",
       },
       {
         status: 500,

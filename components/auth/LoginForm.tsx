@@ -1,6 +1,8 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
@@ -25,7 +27,7 @@ export default function LoginForm() {
       });
 
       if (result?.error) {
-        alert("Invalid Login ID or Password");
+        toast.error("Invalid Login ID or Password");
         return;
       }
 
@@ -66,7 +68,7 @@ switch (session.user?.role) {
 
 router.refresh();
     } catch {
-      alert("Something went wrong.");
+      toast.error("Unable to sign in.");
     } finally {
       setIsLoading(false);
     }
@@ -118,12 +120,12 @@ router.refresh();
 
       {/* FORGOT PASSWORD */}
       <div className="flex justify-end">
-        <button
-          type="button"
+        <Link
+          href="/forgot-password"
           className="cursor-pointer text-sm text-yellow-600 transition hover:text-yellow-700 hover:underline"
         >
           Forgot Password?
-        </button>
+        </Link>
       </div>
 
       {/* SIGN IN BUTTON */}

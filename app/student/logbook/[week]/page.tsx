@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 
 import WeekForm from "./week-form";
+import StatusCard from "@/components/ui/StatusCard";
 
 export default async function WeekPage({
   params,
@@ -17,7 +18,15 @@ export default async function WeekPage({
     await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return <div>Unauthorized</div>;
+    return (
+      <main className="p-8">
+        <StatusCard
+          variant="error"
+          title="Unauthorized"
+          message="Please sign in to continue."
+        />
+      </main>
+    );
   }
 
   const student =
@@ -28,9 +37,16 @@ export default async function WeekPage({
     });
 
   if (!student) {
-    return <div>Student not found.</div>;
+    return (
+      <main className="p-8">
+        <StatusCard
+          variant="warning"
+          title="Student Not Found"
+          message="We couldn't find your student record. Please contact the Liaison Office."
+        />
+      </main>
+    );
   }
-
   const { week } =
     await params;
 

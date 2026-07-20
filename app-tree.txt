@@ -1,0 +1,339 @@
+Folder PATH listing
+Volume serial number is 4065-F02A
+C:\PROJECTS\TTU-IAS\APP
+|   favicon.ico
+|   globals.css
+|   layout.tsx
+|   page.tsx
+|   
++---admin
+|   |   layout.tsx
+|   |   page.tsx
+|   |   
+|   +---companies
+|   |   |   company-filter.tsx
+|   |   |   page.tsx
+|   |   |   
+|   |   \---new
+|   |           page.tsx
+|   |           
+|   +---industry-supervisors
+|   |   |   page.tsx
+|   |   |   supervisor-filter.tsx
+|   |   |   supervisor-form.tsx
+|   |   |   
+|   |   \---assign
+|   |           assign-form.tsx
+|   |           page.tsx
+|   |           
+|   +---placement-requests
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[id]
+|   |           page.tsx
+|   |           placement-request-actions.tsx
+|   |           
+|   +---placements
+|   |       page.tsx
+|   |       
+|   +---reports
+|   |       page.tsx
+|   |       report-filter.tsx
+|   |       
+|   +---results
+|   |       page.tsx
+|   |       
+|   +---students
+|   |   |   page.tsx
+|   |   |   student-filter.tsx
+|   |   |   
+|   |   \---new
+|   |           page.tsx
+|   |           
+|   +---supervisors
+|   |   |   page.tsx
+|   |   |   supervisor-filter.tsx
+|   |   |   
+|   |   +---assign
+|   |   |       page.tsx
+|   |   |       
+|   |   +---dashboard
+|   |   |       page.tsx
+|   |   |       
+|   |   \---new
+|   |           page.tsx
+|   |           
+|   \---users
+|           page.tsx
+|           user-filter.tsx
+|           
++---api
+|   +---auth
+|   |   \---[...nextauth]
+|   |           route.ts
+|   |           
+|   +---companies
+|   |   |   route.ts
+|   |   |   
+|   |   \---industry-supervisors
+|   |       |   route.ts
+|   |       |   
+|   |       \---assign
+|   |               route.ts
+|   |               
+|   +---industry-supervisors
+|   |   |   route.ts
+|   |   |   
+|   |   +---assessments
+|   |   |   \---save-score
+|   |   |           route.ts
+|   |   |           
+|   |   +---assign
+|   |   |       route.ts
+|   |   |       
+|   |   +---logbook
+|   |   |   \---[id]
+|   |   |       +---certify
+|   |   |       |       route.ts
+|   |   |       |       
+|   |   |       +---reject
+|   |   |       |       route.ts
+|   |   |       |       
+|   |   |       \---remarks
+|   |   |               route.ts
+|   |   |               
+|   |   +---reports
+|   |   |   \---[id]
+|   |   |       +---approve
+|   |   |       |       route.ts
+|   |   |       |       
+|   |   |       +---reject
+|   |   |       |       route.ts
+|   |   |       |       
+|   |   |       \---remarks
+|   |   |               route.ts
+|   |   |               
+|   |   \---results
+|   |           page.tsx
+|   |           
+|   +---logbook
+|   |   \---weeks
+|   |       |   route.ts
+|   |       |   
+|   |       \---submit
+|   |               route.ts
+|   |               
+|   +---login
+|   |       route.ts
+|   |       
+|   +---placement-requests
+|   |   |   route.ts
+|   |   |   
+|   |   \---[id]
+|   |       +---approve
+|   |       |       route.ts
+|   |       |       
+|   |       \---reject
+|   |               route.ts
+|   |               
+|   +---placements
+|   |       route.ts
+|   |       
+|   +---reports
+|   |   |   route.ts
+|   |   |   
+|   |   +---upload
+|   |   |       route.ts
+|   |   |       
+|   |   \---[id]
+|   |       +---approve
+|   |       |       route.ts
+|   |       |       
+|   |       +---reject
+|   |       |       route.ts
+|   |       |       
+|   |       \---remarks
+|   |               route.ts
+|   |               
+|   +---reset-company-password
+|   |       route.ts
+|   |       
+|   +---students
+|   |       route.ts
+|   |       
+|   +---supervisors
+|   |   |   route.ts
+|   |   |   
+|   |   +---assessments
+|   |   |   \---save-score
+|   |   |           route.ts
+|   |   |           
+|   |   \---assign
+|   |           route.ts
+|   |           
+|   +---test-login
+|   |       route.ts
+|   |       
+|   +---test-placement
+|   \---users
+|       \---toggle-status
+|               route.ts
+|               
++---company
+|   |   page.tsx
+|   |   
+|   +---assignments
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[studentId]
+|   |           page.tsx
+|   |           student-assignment-form.tsx
+|   |           
+|   +---industry-supervisors
+|   |   |   page.tsx
+|   |   |   
+|   |   \---new
+|   |           page.tsx
+|   |           supervisor-form.tsx
+|   |           
+|   \---profile
+|           page.tsx
+|           
++---dashboard
+|       page.tsx
+|       
++---industry-supervisor
+|   |   layout.tsx
+|   |   
+|   +---assessments
+|   |   \---[studentId]
+|   |           AssessmentForm.tsx
+|   |           page.tsx
+|   |           
+|   +---dashboard
+|   |       page.tsx
+|   |       
+|   +---logbook
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[id]
+|   |           page.tsx
+|   |           review-actions.tsx
+|   |           
+|   +---profile
+|   |       page.tsx
+|   |       
+|   +---reports
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[id]
+|   |           page.tsx
+|   |           review-actions.tsx
+|   |           
+|   +---results
+|   |       page.tsx
+|   |       
+|   \---students
+|           page.tsx
+|           
++---liaison
+|   |   page.tsx
+|   |   
+|   +---assignments
+|   |       page.tsx
+|   |       
+|   +---companies
+|   |   |   page.tsx
+|   |   |   
+|   |   \---new
+|   |           company-form.tsx
+|   |           page.tsx
+|   |           
+|   +---industry-supervisors
+|   |       page.tsx
+|   |       
+|   +---placement-requests
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[id]
+|   |           page.tsx
+|   |           review-actions.tsx
+|   |           
+|   +---reports
+|   |       page.tsx
+|   |       report-filter.tsx
+|   |       
+|   +---results
+|   |       page.tsx
+|   |       
+|   \---students
+|       |   page.tsx
+|       |   
+|       \---new
+|               page.tsx
+|               student-form.tsx
+|               
++---login
+|       page.tsx
+|       
++---student
+|   |   layout.tsx
+|   |   page.tsx
+|   |   
+|   +---companies
+|   |       page.tsx
+|   |       
+|   +---logbook
+|   |   |   page.tsx
+|   |   |   
+|   |   \---[week]
+|   |           page.tsx
+|   |           week-form.tsx
+|   |           
+|   +---placement-request
+|   |       page.tsx
+|   |       placement-request-form.tsx
+|   |       
+|   +---reports
+|   |       page.tsx
+|   |       report-filter.tsx
+|   |       report-form.tsx
+|   |       
+|   \---results
+|           page.tsx
+|           
+\---supervisor
+    |   layout.tsx
+    |   page.tsx
+    |   
+    +---assessments
+    |   \---[studentId]
+    |           AssessmentForm.tsx
+    |           page.tsx
+    |           
+    +---logbook
+    |   |   page.tsx
+    |   |   
+    |   +---week
+    |   |   \---[id]
+    |   |           page.tsx
+    |   |           
+    |   \---[id]
+    |           page.tsx
+    |           
+    +---profile
+    |       page.tsx
+    |       
+    +---reports
+    |   |   page.tsx
+    |   |   
+    |   \---[id]
+    |           page.tsx
+    |           remarks-form.tsx
+    |           
+    +---results
+    |       page.tsx
+    |       
+    \---students
+            page.tsx
+            

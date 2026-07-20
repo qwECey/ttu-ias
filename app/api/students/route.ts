@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         role: "STUDENT",
+        mustChangePassword: true,
       },
     });
 

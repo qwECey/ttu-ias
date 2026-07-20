@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
         loginId,
         password: hashedPassword,
         role: "COMPANY",
+        mustChangePassword: true,
       },
     });
 

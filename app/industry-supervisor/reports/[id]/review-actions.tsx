@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,7 @@ export default function ReviewActions({
     try {
       setLoading(true);
 
-      await fetch(
+      const res = await fetch(
         `/api/industry-supervisors/reports/${reportId}/remarks`,
         {
           method: "PATCH",
@@ -34,10 +35,23 @@ export default function ReviewActions({
         }
       );
 
+      if (!res.ok) {
+        throw new Error();
+      }
+
+      toast.success(
+        "Remarks saved successfully."
+      );
+
       setRemarks("");
 
       router.push("/industry-supervisor/reports");
       router.refresh();
+
+    } catch {
+      toast.error(
+        "Failed to save remarks."
+      );
     } finally {
       setLoading(false);
     }
@@ -61,16 +75,18 @@ export default function ReviewActions({
       );
 
       if (!res.ok) {
-        alert("Failed to approve report.");
-        return;
+        throw new Error();
       }
-
-      alert("Report approved successfully.");
-
-      setRemarks(remarks);
+      toast.success(
+        "Report approved successfully."
+      );
 
       router.push("/industry-supervisor/reports");
       router.refresh();
+    } catch {
+      toast.error(
+        "Failed to approve report."
+      );
     } finally {
       setLoading(false);
     }
@@ -94,15 +110,20 @@ export default function ReviewActions({
       );
 
       if (!res.ok) {
-        alert("Failed to reject report.");
-        return;
+        throw new Error();
       }
 
-      setRemarks("");
+      toast.success(
+        "Report returned to the student."
+      );
 
       router.push("/industry-supervisor/reports");
-
       router.refresh();
+    } catch {
+      toast.error(
+        "Failed to reject report."
+      );
+
     } finally {
       setLoading(false);
     }

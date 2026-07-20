@@ -4,11 +4,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 import {
+  getAssessment,
   getAssessmentTemplate,
-  getAssessmentScores,
 } from "@/lib/assessments";
 
 import AssessmentForm from "./AssessmentForm";
+import StatusCard from "@/components/ui/StatusCard";
+import PageHeader from "@/components/ui/PageHeader";
 
 type PageProps = {
   params: Promise<{
@@ -23,9 +25,16 @@ export default async function IndustryAssessmentPage({
     await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return <div>Unauthorized</div>;
+    return (
+      <main className="p-8">
+        <StatusCard
+          variant="error"
+          title="Unauthorized"
+          message="Please sign in to continue."
+        />
+      </main>
+    );
   }
-
   const { studentId } = await params;
 
   const industrySupervisor =
@@ -36,7 +45,15 @@ export default async function IndustryAssessmentPage({
     });
 
   if (!industrySupervisor) {
-    return <div>Industry Supervisor not found.</div>;
+    return (
+      <main className="p-8">
+        <StatusCard
+          variant="warning"
+          title="Supervisor Not Found"
+          message="Your industry supervisor profile could not be found."
+        />
+      </main>
+    );
   }
 
   const internship =
@@ -64,7 +81,7 @@ export default async function IndustryAssessmentPage({
     );
 
   const assessment =
-  await getAssessmentScores(
+  await getAssessment(
     internship.id,
     template!.id
   );
@@ -96,11 +113,47 @@ export default async function IndustryAssessmentPage({
     })),
   };
 
+  const assessmentSummary = serializedTemplate.sections.map(
+    (section) => {
+      const earned = section.criteria.reduce(
+        (total, criterion) =>
+          total + Number(criterion.score ?? 0),
+        0
+      );
+
+      const maximum = section.criteria.reduce(
+        (total, criterion) =>
+          total + criterion.maximumScore,
+        0
+      );
+
+      return {
+        name: section.name,
+        earned,
+        maximum,
+      };
+    }
+  );
+
+  const totalEarned = assessmentSummary.reduce(
+    (total, section) => total + section.earned,
+    0
+  );
+
+  const totalMaximum = assessmentSummary.reduce(
+    (total, section) => total + section.maximum,
+    0
+  );
+
   if (!template) {
     return (
-      <div className="p-8">
-        Assessment template not found.
-      </div>
+      <main className="p-8">
+        <StatusCard
+          variant="warning"
+          title="Assessment Template Missing"
+          message="The assessment template could not be found. Please contact the system administrator."
+        />
+      </main>
     );
   }
 
@@ -109,25 +162,27 @@ export default async function IndustryAssessmentPage({
 
       <div className="mx-auto max-w-5xl">
 
-        <div className="mb-8 rounded-3xl bg-slate-900 p-8 text-white shadow-lg">
-
-          <h1 className="text-3xl font-bold">
-            Industry Supervisor Assessment
-          </h1>
-
-          <p className="mt-3 text-slate-300">
+        <PageHeader
+          title="Industry Supervisor Assessment"
+          dark
+        >
+          <p className="text-lg font-semibold">
             {internship.student.fullName}
           </p>
 
           <p className="text-slate-300">
-            {internship.company?.companyName}
+            {internship.company?.companyName ??
+              "No Company Assigned"}
           </p>
-
-        </div>
+        </PageHeader>
 
         <AssessmentForm
           internshipId={internship.id}
           template={serializedTemplate}
+          completed={assessment?.completed ?? false}
+          summary={assessmentSummary}
+          totalEarned={totalEarned}
+          totalMaximum={totalMaximum}
         />
 
       </div>

@@ -105,10 +105,10 @@ export default async function SupervisorStudentsPage() {
 
                     <td className="px-6 py-4">
                       <Link
-                        href={`/supervisor/reports?studentId=${internship.student.id}`}
+                        href={`/supervisor/assessments/${internship.student.id}`}
                         className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                       >
-                        View Reports
+                        Assess Student
                       </Link>
                       
                     </td>

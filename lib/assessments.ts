@@ -83,7 +83,7 @@ export async function saveAssessmentScore(
   });
 }
 
-export async function getAssessmentScores(
+export async function getAssessment(
   internshipId: string,
   assessmentTemplateId: string
 ) {
@@ -129,4 +129,34 @@ export async function submitAssessment(
       completedAt: new Date(),
     },
   });
+}
+
+export function calculateAcademicScore(
+  rawScore: number,
+  maximumRawScore: number,
+) {
+  return Number(
+    (
+      (rawScore / maximumRawScore) *
+      30
+    ).toFixed(2)
+  );
+}
+
+export function calculateRawAssessmentScore(
+  scores: number[]
+) {
+  return scores.reduce(
+    (total, score) => total + score,
+    0
+  );
+}
+
+export function calculateMaximumRawScore(
+  maximumScores: number[]
+) {
+  return maximumScores.reduce(
+    (total, score) => total + score,
+    0
+  );
 }

@@ -1,0 +1,54 @@
+Folder PATH listing
+Volume serial number is 4065-F02A
+C:\PROJECTS\TTU-IAS\COMPONENTS
++---admin
+|       AdminSidebar.tsx
+|       AdminTopbar.tsx
+|       StatCard.tsx
+|       StudentForm.tsx
+|       
++---auth
+|       LoginForm.tsx
+|       LogoutButton.tsx
+|       
++---company
+|       CompanyForm.tsx
+|       
++---landing
+|       FeaturesSection.tsx
+|       HeroSection.tsx
+|       HowItWorksSection.tsx
+|       StatisticsSection.tsx
+|       
++---layout
+|   |   Footer.tsx
+|   |   Navbar.tsx
+|   |   
+|   +---industry-supervisor
+|   |       IndustrySupervisorSidebar.tsx
+|   |       IndustrySupervisorTopbar.tsx
+|   |       
+|   \---supervisor
+|           SupervisorSidebar.tsx
+|           
++---placement
+|       PlacementForm.tsx
+|       
++---providers
+|       SessionProvider.tsx
+|       
++---results
+|       AssessmentResultsTable.tsx
+|       ScoreDisplay.tsx
+|       StatusBadge.tsx
+|       
++---student
+|       InternshipJourney.tsx
+|       
++---supervisor
+|       SupervisorForm.tsx
+|       
+\---ui
+        PageHeader.tsx
+        StatusCard.tsx
+        

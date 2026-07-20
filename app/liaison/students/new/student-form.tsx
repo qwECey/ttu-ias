@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -58,14 +59,14 @@ export default function StudentForm() {
         await response.json();
 
       if (!response.ok) {
-        alert(
+        toast.error(
           data.message ??
             "Failed to create student."
         );
         return;
       }
 
-      alert(
+      toast.success(
         "Student created successfully."
       );
 
@@ -75,6 +76,10 @@ export default function StudentForm() {
 
       router.refresh();
 
+    } catch {
+      toast.error(
+        "Unable to connect to the server."
+      );
     } finally {
       setLoading(false);
     }

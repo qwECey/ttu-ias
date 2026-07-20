@@ -115,6 +115,132 @@ const assessmentTemplates = [
 
   // Academic Supervisor Assessment
   // will be added here next.
+  {
+    name: "Academic Supervisor Assessment",
+    version: 1,
+    description:
+      "Official TTU School-Based Supervisor Assessment Form",
+
+    sections: [
+      {
+        name: "Industrial Attachment",
+        criteria: [
+          {
+            name: "Week student began industrial attachment",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Completion of Log Book",
+        criteria: [
+          {
+            name: "Filling of student's information",
+            maximumScore: 4,
+          },
+          {
+            name: "Filling of organization profile",
+            maximumScore: 4,
+          },
+          {
+            name: "Filling of daily log book up to date",
+            maximumScore: 4,
+          },
+          {
+            name: "Filling of log book up to date by supervisor",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Placement",
+        criteria: [
+          {
+            name: "Relationship with course of study",
+            maximumScore: 4,
+          },
+          {
+            name: "Relevance of organization to programme of study",
+            maximumScore: 4,
+          },
+          {
+            name: "Skills, Competencies & Knowledge acquired",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Attitude to Work",
+        criteria: [
+          {
+            name: "Punctuality",
+            maximumScore: 4,
+          },
+          {
+            name: "Regularity",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Communication",
+        criteria: [
+          {
+            name: "Written ability",
+            maximumScore: 4,
+          },
+          {
+            name: "Verbal and non-verbal",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Appearance",
+        criteria: [
+          {
+            name: "Headgear / Hair-do",
+            maximumScore: 4,
+          },
+          {
+            name: "Footwear",
+            maximumScore: 4,
+          },
+          {
+            name: "Attire",
+            maximumScore: 4,
+          },
+        ],
+      },
+
+      {
+        name: "Interpersonal Relationship & Team Work",
+        criteria: [
+          {
+            name: "Superior",
+            maximumScore: 4,
+          },
+          {
+            name: "Colleagues",
+            maximumScore: 4,
+          },
+          {
+            name: "Subordinates",
+            maximumScore: 4,
+          },
+          {
+            name: "Clientele",
+            maximumScore: 4,
+          },
+        ],
+      },
+    ],
+  }
 ];
 
 export async function seedAssessments(
