@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import LogoutButton from "@/components/auth/LogoutButton";
-import AdminMobileNav from "@/components/layout/AdminMobileNav";
+import LiaisonMobileNav from "@/components/layout/LiaisonMobileNav";
 
-export default function AdminLayout({
+export default function LiaisonLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-slate-50">
 
-      <AdminMobileNav />
+      <LiaisonMobileNav />
 
       <div className="flex">
 
@@ -38,7 +38,7 @@ export default function AdminLayout({
                 </h2>
 
                 <p className="text-sm text-slate-300">
-                  Administrator
+                  Liaison Officer
                 </p>
               </div>
 
@@ -52,7 +52,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin"
+                  href="/liaison"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Dashboard
@@ -61,7 +61,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/students"
+                  href="/liaison/students"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Students
@@ -70,7 +70,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/companies"
+                  href="/liaison/companies"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Companies
@@ -79,16 +79,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/supervisors"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Academic Supervisors
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/industry-supervisors"
+                  href="/liaison/industry-supervisors"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Industry Supervisors
@@ -97,16 +88,16 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/placements"
+                  href="/liaison/assignments"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
-                  Placements
+                  Assignments
                 </Link>
               </li>
 
               <li>
                 <Link
-                  href="/admin/placement-requests"
+                  href="/liaison/placement-requests"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Placement Requests
@@ -115,7 +106,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/reports"
+                  href="/liaison/reports"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Reports
@@ -124,19 +115,10 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/results"
+                  href="/liaison/results"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Results
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/users"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Users
                 </Link>
               </li>
 
@@ -152,7 +134,7 @@ export default function AdminLayout({
           <header className="hidden items-center justify-between border-b bg-white px-8 py-4 shadow-sm lg:flex">
 
             <h1 className="text-xl font-bold">
-              Administrator Portal
+              Liaison Officer Portal
             </h1>
 
             <LogoutButton />

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Props = {
   placementRequestExists: boolean;
   placementApproved: boolean;
@@ -187,8 +189,23 @@ export default function InternshipJourney({
 
         <JourneyRow
           title="7. Final Assessment"
-          description="Assessment status updates automatically as your supervisors complete their assessments."
-          badge={assessmentBadge()}
+          description={
+            assessmentStatus === "COMPLETED"
+              ? "Your final assessment has been completed. You can now view your official results."
+              : "Assessment status updates automatically as your supervisors complete their assessments."
+          }
+          badge={
+            assessmentStatus === "COMPLETED" ? (
+              <Link
+                href="/student/results"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                View Results
+              </Link>
+            ) : (
+              assessmentBadge()
+            )
+          }
           last
         />
 

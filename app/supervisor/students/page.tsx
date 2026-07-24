@@ -51,8 +51,8 @@ export default async function SupervisorStudentsPage() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
-          <table className="w-full">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
+          <table className="min-w-[1100px] w-full">
 
             <thead className="bg-gray-50">
               <tr>
@@ -73,7 +73,7 @@ export default async function SupervisorStudentsPage() {
                     key={internship.id}
                     className="border-t"
                   >
-                    <td className="px-6 py-4">
+                    <td className="whitespace-nowrap px-6 py-4">
                       {internship.student.studentId}
                     </td>
 
@@ -85,9 +85,8 @@ export default async function SupervisorStudentsPage() {
                       {internship.student.programme}
                     </td>
 
-                    <td className="px-6 py-4">
-                      {internship.company?.companyName ??
-                        "Not Assigned"}
+                    <td className="whitespace-nowrap px-6 py-4">
+                      {internship.company?.companyName ?? "Not Assigned"}
                     </td>
 
                     <td className="px-6 py-4">
@@ -97,13 +96,11 @@ export default async function SupervisorStudentsPage() {
                       }
                     </td>
 
-                    <td className="px-6 py-4">
-                      {
-                        internship.placementStatus
-                      }
+                    <td className="whitespace-nowrap px-6 py-4">
+                      {internship.placementStatus}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="whitespace-nowrap px-6 py-4">
                       <Link
                         href={`/supervisor/assessments/${internship.student.id}`}
                         className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"

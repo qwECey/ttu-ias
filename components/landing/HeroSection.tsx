@@ -1,6 +1,10 @@
+import Link from "next/link";
+
 export default function HeroSection() {
   return (
-    <section className="hero-background relative flex min-h-[85vh] items-center justify-center">
+    <section 
+    id="features"
+    className="hero-background relative flex min-h-[85vh] items-center justify-center">
       <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative z-10 max-w-4xl px-6 text-center text-white">
@@ -14,13 +18,19 @@ export default function HeroSection() {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <button className="rounded-lg bg-white px-6 py-3 font-semibold text-[#0F2D52] hover:bg-gray-100">
+          <Link
+            href="/login"
+            className="rounded-lg bg-white px-6 py-3 font-semibold text-[#0F2D52] transition hover:bg-gray-100"
+          >
             Login
-          </button>
+          </Link>
 
-          <button className="rounded-lg border border-white px-6 py-3 font-semibold text-white hover:bg-white hover:text-[#0F2D52]">
+          <a
+            href="#features"
+            className="rounded-lg border border-white px-6 py-3 font-semibold text-white transition hover:bg-white hover:text-[#0F2D52]"
+          >
             Learn More
-          </button>
+          </a>
         </div>
       </div>
     </section>

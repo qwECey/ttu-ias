@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import LogoutButton from "@/components/auth/LogoutButton";
-import AdminMobileNav from "@/components/layout/AdminMobileNav";
+import CompanyMobileNav from "@/components/layout/CompanyMobileNav";
 
-export default function AdminLayout({
+export default function CompanyLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,11 +12,11 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-slate-50">
 
-      <AdminMobileNav />
+      <CompanyMobileNav />
 
       <div className="flex">
 
-        {/* Sidebar */}
+        {/* Desktop Sidebar */}
         <aside className="hidden w-72 bg-slate-900 text-white lg:block">
 
           <div className="border-b border-slate-700 p-6">
@@ -38,7 +38,7 @@ export default function AdminLayout({
                 </h2>
 
                 <p className="text-sm text-slate-300">
-                  Administrator
+                  Company Portal
                 </p>
               </div>
 
@@ -52,7 +52,7 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin"
+                  href="/company"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Dashboard
@@ -61,34 +61,16 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/students"
+                  href="/company/assignments"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
-                  Students
+                  Assignments
                 </Link>
               </li>
 
               <li>
                 <Link
-                  href="/admin/companies"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Companies
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/supervisors"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Academic Supervisors
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/industry-supervisors"
+                  href="/company/industry-supervisors"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
                   Industry Supervisors
@@ -97,46 +79,10 @@ export default function AdminLayout({
 
               <li>
                 <Link
-                  href="/admin/placements"
+                  href="/company/profile"
                   className="block rounded-lg px-4 py-3 hover:bg-slate-800"
                 >
-                  Placements
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/placement-requests"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Placement Requests
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/reports"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Reports
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/results"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Results
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/admin/users"
-                  className="block rounded-lg px-4 py-3 hover:bg-slate-800"
-                >
-                  Users
+                  Profile
                 </Link>
               </li>
 
@@ -147,12 +93,13 @@ export default function AdminLayout({
         </aside>
 
         {/* Main Content */}
+
         <div className="min-w-0 flex flex-1 flex-col">
 
           <header className="hidden items-center justify-between border-b bg-white px-8 py-4 shadow-sm lg:flex">
 
             <h1 className="text-xl font-bold">
-              Administrator Portal
+              Company Portal
             </h1>
 
             <LogoutButton />

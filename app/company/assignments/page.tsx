@@ -43,12 +43,6 @@ export default async function CompanyAssignmentsPage() {
     );
   }
 
-  console.log("Logged in company:", company?.id);
-console.log(
-  "Internships found:",
-  company?.internships.length
-);
-
   return (
     <main className="min-h-screen bg-gray-100 p-6">
 
@@ -66,27 +60,27 @@ console.log(
 
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-          <table className="w-full">
+          <table className="min-w-[900px] w-full">
 
             <thead className="bg-gray-50">
 
               <tr>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Student
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Student ID
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Supervisor
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Action
                 </th>
 
@@ -104,23 +98,21 @@ console.log(
                     className="border-t"
                   >
 
-                    <td className="px-6 py-4 font-semibold">
+                    <td className="px-6 py-4 font-semibold whitespace-nowrap">
                       {internship.student.fullName}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {internship.student.studentId}
                     </td>
 
-                    <td className="px-6 py-4">
-
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {internship.industrySupervisor
                         ? internship.industrySupervisor.fullName
                         : "Not Assigned"}
-
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
 
                       <Link
                         href={`/company/assignments/${internship.id}`}

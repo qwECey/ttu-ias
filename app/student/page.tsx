@@ -5,6 +5,7 @@ import Image from "next/image";
 import { getOrCreateActiveInternship } from "@/lib/internship";
 import Link from "next/link";
 import InternshipJourney from "@/components/student/InternshipJourney";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 export default async function StudentPage() {
   const session =
@@ -162,6 +163,10 @@ export default async function StudentPage() {
             <div className="absolute inset-0 bg-black/60" />
 
             <div className="relative z-10 p-10 text-white">
+
+              <div className="mb-6 flex justify-end">
+                <LogoutButton />
+              </div>
 
               <h1 className="text-4xl font-bold">
                 Welcome Back,

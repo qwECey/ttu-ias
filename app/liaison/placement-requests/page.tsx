@@ -7,6 +7,7 @@ export default async function PlacementRequestsPage() {
       orderBy: {
         createdAt: "desc",
       },
+
       include: {
         student: true,
       },
@@ -14,9 +15,11 @@ export default async function PlacementRequestsPage() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+
       <div className="mx-auto max-w-7xl">
 
         <div className="mb-8 rounded-3xl bg-white p-8 shadow">
+
           <h1 className="text-3xl font-bold">
             Placement Requests
           </h1>
@@ -24,34 +27,37 @@ export default async function PlacementRequestsPage() {
           <p className="mt-2 text-gray-500">
             Review student placement requests.
           </p>
+
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-          <table className="w-full">
+          <table className="min-w-[1000px] w-full">
 
             <thead className="bg-gray-50">
 
               <tr>
-                <th className="px-6 py-4 text-left">
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Student
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Company
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Status
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Submitted
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Action
                 </th>
+
               </tr>
 
             </thead>
@@ -65,31 +71,31 @@ export default async function PlacementRequestsPage() {
                   className="border-t"
                 >
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 font-medium whitespace-nowrap">
                     {request.student.fullName}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {request.companyName}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
 
                     {request.status === "APPROVED" ? (
 
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                         APPROVED
                       </span>
 
                     ) : request.status === "REJECTED" ? (
 
-                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
+                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
                         REJECTED
                       </span>
 
                     ) : (
 
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
+                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
                         PENDING
                       </span>
 
@@ -97,13 +103,13 @@ export default async function PlacementRequestsPage() {
 
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {new Date(
                       request.createdAt
                     ).toLocaleDateString("en-GB")}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
 
                     <Link
                       href={`/liaison/placement-requests/${request.id}`}
@@ -125,6 +131,7 @@ export default async function PlacementRequestsPage() {
         </div>
 
       </div>
+
     </main>
   );
 }

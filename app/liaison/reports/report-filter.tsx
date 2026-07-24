@@ -30,6 +30,31 @@ function getOverallStatus(report: Report) {
   return "PENDING";
 }
 
+function getStatusBadge(status: string) {
+  switch (status) {
+    case "APPROVED":
+      return (
+        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+          Approved
+        </span>
+      );
+
+    case "REJECTED":
+      return (
+        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+          Rejected
+        </span>
+      );
+
+    default:
+      return (
+        <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+          Pending
+        </span>
+      );
+  }
+}
+
 export default function ReportFilter({
   reports,
 }: {
@@ -58,8 +83,9 @@ export default function ReportFilter({
       const matchesStatus =
         status === "ALL"
           ? true
-          : getOverallStatus(report) ===
-            status;
+          : getOverallStatus(
+              report
+            ) === status;
 
       return (
         matchesSearch &&
@@ -69,13 +95,14 @@ export default function ReportFilter({
 
   return (
     <>
-      <div className="mb-6 flex gap-4">
+
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
 
         <label
-          htmlFor="liaison-search"
+          htmlFor="liaison-report-search"
           className="sr-only"
         >
-          Search student or report...
+          Search student or report
         </label>
 
         <input
@@ -88,7 +115,7 @@ export default function ReportFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="flex-1 rounded-xl border bg-white px-4 py-3 shadow-sm"
         />
 
         <label
@@ -106,10 +133,10 @@ export default function ReportFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="rounded-xl border bg-white px-4 py-3 shadow-sm"
         >
           <option value="ALL">
-            All
+            All Statuses
           </option>
 
           <option value="PENDING">
@@ -123,80 +150,110 @@ export default function ReportFilter({
           <option value="REJECTED">
             Rejected
           </option>
+
         </select>
 
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-        <table className="w-full">
+      {filtered.length === 0 ? (
 
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left">
-                Student
-              </th>
+        <div className="rounded-3xl bg-white p-10 text-center shadow">
 
-              <th className="px-6 py-4 text-left">
-                Title
-              </th>
+          <h3 className="text-xl font-semibold">
+            No Reports Found
+          </h3>
 
-              <th className="px-6 py-4 text-left">
-                Type
-              </th>
+          <p className="mt-2 text-gray-500">
+            Try changing your search or filter.
+          </p>
 
-              <th className="px-6 py-4 text-left">
-                Status
-              </th>
+        </div>
 
-              <th className="px-6 py-4 text-left">
-                Submitted
-              </th>
-            </tr>
-          </thead>
+      ) : (
 
-          <tbody>
-            {filtered.map(
-              (report) => (
-                <tr
-                  key={report.id}
-                  className="border-t"
-                >
-                  <td className="px-6 py-4">
-                    {
-                      report.studentName
-                    }
-                  </td>
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-                  <td className="px-6 py-4">
-                    {report.title}
-                  </td>
+          <table className="min-w-[1000px] w-full">
 
-                  <td className="px-6 py-4">
-                    {
-                      report.reportType
-                    }
-                  </td>
+            <thead className="bg-gray-50">
 
-                  <td className="px-6 py-4">
-                    {getOverallStatus(
-                      report
-                    )}
-                  </td>
+              <tr>
 
-                  <td className="px-6 py-4">
-                    {new Date(
-                      report.submittedAt
-                    ).toLocaleDateString(
-                      "en-GB"
-                    )}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Student
+                </th>
 
-        </table>
-      </div>
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Title
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Type
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Status
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Submitted
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {filtered.map(
+                (report) => (
+
+                  <tr
+                    key={report.id}
+                    className="border-t"
+                  >
+
+                    <td className="px-6 py-4 font-medium whitespace-nowrap">
+                      {report.studentName}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {report.title}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {report.reportType}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(
+                        getOverallStatus(
+                          report
+                        )
+                      )}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {new Date(
+                        report.submittedAt
+                      ).toLocaleDateString(
+                        "en-GB"
+                      )}
+                    </td>
+
+                  </tr>
+
+                )
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
     </>
   );
 }

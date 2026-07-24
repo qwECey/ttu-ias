@@ -29,13 +29,21 @@ export default async function CompanyProfilePage() {
   return (
     <main className="min-h-screen bg-gray-100 p-6">
 
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl space-y-8">
 
         <div className="rounded-3xl bg-white p-8 shadow">
 
-          <h1 className="mb-8 text-3xl font-bold">
+          <h1 className="text-3xl font-bold">
             Company Profile
           </h1>
+
+          <p className="mt-2 text-gray-500">
+            View your company`s account information.
+          </p>
+
+        </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow">
 
           <div className="grid gap-6 md:grid-cols-2">
 
@@ -94,13 +102,13 @@ function ProfileItem({
   value: string;
 }) {
   return (
-    <div>
+    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
         {label}
       </p>
 
-      <p className="mt-1 text-lg font-semibold">
+      <p className="mt-2 break-words text-lg font-semibold text-slate-900">
         {value}
       </p>
 

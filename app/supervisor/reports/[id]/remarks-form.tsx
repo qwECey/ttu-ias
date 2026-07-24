@@ -19,7 +19,14 @@ export default function RemarksForm({
     useState(false);
 
   const [message, setMessage] =
-    useState("");
+  useState("");
+
+  const [messageType, setMessageType] =
+    useState<"success" | "error" | "">("");
+
+  // useEffect(() => {
+  //   setRemarks(initialRemarks);
+  // }, [initialRemarks]);
 
   async function saveRemarks() {
     try {
@@ -38,14 +45,26 @@ export default function RemarksForm({
         }
       );
 
+      console.log("Status:", res.status);
+
+      const data = await res.json();
+
+      console.log(data);
+
       if (!res.ok) {
-        setMessage("❌ Failed to save remarks.");
+        setMessageType("error");
+        setMessage(data.message ?? "Failed to save remarks.");
         return;
-    }
+      }
 
-    setMessage("✅ Remarks saved successfully.");
+      setMessageType("success");
+      setMessage("Remarks saved successfully.");
 
-    router.refresh();
+    } catch (error) {
+      console.error(error);
+
+      setMessageType("error");
+      setMessage("Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -122,7 +141,13 @@ export default function RemarksForm({
       </h2>
 
       {message && (
-        <div className="mb-4 rounded-lg bg-green-100 border border-green-300 p-3 text-green-700">
+        <div
+          className={`mb-4 rounded-lg border p-3 ${
+            messageType === "success"
+              ? "border-green-300 bg-green-100 text-green-700"
+              : "border-red-300 bg-red-100 text-red-700"
+          }`}
+        >
           {message}
         </div>
       )}

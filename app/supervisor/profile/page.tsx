@@ -14,14 +14,19 @@ export default async function SupervisorProfile() {
     where: {
       userId: session.user.id,
     },
-    include: {
-      students: true,
-    },
   });
 
   if (!supervisor) {
     return <div className="p-8">Supervisor not found.</div>;
   }
+
+  const assignedStudents =
+    await prisma.internship.count({
+      where: {
+        supervisorId: supervisor.id,
+        status: "ACTIVE",
+      },
+    });
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
@@ -80,7 +85,7 @@ export default async function SupervisorProfile() {
               </h3>
 
               <p className="mt-2 text-lg">
-                {supervisor.students.length}
+                {assignedStudents}
               </p>
             </div>
 

@@ -69,37 +69,36 @@ export default async function AdminResultsPage() {
             completed:
               result.completed,
 
-            actionHref:
-              assessment.assessmentTemplate
-                .name ===
-              "Academic Supervisor Assessment"
-                ? `/supervisor/assessments/${internship.student.id}`
-                : `/industry-supervisor/assessments/${internship.student.id}`,
+            actionHref: `/admin/results/${internship.student.id}`,
           };
         }
       )
   );
 
   return (
-    <main className="mx-auto max-w-6xl p-8">
+    <main className="min-h-screen bg-gray-100 p-6">
 
-      <div className="mb-8 rounded-3xl bg-slate-900 p-8 text-white shadow-lg">
+      <div className="mx-auto max-w-7xl">
 
-        <h1 className="text-4xl font-bold">
-          Assessment Results
-        </h1>
+        <div className="mb-8 rounded-3xl bg-slate-900 p-8 text-white shadow-lg">
 
-        <p className="mt-3 text-slate-300">
-          View all internship assessment
-          results across the system.
-        </p>
+          <h1 className="text-4xl font-bold">
+            Assessment Results
+          </h1>
+
+          <p className="mt-3 text-slate-300">
+            View all internship assessment
+            results across the system.
+          </p>
+
+        </div>
+
+        <AssessmentResultsTable
+          title="All Assessment Results"
+          rows={rows}
+        />
 
       </div>
-
-      <AssessmentResultsTable
-        title="All Assessment Results"
-        rows={rows}
-      />
 
     </main>
   );

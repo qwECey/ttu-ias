@@ -229,8 +229,8 @@ export default async function SupervisorPage() {
             Supervised Students
           </h2>
 
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-            <table className="w-full">
+          <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
+            <table className="min-w-[900px] w-full">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-4 text-left">
@@ -260,7 +260,7 @@ export default async function SupervisorPage() {
                       }
                       className="border-t"
                     >
-                      <td className="px-6 py-4">
+                      <td className="whitespace-nowrap px-6 py-4">
                         {
                           internship.student.studentId
                         }
@@ -278,7 +278,7 @@ export default async function SupervisorPage() {
                         }
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="whitespace-nowrap px-6 py-4">
                         {internship.company?.companyName ??
                           "Not Assigned"}
                       </td>
@@ -295,8 +295,8 @@ export default async function SupervisorPage() {
             Recent Reports
           </h2>
 
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-            <table className="w-full">
+          <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
+            <table className="min-w-[1000px] w-full">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-4 text-left">Student</th>
@@ -322,7 +322,7 @@ export default async function SupervisorPage() {
                         {report.title}
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="whitespace-nowrap px-6 py-4">
                         {report.reportType}
                       </td>
 
@@ -342,7 +342,7 @@ export default async function SupervisorPage() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <Link
                           href={`/supervisor/reports/${report.id}`}
                           className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"

@@ -8,6 +8,7 @@ export default async function IndustrySupervisorsPage() {
       include: {
         company: true,
       },
+
       orderBy: {
         fullName: "asc",
       },
@@ -21,80 +22,99 @@ export default async function IndustrySupervisorsPage() {
     });
 
   return (
-    <main className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">
-          Industry Supervisors
-        </h1>
+    <main className="min-h-screen bg-gray-100 p-6">
 
-        <p className="mt-2 text-gray-600">
-          Manage company supervisors and
-          monitor assigned personnel.
-        </p>
-      </div>
+      <div className="mx-auto max-w-7xl">
 
-      <div className="mb-8 grid gap-6 md:grid-cols-3">
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <p className="text-sm text-gray-500">
-            Total Industry Supervisors
+        <div className="mb-8">
+
+          <h1 className="text-3xl font-bold">
+            Industry Supervisors
+          </h1>
+
+          <p className="mt-2 text-gray-600">
+            Manage company supervisors and monitor assigned personnel.
           </p>
 
-          <h2 className="mt-2 text-4xl font-bold text-blue-600">
-            {supervisors.length}
-          </h2>
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <p className="text-sm text-gray-500">
-            Companies
-          </p>
+        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-          <h2 className="mt-2 text-4xl font-bold text-green-600">
-            {companies.length}
-          </h2>
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+
+            <p className="text-sm text-gray-500">
+              Total Industry Supervisors
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold text-blue-600">
+              {supervisors.length}
+            </h2>
+
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+
+            <p className="text-sm text-gray-500">
+              Companies
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold text-green-600">
+              {companies.length}
+            </h2>
+
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+
+            <p className="text-sm text-gray-500">
+              Active Assignments
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold text-yellow-600">
+              {supervisors.length}
+            </h2>
+
+          </div>
+
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <p className="text-sm text-gray-500">
-            Active Assignments
-          </p>
+        <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
 
-          <h2 className="mt-2 text-4xl font-bold text-yellow-600">
-            {supervisors.length}
+          <h2 className="mb-6 text-xl font-semibold">
+            Create Industry Supervisor
           </h2>
+
+          <IndustrySupervisorForm
+            companies={companies}
+          />
+
         </div>
+
+        <div className="rounded-3xl bg-white p-8 shadow-sm">
+
+          <h2 className="mb-6 text-xl font-semibold">
+            Existing Industry Supervisors
+          </h2>
+
+          <SupervisorFilter
+            supervisors={supervisors.map(
+              (supervisor) => ({
+                id: supervisor.id,
+                fullName:
+                  supervisor.fullName,
+                email:
+                  supervisor.email,
+                companyName:
+                  supervisor.company
+                    .companyName,
+              })
+            )}
+          />
+
+        </div>
+
       </div>
 
-      <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
-        <h2 className="mb-6 text-xl font-semibold">
-          Create Industry Supervisor
-        </h2>
-
-        <IndustrySupervisorForm
-          companies={companies}
-        />
-      </div>
-
-      <div className="rounded-3xl bg-white p-8 shadow-sm">
-        <h2 className="mb-6 text-xl font-semibold">
-          Existing Industry Supervisors
-        </h2>
-
-        <SupervisorFilter
-          supervisors={supervisors.map(
-            (supervisor) => ({
-              id: supervisor.id,
-              fullName:
-                supervisor.fullName,
-              email:
-                supervisor.email,
-              companyName:
-                supervisor.company
-                  .companyName,
-            })
-          )}
-        />
-      </div>
     </main>
   );
 }

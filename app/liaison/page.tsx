@@ -172,11 +172,15 @@ export default async function LiaisonPage() {
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-7xl">
 
-        <h1 className="mb-8 text-3xl font-bold">
-          Liaison Officer Dashboard
-        </h1>
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
-        <div className="grid gap-6 md:grid-cols-4">
+          <h1 className="text-3xl font-bold">
+            Liaison Officer Dashboard
+          </h1>
+
+
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
           <DashboardCard
             title="Students"
@@ -224,13 +228,13 @@ export default async function LiaisonPage() {
           />
 
         </div>
-      </div>
+      {/* </div> */}
       <div className="mt-10">
           <h2 className="mb-4 text-2xl font-semibold">
             Quick Actions
           </h2>
 
-          <div className="grid gap-6 md:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
             <Link
               href="/liaison/students"
@@ -297,14 +301,40 @@ export default async function LiaisonPage() {
               </p>
             </Link>
 
+            <Link
+              href="/liaison/reports"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Reports
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                Review student reports
+              </p>
+            </Link>
+
+            <Link
+              href="/liaison/results"
+              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-md"
+            >
+              <h3 className="text-lg font-semibold">
+                Results
+              </h3>
+
+              <p className="mt-2 text-gray-600">
+                View assessment results
+              </p>
+            </Link>
+
           </div>
           <div className="mt-10">
             <h2 className="mb-4 text-2xl font-semibold">
               Recent Reports
             </h2>
 
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-              <table className="w-full">
+            <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
+              <table className="min-w-[900px] w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-4 text-left">
@@ -381,7 +411,7 @@ export default async function LiaisonPage() {
               Recent Placements
             </h2>
 
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -431,7 +461,7 @@ export default async function LiaisonPage() {
               Analytics
             </h2>
 
-            <div className="grid gap-6 md:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
               <DashboardCard
                 title="Approval Rate"
@@ -455,6 +485,7 @@ export default async function LiaisonPage() {
 
             </div>
           </div>
+      </div>
       </div>
     </main>
   );

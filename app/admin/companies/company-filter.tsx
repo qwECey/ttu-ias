@@ -56,7 +56,7 @@ export default function CompanyFilter({
 
   return (
     <>
-      <div className="mb-6 flex gap-4">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
 
         <label
           htmlFor="company-search"
@@ -75,7 +75,7 @@ export default function CompanyFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="flex-1 rounded-xl border bg-white px-4 py-3 shadow-sm"
         />
 
         <label
@@ -93,10 +93,10 @@ export default function CompanyFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="rounded-xl border bg-white px-4 py-3 shadow-sm"
         >
           <option value="ALL">
-            All
+            All Companies
           </option>
 
           <option value="APPROVED">
@@ -106,76 +106,116 @@ export default function CompanyFilter({
           <option value="PENDING">
             Pending
           </option>
+
         </select>
 
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left">
-                Company
-              </th>
+      {filtered.length === 0 ? (
 
-              <th className="px-6 py-4 text-left">
-                Location
-              </th>
+        <div className="rounded-3xl bg-white p-10 text-center shadow">
 
-              <th className="px-6 py-4 text-left">
-                Contact Person
-              </th>
+          <h3 className="text-xl font-semibold">
+            No Companies Found
+          </h3>
 
-              <th className="px-6 py-4 text-left">
-                Phone
-              </th>
+          <p className="mt-2 text-gray-500">
+            Try changing your search or filter.
+          </p>
 
-              <th className="px-6 py-4 text-left">
-                Status
-              </th>
-            </tr>
-          </thead>
+        </div>
 
-          <tbody>
-            {filtered.map(
-              (company) => (
-                <tr
-                  key={company.id}
-                  className="border-t hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4 font-medium">
-                    {company.companyName}
-                  </td>
+      ) : (
 
-                  <td className="px-6 py-4">
-                    {company.location}
-                  </td>
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-                  <td className="px-6 py-4">
-                    {company.contactPerson}
-                  </td>
+          <table className="min-w-[1000px] w-full">
 
-                  <td className="px-6 py-4">
-                    {company.contactPhone}
-                  </td>
+            <thead className="bg-gray-50">
 
-                  <td className="px-6 py-4">
-                    {company.approved ? (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                        Approved
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
-                        Pending
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
+              <tr>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Company
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Location
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Contact Person
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Phone
+                </th>
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {filtered.map(
+                (company) => (
+
+                  <tr
+                    key={company.id}
+                    className="border-t hover:bg-gray-50"
+                  >
+
+                    <td className="px-6 py-4 font-medium whitespace-nowrap">
+                      {company.companyName}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {company.location}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {company.contactPerson}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {company.contactPhone}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+
+                      {company.approved ? (
+
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                          Approved
+                        </span>
+
+                      ) : (
+
+                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                          Pending
+                        </span>
+
+                      )}
+
+                    </td>
+
+                  </tr>
+
+                )
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
     </>
   );
 }

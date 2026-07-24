@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import PageHeader from "@/components/ui/PageHeader";
 
 export default function ForgotPasswordPage() {
@@ -5,8 +7,8 @@ export default function ForgotPasswordPage() {
     <main className="mx-auto max-w-3xl p-8">
 
       <PageHeader
-        title="Forgot Password"
-        description="Password recovery is managed by TTU TP-CONNECT."
+        title="Password Reset"
+        description="Password resets are managed by the TTU Industrial Attachment System."
       />
 
       <div className="rounded-3xl bg-white p-8 shadow">
@@ -19,16 +21,29 @@ export default function ForgotPasswordPage() {
 
           <p className="mt-4 leading-7 text-gray-700">
             If you have forgotten your password,
-            please visit the TTU TP-CONNECT Office
-            for identity verification and password
-            recovery assistance.
+            please contact the TTU Industrial
+            Attachment System Administrator or visit
+            the TTU TP-CONNECT Office for identity
+            verification and password reset
+            assistance.
           </p>
 
           <p className="mt-4 leading-7 text-gray-700">
             After your password has been reset,
-            you will be required to change it
-            the next time you sign in.
+            you will be required to change it the
+            next time you sign in.
           </p>
+
+        </div>
+
+        <div className="mt-8 flex justify-end">
+
+          <Link
+            href="/login"
+            className="rounded-xl bg-[#0F2D52] px-6 py-3 font-semibold text-white transition hover:opacity-90"
+          >
+            Back to Login
+          </Link>
 
         </div>
 

@@ -55,9 +55,19 @@ export default async function AssignStudentPage({
             Assign Industry Supervisor
           </h1>
 
-          <p className="mb-8 text-gray-500">
-            {internship.student.fullName}
-          </p>
+          <div className="mb-8 rounded-2xl bg-slate-50 p-4">
+            <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              Student
+            </p>
+
+            <p className="mt-1 text-lg font-semibold text-slate-900">
+              {internship.student.fullName}
+            </p>
+
+            <p className="text-slate-500">
+              {internship.student.studentId}
+            </p>
+          </div>
 
           <AssignmentForm
             internshipId={internship.id}

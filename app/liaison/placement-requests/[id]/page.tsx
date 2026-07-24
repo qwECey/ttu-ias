@@ -24,62 +24,112 @@ export default async function PlacementRequestReviewPage({
   }
 
   return (
-    <main className="p-8">
-      <div className="rounded-3xl bg-white p-8 shadow">
+    <main className="min-h-screen bg-gray-100 p-6">
 
-        <h1 className="mb-6 text-3xl font-bold">
-          Placement Request Review
-        </h1>
+      <div className="mx-auto max-w-4xl">
 
-        <div className="space-y-3 mb-8">
+        <div className="rounded-3xl bg-white p-8 shadow">
 
-          <p>
-            <strong>Student:</strong>{" "}
-            {request.student.fullName}
-          </p>
+          <h1 className="mb-8 text-3xl font-bold">
+            Placement Request Review
+          </h1>
 
-          <p>
-            <strong>Student ID:</strong>{" "}
-            {request.student.studentId}
-          </p>
+          <div className="grid gap-6 sm:grid-cols-2">
 
-          <p>
-            <strong>Company:</strong>{" "}
-            {request.companyName}
-          </p>
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Student
+              </p>
 
-          <p>
-            <strong>Location:</strong>{" "}
-            {request.location}
-          </p>
+              <p className="mt-1 font-medium">
+                {request.student.fullName}
+              </p>
+            </div>
 
-          <p>
-            <strong>Contact Person:</strong>{" "}
-            {request.contactPerson}
-          </p>
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Student ID
+              </p>
 
-          <p>
-            <strong>Phone:</strong>{" "}
-            {request.contactPhone}
-          </p>
+              <p className="mt-1">
+                {request.student.studentId}
+              </p>
+            </div>
 
-          <p>
-            <strong>Email:</strong>{" "}
-            {request.contactEmail}
-          </p>
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Company
+              </p>
 
-          <p>
-            <strong>Status:</strong>{" "}
-            {request.status}
-          </p>
+              <p className="mt-1">
+                {request.companyName}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Location
+              </p>
+
+              <p className="mt-1">
+                {request.location}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Contact Person
+              </p>
+
+              <p className="mt-1">
+                {request.contactPerson}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Phone
+              </p>
+
+              <p className="mt-1">
+                {request.contactPhone}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Email
+              </p>
+
+              <p className="mt-1 break-all">
+                {request.contactEmail}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-gray-500">
+                Status
+              </p>
+
+              <p className="mt-1">
+                {request.status}
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-10 border-t pt-8">
+
+            <ReviewActions
+              requestId={request.id}
+            />
+
+          </div>
 
         </div>
 
-        <ReviewActions
-          requestId={request.id}
-        />
-
       </div>
+
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import LogoutButton from "@/components/auth/LogoutButton";
+import IndustrySupervisorMobileNav from "@/components/layout/IndustrySupervisorMobileNav";
 
 export default function IndustrySupervisorLayout({
   children,
@@ -8,9 +9,13 @@ export default function IndustrySupervisorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50">
+
+      <IndustrySupervisorMobileNav />
+
+      <div className="flex">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-900 text-white">
+      <aside className="hidden w-72 bg-slate-900 text-white lg:block">
         <div className="border-b border-slate-700 p-6">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-white p-2">
@@ -74,6 +79,24 @@ export default function IndustrySupervisorLayout({
 
             <li>
               <Link
+                href="/industry-supervisor/assessments"
+                className="block rounded-lg px-4 py-3 hover:bg-slate-800"
+              >
+                Assessments
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/industry-supervisor/results"
+                className="block rounded-lg px-4 py-3 hover:bg-slate-800"
+              >
+                Results
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 href="/industry-supervisor/profile"
                 className="block rounded-lg px-4 py-3 hover:bg-slate-800"
               >
@@ -86,8 +109,8 @@ export default function IndustrySupervisorLayout({
       </aside>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b bg-white px-8 py-4 shadow-sm">
+      <div className="min-w-0 flex flex-1 flex-col">
+        <header className="hidden items-center justify-between border-b bg-white px-8 py-4 shadow-sm lg:flex">
           <h1 className="text-xl font-bold">
             Industry Supervisor Portal
           </h1>
@@ -99,6 +122,7 @@ export default function IndustrySupervisorLayout({
           {children}
         </main>
       </div>
+    </div>
     </div>
   );
 }

@@ -76,7 +76,7 @@ export default function ReportFilter({
 
   return (
     <>
-      <div className="mb-6 flex gap-4">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
 
         <label
           htmlFor="report-search"
@@ -95,7 +95,7 @@ export default function ReportFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="flex-1 rounded-xl border bg-white px-4 py-3 shadow-sm"
         />
 
         <label
@@ -113,7 +113,7 @@ export default function ReportFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="rounded-xl border bg-white px-4 py-3 shadow-sm"
         >
           <option value="ALL">
             All Statuses
@@ -130,101 +130,140 @@ export default function ReportFilter({
           <option value="REJECTED">
             Rejected
           </option>
+
         </select>
 
       </div>
 
-      <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-gray-50">
-              <th className="px-4 py-3 text-left">
-                Student
-              </th>
+      {filtered.length === 0 ? (
 
-              <th className="px-4 py-3 text-left">
-                Title
-              </th>
+        <div className="rounded-3xl bg-white p-10 text-center shadow">
 
-              <th className="px-4 py-3 text-left">
-                Type
-              </th>
+          <h3 className="text-xl font-semibold">
+            No Reports Found
+          </h3>
 
-              <th className="px-4 py-3 text-left">
-                Status
-              </th>
+          <p className="mt-2 text-gray-500">
+            Try changing your search or filter.
+          </p>
 
-              <th className="px-4 py-3 text-left">
-                Submitted
-              </th>
+        </div>
 
-              <th className="px-4 py-3 text-left">
-                Remarks
-              </th>
-            </tr>
-          </thead>
+      ) : (
 
-          <tbody>
-            {filtered.map(
-              (report) => (
-                <tr
-                  key={report.id}
-                  className="border-b"
-                >
-                  <td className="px-4 py-3">
-                    {
-                      report.student
-                        .fullName
-                    }
-                  </td>
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-                  <td className="px-4 py-3">
-                    {report.title}
-                  </td>
+          <table className="min-w-[1200px] w-full">
 
-                  <td className="px-4 py-3">
-                    {
-                      report.reportType
-                    }
-                  </td>
+            <thead className="bg-gray-50">
 
-                  <td className="px-4 py-3">
-                    {getOverallStatus(report) ===
-                    "APPROVED" ? (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                        APPROVED
-                      </span>
-                    ) : getOverallStatus(report) ===
-                      "REJECTED" ? (
-                      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
-                        REJECTED
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
-                        PENDING
-                      </span>
-                    )}
-                  </td>
+              <tr>
 
-                  <td className="px-4 py-3">
-                    {new Date(
-                      report.submittedAt
-                    ).toLocaleDateString(
-                      "en-GB"
-                    )}
-                  </td>
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Student
+                </th>
 
-                  <td className="px-4 py-3">
-                    {report.academicRemarks ??
-                      report.industryRemarks ??
-                      "-"}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Title
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Type
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Status
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Submitted
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Remarks
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {filtered.map(
+                (report) => (
+
+                  <tr
+                    key={report.id}
+                    className="border-t hover:bg-gray-50"
+                  >
+
+                    <td className="px-4 py-4 font-medium whitespace-nowrap">
+                      {report.student.fullName}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {report.title}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {report.reportType}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+
+                      {getOverallStatus(report) ===
+                      "APPROVED" ? (
+
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                          APPROVED
+                        </span>
+
+                      ) : getOverallStatus(report) ===
+                        "REJECTED" ? (
+
+                        <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                          REJECTED
+                        </span>
+
+                      ) : (
+
+                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                          PENDING
+                        </span>
+
+                      )}
+
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {new Date(
+                        report.submittedAt
+                      ).toLocaleDateString(
+                        "en-GB"
+                      )}
+                    </td>
+
+                    <td className="px-4 py-4 max-w-xs">
+                      <p className="truncate">
+                        {report.academicRemarks ??
+                          report.industryRemarks ??
+                          "-"}
+                      </p>
+                    </td>
+
+                  </tr>
+
+                )
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
     </>
   );
 }

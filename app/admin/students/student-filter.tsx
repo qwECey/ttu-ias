@@ -58,7 +58,7 @@ export default function StudentFilter({
 
   return (
     <>
-      <div className="mb-6 flex gap-4">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
 
         <label
           htmlFor="student-search"
@@ -77,7 +77,7 @@ export default function StudentFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="flex-1 rounded-xl border bg-white px-4 py-3 shadow-sm"
         />
 
         <label
@@ -95,7 +95,7 @@ export default function StudentFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="rounded-xl border bg-white px-4 py-3 shadow-sm"
         >
           <option value="ALL">
             All Students
@@ -108,104 +108,140 @@ export default function StudentFilter({
           <option value="UNPLACED">
             Unplaced
           </option>
+
         </select>
 
       </div>
 
-      <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-gray-50">
-              <th className="px-4 py-3 text-left">
-                Student ID
-              </th>
+      {filtered.length === 0 ? (
 
-              <th className="px-4 py-3 text-left">
-                Name
-              </th>
+        <div className="rounded-3xl bg-white p-10 text-center shadow">
 
-              <th className="px-4 py-3 text-left">
-                Department
-              </th>
+          <h3 className="text-xl font-semibold">
+            No Students Found
+          </h3>
 
-              <th className="px-4 py-3 text-left">
-                Programme
-              </th>
+          <p className="mt-2 text-gray-500">
+            Try changing your search or filter.
+          </p>
 
-              <th className="px-4 py-3 text-left">
-                Level
-              </th>
+        </div>
 
-              <th className="px-4 py-3 text-left">
-                Placement Status
-              </th>
+      ) : (
 
-              <th className="px-4 py-3 text-left">
-                Company
-              </th>
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-              <th className="px-4 py-3 text-left">
-                Supervisor
-              </th>
-            </tr>
-          </thead>
+          <table className="min-w-[1400px] w-full">
 
-          <tbody>
-            {filtered.map(
-              (student) => (
-                <tr
-                  key={student.id}
-                  className="border-b hover:bg-gray-50"
-                >
-                  <td className="px-4 py-3">
-                    {student.studentId}
-                  </td>
+            <thead className="bg-gray-50">
 
-                  <td className="px-4 py-3">
-                    {student.fullName}
-                  </td>
+              <tr>
 
-                  <td className="px-4 py-3">
-                    {student.department}
-                  </td>
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Student ID
+                </th>
 
-                  <td className="px-4 py-3">
-                    {student.programme}
-                  </td>
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Name
+                </th>
 
-                  <td className="px-4 py-3">
-                    {student.level}
-                  </td>
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Department
+                </th>
 
-                  <td className="px-4 py-3">
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Programme
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Level
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Placement Status
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Company
+                </th>
+
+                <th className="px-4 py-4 text-left whitespace-nowrap">
+                  Academic Supervisor
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {filtered.map(
+                (student) => (
+
+                  <tr
+                    key={student.id}
+                    className="border-t hover:bg-gray-50"
+                  >
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.studentId}
+                    </td>
+
+                    <td className="px-4 py-4 font-medium whitespace-nowrap">
+                      {student.fullName}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.department}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.programme}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.level}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+
                       {student.placementStatus === "PLACED" ? (
+
                         <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                           PLACED
                         </span>
+
                       ) : (
+
                         <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
                           UNPLACED
                         </span>
+
                       )}
-                  </td>
 
-                  <td className="px-4 py-3">
-                    {
-                      student.companyName
-                    }
-                  </td>
+                    </td>
 
-                  <td className="px-4 py-3">
-                    {
-                      student.supervisorName
-                    }
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.companyName}
+                    </td>
+
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {student.supervisorName}
+                    </td>
+
+                  </tr>
+
+                )
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
     </>
   );
 }

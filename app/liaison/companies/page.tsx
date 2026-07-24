@@ -16,6 +16,7 @@ export default async function LiaisonCompaniesPage() {
 
       industrySupervisors: true,
     },
+
     orderBy: {
       companyName: "asc",
     },
@@ -23,9 +24,10 @@ export default async function LiaisonCompaniesPage() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+
       <div className="mx-auto max-w-7xl">
 
-        <div className="mb-8 flex items-center justify-between rounded-3xl bg-white p-8 shadow">
+        <div className="mb-8 flex flex-col gap-4 rounded-3xl bg-white p-8 shadow sm:flex-row sm:items-center sm:justify-between">
 
           <div>
 
@@ -41,43 +43,47 @@ export default async function LiaisonCompaniesPage() {
 
           <Link
             href="/liaison/companies/new"
-            className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+            className="w-full rounded-xl bg-blue-600 px-6 py-3 text-center font-semibold text-white hover:bg-blue-700 sm:w-auto"
           >
             + Register Company
           </Link>
 
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-          <table className="w-full">
+          <table className="min-w-[1100px] w-full">
 
             <thead className="bg-gray-50">
+
               <tr>
-                <th className="px-6 py-4 text-left">
+
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Company
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Contact Person
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Phone
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Students
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Industry Supervisors
                 </th>
 
-                <th className="px-6 py-4 text-left">
+                <th className="px-6 py-4 text-left whitespace-nowrap">
                   Status
                 </th>
+
               </tr>
+
             </thead>
 
             <tbody>
@@ -89,7 +95,8 @@ export default async function LiaisonCompaniesPage() {
                   className="border-t"
                 >
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
+
                     <div className="font-semibold">
                       {company.companyName}
                     </div>
@@ -97,25 +104,26 @@ export default async function LiaisonCompaniesPage() {
                     <div className="text-sm text-gray-500">
                       {company.location}
                     </div>
+
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {company.contactPerson}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {company.contactPhone}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {company.internships.length}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {company.industrySupervisors.length}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
 
                     {company.approved ? (
 
@@ -144,6 +152,7 @@ export default async function LiaisonCompaniesPage() {
         </div>
 
       </div>
+
     </main>
   );
 }

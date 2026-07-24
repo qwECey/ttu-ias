@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function IndustrySupervisorDashboard() {
   const session =
@@ -31,6 +32,17 @@ export default async function IndustrySupervisorDashboard() {
             },
           },
         },
+
+        internships: {
+          where: {
+            status: "ACTIVE",
+          },
+
+          include: {
+            logbookWeeks: true,
+            assessments: true,
+          },
+        },
       },
     });
 
@@ -56,6 +68,25 @@ export default async function IndustrySupervisorDashboard() {
             student,
           }))
     );
+  
+  const pendingLogbooks =
+    supervisor.internships.flatMap(
+      (internship) =>
+        internship.logbookWeeks
+    ).filter(
+      (week) =>
+        week.submitted &&
+        !week.certified
+    );
+
+  const pendingAssessments =
+    supervisor.internships.filter(
+      (internship) =>
+        internship.assessments.some(
+          (assessment) =>
+            !assessment.completed
+        )
+    );
 
   return (
     <main className="p-8">
@@ -73,7 +104,8 @@ export default async function IndustrySupervisorDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="mb-8 grid gap-6 md:grid-cols-3">
+      <div className="mb-8 grid gap-6 md:grid-cols-4">
+
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <p className="text-sm text-gray-500">
             Assigned Students
@@ -96,21 +128,24 @@ export default async function IndustrySupervisorDashboard() {
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <p className="text-sm text-gray-500">
-            Reviewed Reports
+            Pending Logbooks
+          </p>
+
+          <h2 className="mt-2 text-4xl font-bold text-orange-600">
+            {pendingLogbooks.length}
+          </h2>
+        </div>
+
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <p className="text-sm text-gray-500">
+            Pending Assessments
           </p>
 
           <h2 className="mt-2 text-4xl font-bold text-green-600">
-            {
-              supervisor.students.flatMap(
-                (s) => s.reports
-              ).filter(
-                (r) =>
-                  r.industryStatus !==
-                  "PENDING"
-              ).length
-            }
+            {pendingAssessments.length}
           </h2>
         </div>
+
       </div>
 
       {/* Assigned Students */}
@@ -208,12 +243,12 @@ export default async function IndustrySupervisorDashboard() {
                     ).toLocaleDateString()}
                   </p>
 
-                  <a
+                  <Link
                     href={`/industry-supervisor/reports/${report.id}`}
-                    className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white"
+                    className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
                     Review Report
-                  </a>
+                  </Link>
                 </div>
               )
             )}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 
 export default function Navbar() {
@@ -23,9 +24,12 @@ export default function Navbar() {
           </div>
         </div>
 
-        <button className="rounded-lg bg-[#0F2D52] px-5 py-2 text-white transition hover:opacity-90">
+        <Link
+          href="/login"
+          className="rounded-lg bg-[#0F2D52] px-5 py-2 text-white transition hover:opacity-90"
+        >
           Login
-        </button>
+        </Link>
       </div>
     </header>
   );

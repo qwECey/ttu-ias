@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import StudentMobileNav from "@/components/layout/StudentMobileNav";
 
 export default function StudentLayout({
   children,
@@ -7,9 +8,13 @@ export default function StudentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100">
 
-      <aside className="w-72 bg-white shadow-lg">
+      <StudentMobileNav />
+
+      <div className="flex">
+
+      <aside className="hidden w-72 bg-white shadow-lg lg:block">
 
           <div className="border-b p-6">
 
@@ -64,9 +69,11 @@ export default function StudentLayout({
 
         </aside>
 
-      <main className="flex-1">
+      <main className="min-w-0 flex-1">
         {children}
       </main>
+
+      </div>
 
     </div>
   );

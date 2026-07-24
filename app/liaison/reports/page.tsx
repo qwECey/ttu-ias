@@ -15,11 +15,20 @@ export default async function LiaisonReportsPage() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+
       <div className="mx-auto max-w-7xl">
 
-        <h1 className="mb-6 text-3xl font-bold">
-          All Reports
-        </h1>
+        <div className="mb-8 rounded-3xl bg-white p-8 shadow">
+
+          <h1 className="text-3xl font-bold">
+            All Reports
+          </h1>
+
+          <p className="mt-2 text-gray-500">
+            View and filter reports submitted by all students.
+          </p>
+
+        </div>
 
         <ReportFilter
           reports={reports.map(
@@ -41,6 +50,7 @@ export default async function LiaisonReportsPage() {
         />
 
       </div>
+
     </main>
   );
 }

@@ -79,9 +79,17 @@ export async function PATCH(
       );
     }
 
+    const internship =
+      await prisma.internship.findFirst({
+        where: {
+          studentId: report.student.id,
+          status: "ACTIVE",
+        },
+      });
+
     if (
-      report.student.supervisorId !==
-      supervisor.id
+      !internship ||
+      internship.supervisorId !== supervisor.id
     ) {
       return NextResponse.json(
         {

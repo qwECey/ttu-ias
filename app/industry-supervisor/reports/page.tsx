@@ -60,8 +60,8 @@ export default async function IndustryReportsPage({
   const filteredInternships =
     studentId
       ? supervisor.internships.filter(
-          (student) =>
-            student.id === studentId
+          (internship) =>
+            internship.student.id === studentId
         )
       : supervisor.internships;
 
@@ -101,9 +101,9 @@ export default async function IndustryReportsPage({
 
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
-          <table className="w-full">
+          <table className="min-w-[1000px] w-full">
 
             <thead className="bg-gray-50">
 
@@ -149,7 +149,7 @@ export default async function IndustryReportsPage({
                       {report.studentName}
                     </div>
 
-                    <div className="text-sm text-gray-500">
+                    <div className="whitespace-nowrap text-sm text-gray-500">
                       {report.studentId}
                     </div>
                   </td>
@@ -158,11 +158,11 @@ export default async function IndustryReportsPage({
                     {report.title}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="whitespace-nowrap px-6 py-4">
                     {report.reportType}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="whitespace-nowrap px-6 py-4">
 
                     {report.industryStatus === "APPROVED" ? (
 
@@ -186,13 +186,13 @@ export default async function IndustryReportsPage({
 
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="whitespace-nowrap px-6 py-4">
                     {new Date(
                       report.submittedAt
                     ).toLocaleDateString("en-GB")}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="whitespace-nowrap px-6 py-4">
 
                     <Link
                       href={`/industry-supervisor/reports/${report.id}`}
