@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{
     studentId: string;

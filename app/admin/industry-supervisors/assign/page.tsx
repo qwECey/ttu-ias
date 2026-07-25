@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import AssignIndustrySupervisorForm from "./assign-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function AssignIndustrySupervisorPage() {
   const students =
     await prisma.student.findMany({

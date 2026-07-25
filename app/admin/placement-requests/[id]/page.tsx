@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PlacementRequestActions from "./placement-request-actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function PlacementRequestReviewPage({
   params,
 }: {

@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function SupervisorDashboard() {
   const supervisors =
     await prisma.supervisor.findMany({

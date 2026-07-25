@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import IndustrySupervisorForm from "./supervisor-form";
 import SupervisorFilter from "./supervisor-filter";
 
+export const dynamic = "force-dynamic";
+
 export default async function IndustrySupervisorsPage() {
   const supervisors =
     await prisma.industrySupervisor.findMany({

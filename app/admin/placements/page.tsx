@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import PlacementForm from "@/components/placement/PlacementForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function PlacementsPage() {
   const students =
     await prisma.student.findMany({

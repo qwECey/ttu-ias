@@ -5,6 +5,8 @@ import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 import { getAssessmentDisplayScore } from "@/lib/scoring";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminResultsPage() {
   const session =
     await getServerSession(authOptions);

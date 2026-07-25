@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import ReportFilter from "./report-filter";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminReportsPage() {
   const reports =
     await prisma.report.findMany({

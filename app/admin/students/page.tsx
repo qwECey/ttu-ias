@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 
 import StudentFilter from "./student-filter";
 
+export const dynamic = "force-dynamic";
+
 export default async function StudentsPage() {
   const students =
     await prisma.student.findMany({

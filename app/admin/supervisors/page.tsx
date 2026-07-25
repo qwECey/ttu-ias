@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 import SupervisorFilter from "./supervisor-filter";
 
+export const dynamic = "force-dynamic";
+
 export default async function SupervisorsPage() {
   const supervisors =
     await prisma.supervisor.findMany({

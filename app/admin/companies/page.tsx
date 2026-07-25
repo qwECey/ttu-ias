@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 
 import CompanyFilter from "./company-filter";
 
+export const dynamic = "force-dynamic";
+
 export default async function CompaniesPage() {
   const session =
     await getServerSession(
