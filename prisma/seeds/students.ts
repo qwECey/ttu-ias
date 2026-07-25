@@ -52,6 +52,17 @@ export async function seedStudents(
         studentId,
         10
       );
+    
+    const existingStudent =
+      await prisma.student.findUnique({
+        where: {
+          studentId,
+        },
+      });
+
+    if (existingStudent) {
+      continue;
+    }
 
     await prisma.$transaction(
       async (tx) => {

@@ -14,10 +14,10 @@ export default function AdminLayout({
 
       <AdminMobileNav />
 
-      <div className="flex">
+      <div className="flex min-h-screen">
 
         {/* Sidebar */}
-        <aside className="hidden w-72 bg-slate-900 text-white lg:block">
+        <aside className="hidden min-h-screen w-72 bg-slate-900 text-white lg:block">
 
           <div className="border-b border-slate-700 p-6">
 
