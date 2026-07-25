@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import bcrypt from "bcryptjs";
+import {
+  generateTemporaryPassword,
+  hashPassword,
+} from "@/lib/password";
 
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
-
-function generateTemporaryPassword() {
-  const number =
-    Math.floor(
-      1000 + Math.random() * 9000
-    );
-
-  return `IAS${number}`;
-}
 
 export async function PATCH(
   req: NextRequest
@@ -65,9 +59,8 @@ export async function PATCH(
       generateTemporaryPassword();
 
     const hashedPassword =
-      await bcrypt.hash(
-        temporaryPassword,
-        10
+      await hashPassword(
+        temporaryPassword
       );
 
     await prisma.user.update({

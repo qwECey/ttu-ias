@@ -43,22 +43,21 @@ enum AssessmentStatus {
 }
 
 model User {
-  id       String   @id @default(cuid())
-  loginId  String   @unique
-  email    String?  @unique
-  password String
-  role     UserRole
-  isActive Boolean  @default(true)
-  mustChangePassword Boolean @default(false)
+  id                 String   @id @default(cuid())
+  loginId            String   @unique
+  fullName           String
+  email              String?  @unique
+  password           String
+  role               UserRole
+  isActive           Boolean  @default(true)
+  mustChangePassword Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   student Student?
   company Company?
-
   supervisor Supervisor?
-
   industrySupervisor IndustrySupervisor?
 
   @@map("users")

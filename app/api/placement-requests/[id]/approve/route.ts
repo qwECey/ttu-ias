@@ -117,10 +117,12 @@ export async function PATCH(
         const user =
           await prisma.user.create({
             data: {
+              fullName: request.contactPerson,
               loginId,
               email: request.contactEmail,
               password: hashedPassword,
               role: UserRole.COMPANY,
+              mustChangePassword: true,
             },
           });
 
@@ -136,7 +138,7 @@ export async function PATCH(
               approved: true,
             },
           });
-      }
+    }
 
     await prisma.internship.update({
       where: {

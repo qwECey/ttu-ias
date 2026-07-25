@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 type User = {
   id: string;
+  fullName: string;
   loginId: string;
   email: string | null;
   role: string;
@@ -109,6 +110,10 @@ export default function UserFilter({
   const filtered =
     users.filter((user) => {
       const matchesSearch =
+        user.fullName
+          .toLowerCase()
+          .includes(search.toLowerCase()
+          ) ||
         user.loginId
           .toLowerCase()
           .includes(
@@ -202,6 +207,10 @@ export default function UserFilter({
             <tr className="border-b bg-gray-50">
 
               <th className="px-4 py-3 text-left">
+                Name
+              </th>
+
+              <th className="px-4 py-3 text-left">
                 Login ID
               </th>
 
@@ -235,6 +244,10 @@ export default function UserFilter({
                   key={user.id}
                   className="border-b"
                 >
+                  <td className="px-4 py-3 font-medium">
+                    {user.fullName || "-"}
+                  </td>
+
                   <td className="px-4 py-3">
                     {user.loginId}
                   </td>

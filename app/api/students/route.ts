@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.create({
       data: {
+        fullName,
         loginId: studentId,
         email,
         password: hashedPassword,
@@ -45,7 +46,6 @@ export async function POST(req: NextRequest) {
         mustChangePassword: true,
       },
     });
-
     const student = await prisma.student.create({
       data: {
         userId: user.id,

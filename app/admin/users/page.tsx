@@ -1,11 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import UserFilter from "./user-filter";
+import Link from "next/link";
 
 export default async function UsersPage() {
   const users =
     await prisma.user.findMany({
       select: {
         id: true,
+        fullName: true,
         loginId: true,
         email: true,
         role: true,
@@ -36,16 +38,23 @@ export default async function UsersPage() {
       <div className="mx-auto max-w-7xl">
 
         {/* Hero */}
-        <div className="mb-8 rounded-3xl bg-linear-to-r from-slate-700 to-slate-900 p-8 text-white shadow-lg">
+        <div className="mb-8 flex items-center justify-between">
+          <div className="rounded-3xl bg-linear-to-r from-slate-700 to-slate-900 p-8 text-white shadow-lg">
+            <h1 className="text-4xl font-bold">
+              User Management
+            </h1>
 
-          <h1 className="text-4xl font-bold">
-            User Management
-          </h1>
+            <p className="mt-2 text-slate-200">
+              Manage system users and account activity.
+            </p>
+          </div>
 
-          <p className="mt-2 text-slate-200">
-            Manage system users and account activity.
-          </p>
-
+          <Link
+            href="/admin/users/new"
+            className="rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
+          >
+            + Create User
+          </Link>
         </div>
 
         {/* Stats */}
