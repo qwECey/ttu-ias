@@ -14,6 +14,8 @@ export async function PATCH(
   try {
     const { id } = await params;
 
+    const { remarks } = await req.json();
+
     const request =
       await prisma.placementRequest.findUnique({
         where: {
@@ -54,12 +56,11 @@ export async function PATCH(
       );
     }
 
-    if (request.status === "APPROVED") {
+    if (request.status !== "PENDING") {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Request already approved",
+          message: "This request has already been reviewed.",
         },
         {
           status: 400,
@@ -163,6 +164,7 @@ export async function PATCH(
       },
       data: {
         status: "APPROVED",
+        liaisonRemarks: remarks,
       },
     });
 

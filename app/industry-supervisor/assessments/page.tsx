@@ -10,139 +10,189 @@ export default async function IndustryAssessmentsPage() {
 
   if (!session?.user?.id) {
     return (
-      <div className="p-8">
-        Unauthorized
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+        <div className="rounded-2xl bg-white p-8 shadow-md">
+          Unauthorized
+        </div>
+      </main>
     );
   }
 
   const supervisor =
     await prisma.industrySupervisor.findUnique({
-        where: {
+      where: {
         userId: session.user.id,
-        },
+      },
 
-        include: {
+      include: {
         internships: {
-            where: {
+          where: {
             status: "ACTIVE",
-            },
+          },
 
-            include: {
+          include: {
             student: true,
             assessments: true,
-            },
+          },
 
-            orderBy: {
+          orderBy: {
             student: {
-                fullName: "asc",
+              fullName: "asc",
             },
-            },
+          },
         },
-        },
+      },
     });
 
-    if (!supervisor) {
+  if (!supervisor) {
     return (
-        <div className="p-8">
-        Industry Supervisor not found.
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+        <div className="rounded-2xl bg-white p-8 shadow-md">
+          Industry Supervisor not found.
         </div>
+      </main>
     );
-    }
+  }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-100 p-4 sm:p-6">
 
-      <div className="overflow-hidden rounded-3xl bg-white shadow">
+      <div className="mx-auto max-w-7xl">
 
-        <table className="w-full">
+        {/* Header */}
 
-            <thead className="bg-gray-50">
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm sm:rounded-3xl sm:p-8">
 
-            <tr>
+          <h1 className="text-2xl font-bold sm:text-3xl">
+            Student Assessments
+          </h1>
 
-                <th className="px-6 py-4 text-left">
-                Student
-                </th>
-
-                <th className="px-6 py-4 text-left">
-                Student ID
-                </th>
-
-                <th className="px-6 py-4 text-left">
-                Status
-                </th>
-
-                <th className="px-6 py-4 text-left">
-                Action
-                </th>
-
-            </tr>
-
-            </thead>
-
-            <tbody>
-
-            {supervisor.internships.map(
-                (internship) => {
-
-                const completed =
-                    internship.assessments.some(
-                    (assessment) =>
-                        assessment.completed
-                    );
-
-                return (
-                    <tr
-                    key={internship.id}
-                    className="border-t"
-                    >
-
-                    <td className="px-6 py-4 font-semibold">
-                        {internship.student.fullName}
-                    </td>
-
-                    <td className="px-6 py-4">
-                        {internship.student.studentId}
-                    </td>
-
-                    <td className="px-6 py-4">
-
-                        {completed ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                            Completed
-                        </span>
-                        ) : (
-                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
-                            Pending
-                        </span>
-                        )}
-
-                    </td>
-
-                    <td className="px-6 py-4">
-
-                        <Link
-                        href={`/industry-supervisor/assessments/${internship.student.id}`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                        >
-                        {completed
-                            ? "View Assessment"
-                            : "Start Assessment"}
-                        </Link>
-
-                    </td>
-
-                    </tr>
-                );
-                }
-            )}
-
-            </tbody>
-
-        </table>
+          <p className="mt-2 text-sm text-gray-500 sm:text-base">
+            Complete and review internship
+            assessments for your assigned students.
+          </p>
 
         </div>
+
+        {/* Table */}
+
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
+
+          {supervisor.internships.length === 0 ? (
+
+            <div className="p-10 text-center">
+
+              <h2 className="text-lg font-semibold text-gray-700">
+                No Students Assigned
+              </h2>
+
+              <p className="mt-2 text-gray-500">
+                Assessment records will appear
+                here once students are assigned.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <table className="min-w-[850px] w-full">
+
+              <thead className="bg-gray-50">
+
+                <tr>
+
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Student
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Student ID
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Status
+                  </th>
+
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Action
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody className="divide-y divide-gray-200">
+
+                {supervisor.internships.map(
+                  (internship) => {
+
+                    const completed =
+                      internship.assessments.some(
+                        (assessment) =>
+                          assessment.completed
+                      );
+
+                    return (
+
+                      <tr
+                        key={internship.id}
+                        className="transition-colors hover:bg-gray-50"
+                      >
+
+                        <td className="px-6 py-4 font-medium whitespace-nowrap">
+                          {internship.student.fullName}
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {internship.student.studentId}
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+
+                          {completed ? (
+
+                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                              Completed
+                            </span>
+
+                          ) : (
+
+                            <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                              Pending
+                            </span>
+
+                          )}
+
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+
+                          <Link
+                            href={`/industry-supervisor/assessments/${internship.student.id}`}
+                            className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                          >
+                            {completed
+                              ? "View"
+                              : "Assess"}
+                          </Link>
+
+                        </td>
+
+                      </tr>
+
+                    );
+                  }
+                )}
+
+              </tbody>
+
+            </table>
+
+          )}
+
+        </div>
+
+      </div>
 
     </main>
   );

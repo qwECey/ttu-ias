@@ -73,10 +73,10 @@ export default async function IndustryAssessmentsPage() {
             </p>
         </div>
         ) : (
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        <div className="overflow-x-auto rounded-3xl bg-white shadow">
 
             {/* table */}
-            <table className="w-full">
+            <table className="min-w-[850px] w-full">
 
                 <thead className="bg-gray-50">
 
@@ -102,7 +102,7 @@ export default async function IndustryAssessmentsPage() {
 
                 </thead>
 
-                <tbody>
+                <tbody className="divide-y divide-gray-200">
 
                 {supervisor.internships.map(
                     (internship) => {
@@ -114,20 +114,16 @@ export default async function IndustryAssessmentsPage() {
                         );
 
                     return (
-                        <tr
-                        key={internship.id}
-                        className="border-t"
-                        >
+                        <tr key={internship.id}>
 
-                        <td className="px-6 py-4 font-semibold">
+                        <td className="whitespace-nowrap px-6 py-4 font-semibold">
                             {internship.student.fullName}
                         </td>
 
-                        <td className="px-6 py-4">
+                        <td className="whitespace-nowrap px-6 py-4">
                             {internship.student.studentId}
                         </td>
-
-                        <td className="px-6 py-4">
+                        <td className="whitespace-nowrap px-6 py-4">
 
                             {completed ? (
                             <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
@@ -145,7 +141,7 @@ export default async function IndustryAssessmentsPage() {
 
                             <Link
                             href={`/supervisor/assessments/${internship.student.id}`}
-                            className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                             >
                             {completed
                                 ? "View Assessment"

@@ -17,21 +17,17 @@ export default async function IndustryLogbookPage() {
       where: {
         userId: session.user.id,
       },
-
       include: {
         internships: {
           where: {
             status: "ACTIVE",
           },
-
           include: {
             student: true,
-
             logbookWeeks: {
               where: {
                 submitted: true,
               },
-
               orderBy: {
                 weekNumber: "asc",
               },
@@ -43,9 +39,17 @@ export default async function IndustryLogbookPage() {
 
   if (!supervisor) {
     return (
-      <div>
-        Industry Supervisor not found.
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-md">
+          <h2 className="text-xl font-semibold">
+            Industry Supervisor Not Found
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Unable to locate your profile.
+          </p>
+        </div>
+      </main>
     );
   }
 
@@ -62,115 +66,142 @@ export default async function IndustryLogbookPage() {
     );
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-100 p-4 sm:p-6">
 
       <div className="mx-auto max-w-7xl">
 
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow">
+        {/* Header */}
 
-          <h1 className="text-3xl font-bold">
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm sm:rounded-3xl sm:p-8">
+
+          <h1 className="text-2xl font-bold sm:text-3xl">
             Weekly Logbooks
           </h1>
 
-          <p className="mt-2 text-gray-500">
-            Review submitted weekly logbooks.
+          <p className="mt-2 text-sm text-gray-500 sm:text-base">
+            Review submitted student logbooks.
           </p>
 
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        {/* Table */}
 
-          <table className="w-full">
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
 
-            <thead className="bg-gray-50">
+          {weeks.length === 0 ? (
 
-              <tr>
+            <div className="p-10 text-center">
 
-                <th className="px-6 py-4 text-left">
-                  Student
-                </th>
+              <h2 className="text-lg font-semibold text-gray-700">
+                No Submitted Logbooks
+              </h2>
 
-                <th className="px-6 py-4 text-left">
-                  Week
-                </th>
+              <p className="mt-2 text-gray-500">
+                Submitted weekly logbooks
+                will appear here.
+              </p>
 
-                <th className="px-6 py-4 text-left">
-                  Submitted
-                </th>
+            </div>
 
-                <th className="px-6 py-4 text-left">
-                  Certified
-                </th>
+          ) : (
 
-                <th className="px-6 py-4 text-left">
-                  Action
-                </th>
+            <table className="min-w-[900px] w-full">
 
-              </tr>
+              <thead className="bg-gray-50">
 
-            </thead>
+                <tr>
 
-            <tbody>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Student
+                  </th>
 
-              {weeks.map((week) => (
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Week
+                  </th>
 
-                <tr
-                  key={week.id}
-                  className="border-t"
-                >
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Submitted
+                  </th>
 
-                  <td className="px-6 py-4">
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Status
+                  </th>
 
-                    <div className="font-semibold">
-                      {week.student.fullName}
-                    </div>
-
-                    <div className="text-sm text-gray-500">
-                      {week.student.studentId}
-                    </div>
-
-                  </td>
-
-                  <td className="px-6 py-4">
-                    Week {week.weekNumber}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    ✅
-                  </td>
-
-                  <td className="px-6 py-4">
-
-                    {week.certified ? (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                        Certified
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
-                        Pending
-                      </span>
-                    )}
-
-                  </td>
-
-                  <td className="px-6 py-4">
-
-                    <Link
-                      href={`/industry-supervisor/logbook/${week.id}`}
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    >
-                      Review
-                    </Link>
-
-                  </td>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Action
+                  </th>
 
                 </tr>
 
-              ))}
+              </thead>
 
-            </tbody>
+              <tbody className="divide-y divide-gray-200">
 
-          </table>
+                {weeks.map((week) => (
+
+                  <tr
+                    key={week.id}
+                    className="transition-colors hover:bg-gray-50"
+                  >
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+
+                      <div className="font-medium">
+                        {week.student.fullName}
+                      </div>
+
+                      <div className="text-sm text-gray-500">
+                        {week.student.studentId}
+                      </div>
+
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      Week {week.weekNumber}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      ✅ Submitted
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+
+                      {week.certified ? (
+
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                          Certified
+                        </span>
+
+                      ) : (
+
+                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                          Pending
+                        </span>
+
+                      )}
+
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+
+                      <Link
+                        href={`/industry-supervisor/logbook/${week.id}`}
+                        className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                      >
+                        Review
+                      </Link>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          )}
 
         </div>
 

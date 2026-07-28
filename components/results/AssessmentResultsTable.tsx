@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import ScoreDisplay from "./ScoreDisplay";
 import StatusBadge from "./StatusBadge";
 
@@ -22,96 +23,100 @@ export default function AssessmentResultsTable({
   rows,
 }: Props) {
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow">
+    <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
 
-      <div className="border-b bg-slate-50 px-6 py-5">
+      {/* Header */}
 
-        <h2 className="text-xl font-bold text-slate-900">
+      <div className="border-b border-gray-200 bg-slate-50 px-6 py-5">
+
+        <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
           {title}
         </h2>
 
       </div>
 
-      <table className="min-w-full">
+      {rows.length === 0 ? (
 
-        <thead className="bg-slate-100">
+        <div className="p-10 text-center">
 
-          <tr>
+          <h3 className="text-lg font-semibold text-gray-700">
+            No Assessment Records
+          </h3>
 
-            <th className="px-6 py-4 text-left">
-              Student
-            </th>
+          <p className="mt-2 text-gray-500">
+            Assessment results will appear
+            here once assessments are completed.
+          </p>
 
-            <th className="px-6 py-4 text-left">
-              Company
-            </th>
+        </div>
 
-            <th className="px-6 py-4 text-left">
-              Score
-            </th>
+      ) : (
 
-            <th className="px-6 py-4 text-left">
-              Status
-            </th>
+        <table className="min-w-[900px] w-full">
 
-            <th className="px-6 py-4 text-center">
-              Action
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {rows.length === 0 ? (
+          <thead className="bg-slate-100">
 
             <tr>
 
-              <td
-                colSpan={5}
-                className="px-6 py-10 text-center text-gray-500"
-              >
-                No assessment records found.
-              </td>
+              <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                Student
+              </th>
+
+              <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                Company
+              </th>
+
+              <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                Score
+              </th>
+
+              <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                Status
+              </th>
+
+              <th className="px-6 py-4 text-center text-sm font-semibold whitespace-nowrap">
+                Action
+              </th>
 
             </tr>
 
-          ) : (
+          </thead>
 
-            rows.map((row) => (
+          <tbody className="divide-y divide-gray-200">
+
+            {rows.map((row) => (
 
               <tr
                 key={row.id}
-                className="border-t hover:bg-slate-50"
+                className="transition-colors hover:bg-slate-50"
               >
 
-                <td className="px-6 py-4 font-medium">
+                <td className="px-6 py-4 font-medium whitespace-nowrap">
                   {row.studentName}
                 </td>
 
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   {row.companyName}
                 </td>
 
-                <td className="px-6 py-4">
-                    <ScoreDisplay
-                        score={row.score}
-                        maximum={row.maximum}
-                    />
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <ScoreDisplay
+                    score={row.score}
+                    maximum={row.maximum}
+                  />
                 </td>
 
-                <td className="px-6 py-4">
-                    <StatusBadge
-                        completed={row.completed}
-                    />
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <StatusBadge
+                    completed={row.completed}
+                  />
                 </td>
 
-                <td className="px-6 py-4 text-center">
+                <td className="px-6 py-4 text-center whitespace-nowrap">
 
                   <Link
                     href={row.actionHref}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                   >
                     View
                   </Link>
@@ -120,13 +125,13 @@ export default function AssessmentResultsTable({
 
               </tr>
 
-            ))
+            ))}
 
-          )}
+          </tbody>
 
-        </tbody>
+        </table>
 
-      </table>
+      )}
 
     </div>
   );

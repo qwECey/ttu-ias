@@ -81,7 +81,7 @@ export default function ReviewActions({
         return;
     }
 
-      toast.success("Placement request rejected.");
+      toast.error("Placement request rejected.");
       setRemarks("");
 
       router.refresh();
@@ -109,7 +109,7 @@ export default function ReviewActions({
           type="button"
           onClick={approve}
           disabled={loading}
-          className="rounded-lg bg-green-600 px-5 py-2 text-white"
+          className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:opacity-50"
         >
           {loading
             ? "Approving..."
@@ -120,7 +120,7 @@ export default function ReviewActions({
           type="button"
           onClick={reject}
           disabled={loading}
-          className="rounded-lg bg-red-600 px-5 py-2 text-white"
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
         >
           {loading
             ? "Rejecting..."

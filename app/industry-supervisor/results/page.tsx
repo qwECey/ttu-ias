@@ -11,7 +11,13 @@ export default async function IndustrySupervisorResultsPage() {
     await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return <div>Unauthorized</div>;
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+        <div className="rounded-2xl bg-white p-8 shadow-md">
+          Unauthorized
+        </div>
+      </main>
+    );
   }
 
   const industrySupervisor =
@@ -108,24 +114,28 @@ export default async function IndustrySupervisorResultsPage() {
   );
 
   return (
-    <main className="mx-auto max-w-6xl p-8">
+    <main className="min-h-screen bg-gray-100 p-4 sm:p-6">
 
-      <div className="mb-8 rounded-3xl bg-slate-900 p-8 text-white shadow-lg">
+      <div className="mx-auto max-w-7xl">
 
-        <h1 className="text-4xl font-bold">
-          Assessment Results
-        </h1>
+        <div className="mb-6 rounded-2xl bg-slate-900 p-6 text-white shadow-lg sm:rounded-3xl sm:p-8">
 
-        <p className="mt-3 text-slate-300">
-          View assessment results for your assigned students.
-        </p>
+          <h1 className="text-2xl font-bold sm:text-4xl">
+            Assessment Results
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-300 sm:text-base">
+            View assessment results for your assigned students.
+          </p>
+
+        </div>
+
+        <AssessmentResultsTable
+          title="Industry Supervisor Assessments"
+          rows={rows}
+        />
 
       </div>
-
-      <AssessmentResultsTable
-        title="Industry Supervisor Assessments"
-        rows={rows}
-      />
 
     </main>
   );

@@ -251,14 +251,13 @@ export default async function SupervisorPage() {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody className="divide-y divide-gray-200">
                 {supervisor.internships.map(
                   (internship) => (
                     <tr
                       key={
                         internship.id
                       }
-                      className="border-t"
                     >
                       <td className="whitespace-nowrap px-6 py-4">
                         {
@@ -266,7 +265,7 @@ export default async function SupervisorPage() {
                         }
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="whitespace-nowrap px-6 py-4">
                         {
                           internship.student.fullName
                         }
@@ -307,12 +306,11 @@ export default async function SupervisorPage() {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody className="divide-y divide-gray-200">
                 {supervisor.internships.flatMap((internship) =>
                   internship.student.reports.map((report) => (
                     <tr
-                      key={report.id}
-                      className="border-t"
+                      key={`${internship.id}-${report.id}`}
                     >
                       <td className="px-6 py-4">
                         {internship.student.fullName}
@@ -345,7 +343,7 @@ export default async function SupervisorPage() {
                       <td className="whitespace-nowrap px-6 py-4">
                         <Link
                           href={`/supervisor/reports/${report.id}`}
-                          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                          className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                         >
                           Review
                         </Link>

@@ -34,12 +34,11 @@ export async function PATCH(
       );
     }
 
-    if (request.status === "REJECTED") {
+    if (request.status !== "PENDING") {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Request already rejected.",
+          message: "This request has already been reviewed.",
         },
         {
           status: 400,
@@ -53,7 +52,7 @@ export async function PATCH(
       },
       data: {
         status: "REJECTED",
-        liaisonRemarks: remarks,
+        liaisonRemarks: remarks?.trim() || null,
       },
     });
 

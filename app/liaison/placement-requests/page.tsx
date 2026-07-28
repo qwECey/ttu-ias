@@ -62,13 +62,12 @@ export default async function PlacementRequestsPage() {
 
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-gray-200">
 
               {requests.map((request) => (
 
                 <tr
                   key={request.id}
-                  className="border-t"
                 >
 
                   <td className="px-6 py-4 font-medium whitespace-nowrap">
@@ -113,7 +112,7 @@ export default async function PlacementRequestsPage() {
 
                     <Link
                       href={`/liaison/placement-requests/${request.id}`}
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                      className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                     >
                       Review
                     </Link>

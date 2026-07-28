@@ -153,7 +153,19 @@ export default function AssessmentForm({
           </span>
 
           <span className="text-2xl font-bold">
-            {currentTotal} / 30
+            {currentTotal} / {
+              template.sections.reduce(
+                (total, section) =>
+                  total +
+                  section.criteria.reduce(
+                    (sum, criterion) =>
+                      sum +
+                      criterion.maximumScore,
+                    0
+                  ),
+                0
+              )
+            }
           </span>
         </div>
       </div>
@@ -192,10 +204,7 @@ export default function AssessmentForm({
                     id={`score-${criterion.id}`}
                     aria-label={`Score for ${criterion.name}`}
                     title={`Score for ${criterion.name}`}
-                    disabled={
-                      completed ||
-                      !allCriteriaScored
-                    }
+                    disabled={completed}
                     value={
                       scores[criterion.id] ?? ""
                     }

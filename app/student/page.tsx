@@ -162,29 +162,29 @@ export default async function StudentPage() {
 
             <div className="absolute inset-0 bg-black/60" />
 
-            <div className="relative z-10 p-10 text-white">
+            <div className="relative z-10 p-5 text-white sm:p-10">
 
               <div className="mb-6 flex justify-end">
                 <LogoutButton />
               </div>
 
-              <h1 className="text-4xl font-bold">
+              <h1 className="text-3xl font-bold sm:text-4xl">
                 Welcome Back,
               </h1>
 
-              <h2 className="mt-2 text-3xl font-semibold">
+              <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
                 {student.fullName}
               </h2>
 
-              <p className="mt-3 text-lg text-gray-200">
+              <p className="mt-3 text-base text-gray-200 sm:text-lg">
                 Student ID: {student.studentId}
               </p>
 
               <div className="mt-6 flex flex-wrap items-center gap-4">
 
-                  <div className="inline-flex rounded-full bg-white/20 px-5 py-2 backdrop-blur-sm">
+                  <div className="inline-flex items-center rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
                     <span className="font-semibold">
-                      Placement Status:
+                      Status:
                     </span>
 
                     <span className="ml-2">
@@ -203,7 +203,7 @@ export default async function StudentPage() {
                   ) : (
                     <a
                       href="/student/placement-request"
-                      className="rounded-xl bg-yellow-500 px-5 py-3 font-semibold text-white shadow hover:bg-yellow-600"
+                      className="rounded-xl bg-yellow-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-yellow-600"
                     >
                       Request Placement
                     </a>
@@ -211,7 +211,7 @@ export default async function StudentPage() {
 
                   <a
                     href="/student/reports"
-                    className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow hover:bg-blue-700"
+                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700"
                   >
                     Submit Report
                   </a>

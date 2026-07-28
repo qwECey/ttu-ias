@@ -40,9 +40,9 @@ export default async function UsersPage() {
       <div className="mx-auto max-w-7xl">
 
         {/* Hero */}
-        <div className="mb-8 flex items-center justify-between">
-          <div className="rounded-3xl bg-linear-to-r from-slate-700 to-slate-900 p-8 text-white shadow-lg">
-            <h1 className="text-4xl font-bold">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex-1 rounded-3xl bg-linear-to-r from-slate-700 to-slate-900 p-6 text-white shadow-lg sm:p-8">
+            <h1 className="text-3xl font-bold sm:text-4xl">
               User Management
             </h1>
 
@@ -53,7 +53,7 @@ export default async function UsersPage() {
 
           <Link
             href="/admin/users/new"
-            className="rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
+            className="w-full rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-700 lg:w-auto"
           >
             + Create User
           </Link>

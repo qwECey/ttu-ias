@@ -28,44 +28,42 @@ export default function InternshipJourney({
     switch (assessmentStatus) {
       case "COMPLETED":
         return (
-          <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+          <BadgeGreen>
             ✓ Completed
-          </span>
+          </BadgeGreen>
         );
 
       case "IN_PROGRESS":
         return (
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+          <BadgeBlue>
             In Progress
-          </span>
+          </BadgeBlue>
         );
 
       case "PENDING":
         return (
-          <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+          <BadgeYellow>
             Awaiting Assessment
-          </span>
+          </BadgeYellow>
         );
 
       default:
         return (
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+          <BadgeGray>
             Locked
-          </span>
+          </BadgeGray>
         );
     }
   }
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-md">
+    <div className="rounded-2xl bg-white p-5 shadow-md sm:rounded-3xl sm:p-6">
 
-      <h2 className="mb-6 text-xl font-semibold">
+      <h2 className="mb-5 text-lg font-semibold sm:text-xl">
         Your Internship Journey
       </h2>
 
-      <div className="space-y-5">
-
-        {/* Student Registration */}
+      <div className="space-y-4">
 
         <JourneyRow
           title="1. Student Registration"
@@ -76,8 +74,6 @@ export default function InternshipJourney({
             </BadgeGreen>
           }
         />
-
-        {/* Placement Request */}
 
         <JourneyRow
           title="2. Placement Request"
@@ -99,8 +95,6 @@ export default function InternshipJourney({
           }
         />
 
-        {/* Placement Approval */}
-
         <JourneyRow
           title="3. Placement Approval"
           description={
@@ -121,8 +115,6 @@ export default function InternshipJourney({
           }
         />
 
-        {/* Academic Supervisor */}
-
         <JourneyRow
           title="4. Academic Supervisor"
           description={
@@ -141,8 +133,6 @@ export default function InternshipJourney({
             )
           }
         />
-
-        {/* Industry Supervisor */}
 
         <JourneyRow
           title="5. Industry Supervisor"
@@ -163,8 +153,6 @@ export default function InternshipJourney({
           }
         />
 
-        {/* Reports */}
-
         <JourneyRow
           title="6. Report Submission"
           description={
@@ -174,9 +162,9 @@ export default function InternshipJourney({
           }
           badge={
             totalReports > 0 ? (
-              <BadgeGreen>
+              <BadgeBlue>
                 In Progress
-              </BadgeGreen>
+              </BadgeBlue>
             ) : (
               <BadgeGray>
                 Waiting
@@ -184,8 +172,6 @@ export default function InternshipJourney({
             )
           }
         />
-
-        {/* Assessment */}
 
         <JourneyRow
           title="7. Final Assessment"
@@ -198,7 +184,7 @@ export default function InternshipJourney({
             assessmentStatus === "COMPLETED" ? (
               <Link
                 href="/student/results"
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
               >
                 View Results
               </Link>
@@ -228,25 +214,27 @@ function JourneyRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between ${
+      className={`flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${
         !last
-          ? "border-b pb-3"
+          ? "border-b border-gray-200 pb-4"
           : ""
       }`}
     >
-      <div>
+      <div className="min-w-0 flex-1">
 
-        <h3 className="font-semibold">
+        <h3 className="font-semibold text-gray-900">
           {title}
         </h3>
 
-        <p className="text-sm text-gray-500">
+        <p className="mt-1 text-sm text-gray-500">
           {description}
         </p>
 
       </div>
 
-      {badge}
+      <div className="shrink-0">
+        {badge}
+      </div>
 
     </div>
   );
@@ -258,7 +246,19 @@ function BadgeGreen({
   children: React.ReactNode;
 }) {
   return (
-    <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700 sm:text-sm">
+      {children}
+    </span>
+  );
+}
+
+function BadgeBlue({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 sm:text-sm">
       {children}
     </span>
   );
@@ -270,7 +270,7 @@ function BadgeYellow({
   children: React.ReactNode;
 }) {
   return (
-    <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700 sm:text-sm">
       {children}
     </span>
   );
@@ -282,7 +282,7 @@ function BadgeGray({
   children: React.ReactNode;
 }) {
   return (
-    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700 sm:text-sm">
       {children}
     </span>
   );

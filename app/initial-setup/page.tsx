@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import SetupForm from "./setup-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function InitialSetupPage() {
   const admin =
     await prisma.user.findFirst({

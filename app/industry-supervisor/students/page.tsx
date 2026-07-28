@@ -5,7 +5,8 @@ import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 
 export default async function IndustryStudentsPage() {
-  const session = await getServerSession(authOptions);
+  const session =
+    await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     return <div>Unauthorized</div>;
@@ -16,20 +17,16 @@ export default async function IndustryStudentsPage() {
       where: {
         userId: session.user.id,
       },
-
       include: {
         company: true,
-
         internships: {
           where: {
             status: "ACTIVE",
           },
-
           include: {
             student: true,
             company: true,
           },
-
           orderBy: {
             student: {
               fullName: "asc",
@@ -40,134 +37,178 @@ export default async function IndustryStudentsPage() {
     });
 
   if (!supervisor) {
-    return <div>Industry Supervisor not found.</div>;
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-md">
+          <h2 className="text-xl font-semibold">
+            Industry Supervisor Not Found
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Unable to locate your profile.
+          </p>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-100 p-4 sm:p-6">
+
       <div className="mx-auto max-w-7xl">
 
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow">
-          <h1 className="text-3xl font-bold">
+        {/* Header */}
+
+        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm sm:rounded-3xl sm:p-8">
+
+          <h1 className="text-2xl font-bold sm:text-3xl">
             Assigned Students
           </h1>
 
-          <p className="mt-2 text-gray-500">
-            Students under your supervision.
+          <p className="mt-2 text-sm text-gray-500 sm:text-base">
+            Students currently under your supervision.
           </p>
+
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow">
+        {/* Table */}
 
-          <table className="w-full">
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
 
-            <thead className="bg-gray-50">
+          {supervisor.internships.length === 0 ? (
 
-              <tr>
-                <th className="px-6 py-4 text-left">
-                  Student ID
-                </th>
+            <div className="p-10 text-center">
 
-                <th className="px-6 py-4 text-left">
-                  Name
-                </th>
+              <h2 className="text-lg font-semibold text-gray-700">
+                No Students Assigned
+              </h2>
 
-                <th className="px-6 py-4 text-left">
-                  Programme
-                </th>
+              <p className="mt-2 text-gray-500">
+                Students assigned to you will
+                appear here.
+              </p>
 
-                <th className="px-6 py-4 text-left">
-                  Company
-                </th>
+            </div>
 
-                <th className="px-6 py-4 text-left">
-                  Placement Status
-                </th>
+          ) : (
 
-                <th className="px-6 py-4 text-left">
-                  Action
-                </th>
-              </tr>
+            <table className="min-w-[1100px] w-full">
 
-            </thead>
+              <thead className="bg-gray-50">
 
-            <tbody>
+                <tr>
 
-              {supervisor.internships.map((internship) => (
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Student ID
+                  </th>
 
-                <tr
-                  key={internship.id}
-                  className="border-t"
-                >
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Name
+                  </th>
 
-                  <td className="px-6 py-4">
-                    {internship.student.studentId}
-                  </td>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Programme
+                  </th>
 
-                  <td className="px-6 py-4">
-                    {internship.student.fullName}
-                  </td>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Company
+                  </th>
 
-                  <td className="px-6 py-4">
-                    {internship.student.programme}
-                  </td>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Status
+                  </th>
 
-                  <td className="px-6 py-4">
-                    {internship.company?.companyName ??
-                      "Not Assigned"}
-                  </td>
-
-                  <td className="px-6 py-4">
-
-                    {internship.placementStatus === "PLACED" ? (
-
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                        PLACED
-                      </span>
-
-                    ) : (
-
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700">
-                        UNPLACED
-                      </span>
-
-                    )}
-
-                  </td>
-
-                  <td className="px-6 py-4">
-
-                    <div className="flex gap-3">
-
-                      <Link
-                        href={`/industry-supervisor/reports?studentId=${internship.student.id}`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                      >
-                        Reports
-                      </Link>
-
-                      <Link
-                        href={`/industry-supervisor/assessments/${internship.student.id}`}
-                        className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-                      >
-                        Assess
-                      </Link>
-
-                    </div>
-
-                  </td>
+                  <th className="px-6 py-4 text-left text-sm font-semibold whitespace-nowrap">
+                    Actions
+                  </th>
 
                 </tr>
 
-              ))}
+              </thead>
 
-            </tbody>
+              <tbody className="divide-y divide-gray-200">
 
-          </table>
+                {supervisor.internships.map(
+                  (internship) => (
+
+                    <tr
+                      key={internship.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {internship.student.studentId}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap font-medium">
+                        {internship.student.fullName}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {internship.student.programme}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {internship.company?.companyName ??
+                          "Not Assigned"}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+
+                        {internship.placementStatus ===
+                        "PLACED" ? (
+
+                          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                            PLACED
+                          </span>
+
+                        ) : (
+
+                          <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                            UNPLACED
+                          </span>
+
+                        )}
+
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+
+                        <div className="flex gap-2">
+
+                          <Link
+                            href={`/industry-supervisor/reports?studentId=${internship.student.id}`}
+                            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                          >
+                            Reports
+                          </Link>
+
+                          <Link
+                            href={`/industry-supervisor/assessments/${internship.student.id}`}
+                            className="rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+                          >
+                            Assess
+                          </Link>
+
+                        </div>
+
+                      </td>
+
+                    </tr>
+
+                  )
+                )}
+
+              </tbody>
+
+            </table>
+
+          )}
 
         </div>
 
       </div>
+
     </main>
   );
 }

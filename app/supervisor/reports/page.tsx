@@ -61,13 +61,29 @@ export default async function SupervisorReportsPage({
     );
   }
 
-  const filteredInternships =
+  const internships =
     studentId
       ? supervisor.internships.filter(
           (internship) =>
             internship.student.id === studentId
         )
       : supervisor.internships;
+
+  const filteredInternships = Array.from(
+    new Map(
+      internships.map((internship) => [
+       internship.student.id,
+        internship,
+      ])
+    ).values()
+  );
+
+    console.log(
+      filteredInternships.map(i => ({
+        internshipId: i.id,
+        student: i.student.fullName,
+      }))
+    );
 
   const reports =
     filteredInternships.flatMap(
@@ -81,6 +97,14 @@ export default async function SupervisorReportsPage({
               internship.student.studentId,
           })
         )
+    );
+
+    console.log(
+      reports.map((report) => ({
+        id: report.id,
+        student: report.studentName,
+        title: report.title,
+      }))
     );
 
   return (
@@ -142,14 +166,13 @@ export default async function SupervisorReportsPage({
 
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-gray-200">
 
               {reports.map(
                 (report) => (
 
                   <tr
-                    key={report.id}
-                    className="border-t"
+                    key={`${report.studentId}-${report.id}`}
                   >
 
                     <td className="px-6 py-4">
@@ -164,7 +187,7 @@ export default async function SupervisorReportsPage({
 
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="whitespace-nowrap px-6 py-4">
                       {report.title}
                     </td>
 
@@ -206,7 +229,7 @@ export default async function SupervisorReportsPage({
 
                       <Link
                         href={`/supervisor/reports/${report.id}`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                        className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                       >
                         Review
                       </Link>

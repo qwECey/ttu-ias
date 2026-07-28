@@ -138,7 +138,7 @@ export default function UserFilter({
 
   return (
     <>
-      <div className="mb-6 flex gap-4">
+      <div className="mb-6 flex flex-col gap-3 md:flex-row">
 
         <label
           htmlFor="user-search"
@@ -157,7 +157,7 @@ export default function UserFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="w-full rounded-lg border px-4 py-2 md:flex-1"
         />
 
         <label
@@ -175,7 +175,7 @@ export default function UserFilter({
               e.target.value
             )
           }
-          className="rounded border px-4 py-2"
+          className="w-full rounded-lg border px-4 py-2 md:w-56"
         >
           <option value="ALL">
             All Roles
@@ -201,7 +201,7 @@ export default function UserFilter({
       </div>
 
       <div className="overflow-x-auto rounded-2xl bg-white shadow-sm">
-        <table className="w-full">
+        <table className="min-w-[1100px] w-full">
 
           <thead>
             <tr className="border-b bg-gray-50">
@@ -248,11 +248,11 @@ export default function UserFilter({
                     {user.fullName || "-"}
                   </td>
 
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3">
                     {user.loginId}
                   </td>
 
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3">
                     {user.email}
                   </td>
 
@@ -284,10 +284,10 @@ export default function UserFilter({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3"></td>
+
                   <td className="px-4 py-3">
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex min-w-[150px] flex-col gap-2">
 
                       <button
                         onClick={() =>

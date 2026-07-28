@@ -57,13 +57,22 @@ export default async function IndustryReportsPage({
     return <div>Industry Supervisor not found.</div>;
   }
 
-  const filteredInternships =
+  const internships =
     studentId
       ? supervisor.internships.filter(
           (internship) =>
             internship.student.id === studentId
         )
       : supervisor.internships;
+
+  const filteredInternships = Array.from(
+    new Map(
+      internships.map((internship) => [
+        internship.student.id,
+        internship,
+      ])
+    ).values()
+  );
 
   const reports =
     filteredInternships.flatMap(
@@ -135,13 +144,12 @@ export default async function IndustryReportsPage({
 
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-gray-200">
 
               {reports.map((report) => (
 
                 <tr
-                  key={report.id}
-                  className="border-t"
+                  key={`${report.studentId}-${report.id}`}
                 >
 
                   <td className="px-6 py-4">
